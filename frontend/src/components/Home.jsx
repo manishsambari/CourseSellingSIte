@@ -92,25 +92,23 @@ function Home() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-black to-blue-950 ">
-      <div className="h-[1250px] md:h-[1050px] text-white container mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+      <div className="text-white container mx-auto">
         {/* Header */}
-        <header className="flex items-center justify-between p-6 ">
-          <div className="flex items-center space-x-2">
-            <img
-              src={logo}
-              alt=""
-              className="w-7 h-7 md:w-10 md:h-10 rounded-full"
-            />
-            <h1 className="md:text-2xl text-orange-500 font-bold">
+        <header className="flex items-center justify-between p-6 backdrop-blur-sm bg-white/10 rounded-b-2xl">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-lg">C</span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
               CourseShip
             </h1>
           </div>
-          <div className="space-x-4">
+          <div className="space-x-3">
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
-                className="bg-transparent text-white text-xs md:text-lg md:py-2 md:px-4 p-2 border border-white rounded"
+                className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300"
               >
                 Logout
               </button>
@@ -118,65 +116,81 @@ function Home() {
               <>
                 <Link
                   to={"/login"}
-                  className="bg-transparent text-white text-xs md:text-lg md:py-2 md:px-4 p-2 border border-white rounded"
+                  className="bg-transparent text-white px-4 py-2 border-2 border-cyan-400 rounded-full font-medium hover:bg-cyan-400 hover:text-black transition-all duration-300"
                 >
                   Login
                 </Link>
                 <Link
                   to={"/signup"}
-                  className="bg-transparent text-white text-xs md:text-lg md:py-2 md:px-4 p-2 border border-white rounded"
+                  className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300"
                 >
-                  Signup
+                  Sign Up
                 </Link>
               </>
             )}
           </div>
         </header>
 
-        {/* Main section */}
-        <section className="text-center py-20">
-          <h1 className="text-4xl font-semibold text-orange-500">
-            CourseShip
-          </h1>
-
-          <br />
-          <p className="text-gray-500">
-            Sharpen your skills with courses crafted by experts.
-          </p>
-          <div className="space-x-4 mt-8">
-            <Link
-              to={"/courses"}
-              className="bg-green-500 text-white p-2 md:py-3 md:px-6 rounded font-semibold hover:bg-white duration-300 hover:text-black"
-            >
-              Explore courses
-            </Link>
-            <Link
-              to={"https://www.youtube.com/learncodingofficial"}
-              className="bg-white text-black  p-2 md:py-3 md:px-6 rounded font-semibold hover:bg-green-500 duration-300 hover:text-white"
-            >
-              Courses videos
-            </Link>
+        {/* Hero section */}
+        <section className="text-center py-20 px-6">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                CourseShip
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
+              🚀 Navigate Your Learning Journey with Expert-Crafted Courses
+            </p>
+            <p className="text-lg text-gray-400 mb-12">
+              Unlock your potential with cutting-edge skills and industry-leading expertise
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                to={"/courses"}
+                className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
+              >
+                🎯 Explore Courses
+              </Link>
+              <Link
+                to={"https://www.youtube.com/learncodingofficial"}
+                className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-full font-semibold text-lg border-2 border-white/20 hover:bg-white/20 transition-all duration-300 flex items-center gap-2"
+              >
+                📺 Watch Videos
+              </Link>
+            </div>
           </div>
         </section>
-        <section className="p-10">
-          <Slider className="" {...settings}>
+        {/* Courses Section */}
+        <section className="px-6 pb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+              Featured Courses
+            </h2>
+            <p className="text-gray-300 text-lg">Discover courses that will transform your career</p>
+          </div>
+          <Slider {...settings}>
             {courses.map((course) => (
               <div key={course._id} className="p-4">
-                <div className="relative flex-shrink-0 w-92 transition-transform duration-300 transform hover:scale-105">
-                  <div className="bg-gray-900 rounded-lg overflow-hidden">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+                  <div className="relative">
                     <img
-                      className="h-32 w-full object-contain"
+                      className="h-48 w-full object-cover"
                       src={course.image.url}
-                      alt=""
+                      alt={course.title}
                     />
-                    <div className="p-6 text-center">
-                      <h2 className="text-xl font-bold text-white">
-                        {course.title}
-                      </h2>
-                      <Link to={`/buy/${course._id}`} className="mt-8 bg-orange-500 text-white py-2 px-4 rounded-full hover:bg-blue-500 duration-300">
-                        Enroll Now
-                      </Link>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-white mb-3 line-clamp-2">
+                      {course.title}
+                    </h3>
+                    <Link 
+                      to={`/buy/${course._id}`} 
+                      className="inline-block w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white py-3 px-6 rounded-full font-semibold text-center hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                    >
+                      🚀 Enroll Now
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -184,62 +198,68 @@ function Home() {
           </Slider>
         </section>
 
-        <hr />
         {/* Footer */}
-        <footer className="my-12">
-          <div className="grid grid-cols-1 md:grid-cols-3">
-            <div className="flex flex-col items-center md:items-start">
-              <div className="flex items-center space-x-2">
-                <img src={logo} alt="" className="w-10 h-10 rounded-full" />
-                <h1 className="text-2xl text-orange-500 font-bold">
-                  CourseShip
-                </h1>
-              </div>
-              <div className="mt-3 ml-2 md:ml-8">
-                <p className="mb-2">Follow us</p>
-                <div className="flex space-x-4">
-                  <a href="">
-                    <FaFacebook className="text-2xl hover:text-blue-400 duration-300" />
+        <footer className="bg-black/30 backdrop-blur-sm border-t border-white/10 mt-20">
+          <div className="px-6 py-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center md:text-left">
+                <div className="flex items-center justify-center md:justify-start space-x-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">C</span>
+                  </div>
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                    CourseShip
+                  </h1>
+                </div>
+                <p className="text-gray-400 mb-4">Navigate your learning journey</p>
+                <div className="flex justify-center md:justify-start space-x-4">
+                  <a href="#" className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                    <FaFacebook className="text-white" />
                   </a>
-                  <a href="">
-                    <FaInstagram className="text-2xl hover:text-pink-600 duration-300" />
+                  <a href="#" className="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-500 transition-colors">
+                    <FaInstagram className="text-white" />
                   </a>
-                  <a href="">
-                    <FaTwitter className="text-2xl hover:text-blue-600 duration-300" />
+                  <a href="#" className="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-300 transition-colors">
+                    <FaTwitter className="text-white" />
                   </a>
                 </div>
               </div>
-            </div>
 
-            <div className="items-center mt-6 md:mt-0 flex flex-col">
-              <h3 className="text-lg font-semibold md:mb-4">connects</h3>
-              <ul className=" space-y-2 text-gray-400">
-                <li className="hover:text-white cursor-pointer duration-300">
-                  youtube- learn coding
-                </li>
-                <li className="hover:text-white cursor-pointer duration-300">
-                  telegram- learn coding
-                </li>
-                <li className="hover:text-white cursor-pointer duration-300">
-                  Github- learn coding
-                </li>
-              </ul>
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-4 text-cyan-400">Connect</h3>
+                <ul className="space-y-3 text-gray-400">
+                  <li className="hover:text-cyan-400 cursor-pointer transition-colors">
+                    📺 YouTube Channel
+                  </li>
+                  <li className="hover:text-cyan-400 cursor-pointer transition-colors">
+                    💬 Telegram Community
+                  </li>
+                  <li className="hover:text-cyan-400 cursor-pointer transition-colors">
+                    🐙 GitHub Repository
+                  </li>
+                </ul>
+              </div>
+
+              <div className="text-center">
+                <h3 className="text-lg font-semibold mb-4 text-cyan-400">Legal</h3>
+                <ul className="space-y-3 text-gray-400">
+                  <li className="hover:text-cyan-400 cursor-pointer transition-colors">
+                    📋 Terms & Conditions
+                  </li>
+                  <li className="hover:text-cyan-400 cursor-pointer transition-colors">
+                    🔒 Privacy Policy
+                  </li>
+                  <li className="hover:text-cyan-400 cursor-pointer transition-colors">
+                    💰 Refund Policy
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div className="items-center mt-6 md:mt-0 flex flex-col">
-              <h3 className="text-lg font-semibold mb-4">
-                copyrights &#169; 2024
-              </h3>
-              <ul className=" space-y-2 text-center text-gray-400">
-                <li className="hover:text-white cursor-pointer duration-300">
-                  Terms & Conditions
-                </li>
-                <li className="hover:text-white cursor-pointer duration-300">
-                  Privacy Policy
-                </li>
-                <li className="hover:text-white cursor-pointer duration-300">
-                  Refund & Cancellation
-                </li>
-              </ul>
+            
+            <div className="border-t border-white/10 mt-8 pt-8 text-center">
+              <p className="text-gray-400">
+                © 2024 CourseShip. All rights reserved. Made with ❤️ for learners worldwide.
+              </p>
             </div>
           </div>
         </footer>
