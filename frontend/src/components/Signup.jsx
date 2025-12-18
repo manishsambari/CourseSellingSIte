@@ -45,86 +45,91 @@ function Signup() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-black to-blue-950 ">
-      <div className="h-screen container mx-auto flex  items-center justify-center text-white">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+      <div className="h-screen container mx-auto flex items-center justify-center text-white">
         {/* Header */}
-        <header className="absolute top-0 left-0 w-full flex justify-between items-center p-5  ">
-          <div className="flex items-center space-x-2">
-            <img src={logo} alt="Logo" className="w-10 h-10 rounded-full" />
-            <Link to={"/"} className="text-xl font-bold text-orange-500">
-              CourseHaven
+        <header className="absolute top-0 left-0 w-full flex justify-between items-center p-6 backdrop-blur-sm bg-white/10">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-lg">C</span>
+            </div>
+            <Link to={"/"} className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+              CourseShip
             </Link>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             <Link
               to={"/login"}
-              className="bg-transparent border border-gray-500 p-1 text-sm md:text-md md:py-2 md:px-4 rounded-md"
+              className="bg-transparent text-white px-4 py-2 border-2 border-cyan-400 rounded-full font-medium hover:bg-cyan-400 hover:text-black transition-all duration-300"
             >
               Login
             </Link>
             <Link
               to={"/courses"}
-              className="bg-orange-500 p-1 text-sm md:text-md md:py-2 md:px-4 rounded-md"
+              className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300"
             >
-              Join now
+              Explore
             </Link>
           </div>
         </header>
 
         {/* Signup Form */}
-        <div className="bg-gray-900 p-8 rounded-lg shadow-lg w-[500px] m-8 md:m-0 mt-20">
-          <h2 className="text-2xl font-bold mb-4 text-center">
-            Welcome to <span className="text-orange-500">CourseHaven</span>
+        <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 shadow-2xl w-[500px] m-8 md:m-0 mt-20">
+          <h2 className="text-3xl font-bold mb-4 text-center">
+            Welcome to <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">CourseShip</span>
           </h2>
-          <p className="text-center text-gray-400 mb-6">
-            Just Signup To Join Us!
+          <p className="text-center text-gray-300 mb-8">
+            🚀 Join us and start your learning journey!
           </p>
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="firstname" className=" text-gray-400 mb-2">
-                Firstname
-              </label>
-              <input
-                type="text"
-                id="firstname"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Type your firstname"
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="lastname" className=" text-gray-400 mb-2">
-                Lastname
-              </label>
-              <input
-                type="text"
-                id="lastname"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Type your lastname"
-                required
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label htmlFor="firstname" className="block text-gray-300 mb-2 font-medium">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  id="firstname"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  className="w-full p-4 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-white placeholder-gray-400"
+                  placeholder="Enter first name"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="lastname" className="block text-gray-300 mb-2 font-medium">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  id="lastname"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  className="w-full p-4 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-white placeholder-gray-400"
+                  placeholder="Enter last name"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="mb-4">
-              <label htmlFor="email" className=" text-gray-400 mb-2">
-                Email
+            <div className="mb-6">
+              <label htmlFor="email" className="block text-gray-300 mb-2 font-medium">
+                Email Address
               </label>
               <input
-                type="text"
+                type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="name@email.com"
+                className="w-full p-4 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-white placeholder-gray-400"
+                placeholder="name@example.com"
                 required
               />
             </div>
-            <div className="mb-4">
-              <label htmlFor="password" className=" text-gray-400 mb-2">
+            <div className="mb-6">
+              <label htmlFor="password" className="block text-gray-300 mb-2 font-medium">
                 Password
               </label>
               <div className="relative">
@@ -133,13 +138,10 @@ function Signup() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="********"
+                  className="w-full p-4 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-white placeholder-gray-400"
+                  placeholder="Create a strong password"
                   required
                 />
-                <span className="absolute right-3 top-3 text-gray-500 cursor-pointer">
-                  👁️
-                </span>
               </div>
             </div>
             {errorMessage && (
@@ -149,10 +151,17 @@ function Signup() {
             )}
             <button
               type="submit"
-              className="w-full bg-orange-500 hover:bg-blue-600 text-white py-3 px-6 rounded-md transition"
+              className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
             >
-              Signup
+              🚀 Create Account
             </button>
+            
+            <p className="text-center text-gray-400 mt-6">
+              Already have an account?{" "}
+              <Link to="/login" className="text-cyan-400 hover:text-cyan-300 font-medium">
+                Sign in here
+              </Link>
+            </p>
           </form>
         </div>
       </div>
