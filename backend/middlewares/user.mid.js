@@ -13,7 +13,6 @@ function userMiddleware(req, res, next) {
     const decoded = jwt.verify(token, config.JWT_USER_PASSWORD);
     console.log(decoded);
     req.userId = decoded.id;
-
     next();
   } catch (error) {
     return res.status(401).json({ errors: "Invalid token or expired" });
