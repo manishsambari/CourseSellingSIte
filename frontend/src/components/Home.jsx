@@ -10,7 +10,7 @@ import Slider from "react-slick";
 import toast from "react-hot-toast";
 import { BACKEND_URL } from "../utils/utils";
 function Home() {
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState([]);  // jo courses backend se aayenge unko store karne ke liye aur frontend me dikhane ke liye
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // token
@@ -22,6 +22,8 @@ function Home() {
       setIsLoggedIn(false);
     }
   }, []);
+
+
 
   // fetch courses
   useEffect(() => {
@@ -36,7 +38,7 @@ function Home() {
         console.log("error in fetchCourses ", error);
       }
     };
-    fetchCourses();
+    fetchCourses(); // yahape call hoga function
   }, []);
 
   // logout
@@ -54,6 +56,7 @@ function Home() {
     }
   };
 
+  // this is react slider code or slick
   var settings = {
     dots: true,
     infinite: false,
@@ -166,6 +169,10 @@ function Home() {
             </div>
           </div>
         </section>
+
+
+
+
         {/* Courses Section */}
         <section className="px-6 pb-20">
           <div className="text-center mb-12">
@@ -190,8 +197,8 @@ function Home() {
                     <h3 className="text-xl font-bold text-white mb-4">
                       {course.title}
                     </h3>
-                    <Link 
-                      to={`/buy/${course._id}`} 
+                    <Link
+                      to={`/buy/${course._id}`}
                       className="inline-block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-6 rounded-lg font-semibold text-center transition-all duration-300"
                     >
                       Enroll Now
@@ -267,7 +274,7 @@ function Home() {
                 </ul>
               </div>
             </div>
-            
+
             <div className="border-t border-gray-800 mt-8 pt-8 text-center">
               <p className="text-gray-500">
                 © 2024 CourseShip. All rights reserved.

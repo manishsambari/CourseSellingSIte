@@ -21,15 +21,18 @@ dotenv.config()
 //middleware after get data from req body
 app.use(express.json()) // get json data from req body
 app.use(cookieParser())
-app.use(                // for file upload using expressfileupload
+app.use(
+  // for file upload using expressfileupload
   fileUpload({
     useTempFiles: true,
     tempFileDir: "/tmp/",
   })
 )
+
+// to allow frontend port to access backend port 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL, // here is the port
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -49,8 +52,6 @@ app.use("/api/v1/course", courseRoute)
 app.use("/api/v1/user", userRoute)
 app.use("/api/v1/admin", adminRoute)
 app.use("/api/v1/order", orderRoute)
-
-
 
 // Cloudinary configuration code
 cloudinary.config({

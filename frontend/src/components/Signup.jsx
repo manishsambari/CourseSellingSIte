@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import logo from "../../public/logo.webp";
+import { useState } from "react";
+// import logo from "../../public/logo.webp";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { BACKEND_URL } from "../utils/utils";
 
 function Signup() {
-  const [firstName, setFirstName] = useState("");
+  const [firstName, setFirstName] = useState("");  // vlaue mai dalne ke liye
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +16,7 @@ function Signup() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // page reload na ho form submit krne pe
 
     try {
       const response = await axios.post(
@@ -82,7 +82,7 @@ function Signup() {
             Join us and start your learning journey
           </p>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit}> 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <label htmlFor="firstname" className="block text-gray-300 mb-2 font-medium">
@@ -92,7 +92,7 @@ function Signup() {
                   type="text"
                   id="firstname"
                   value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  onChange={(e) => setFirstName(e.target.value)} // jo user type kr raha vo dekna chaiye cuz of target.value
                   className="w-full p-4 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder-gray-400"
                   placeholder="Enter first name"
                   required
@@ -155,7 +155,7 @@ function Signup() {
             >
               Create Account
             </button>
-            
+
             <p className="text-center text-gray-400 mt-6">
               Already have an account?{" "}
               <Link to="/login" className="text-emerald-400 hover:text-emerald-300 font-medium">
