@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import logo from "../../public/logo.webp";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaFacebook } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
@@ -92,7 +91,7 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-black font-sans">
       <div className="text-white container mx-auto">
         {/* Header */}
         <header className="flex items-center justify-between p-6 bg-gray-900/50 backdrop-blur-xl border-b border-gray-800">
@@ -130,6 +129,14 @@ function Home() {
             )}
           </div>
         </header>
+
+
+
+
+
+
+
+
 
         {/* Hero section */}
         <section className="text-center py-20 px-6">
@@ -195,6 +202,13 @@ function Home() {
             ))}
           </Slider>
         </section>
+
+
+
+
+
+
+
 
         {/* Footer */}
         <footer className="bg-gray-900 border-t border-gray-800 mt-20">
