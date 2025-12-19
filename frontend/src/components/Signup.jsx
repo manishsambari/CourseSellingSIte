@@ -45,28 +45,28 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+    <div className="min-h-screen bg-black">
       <div className="h-screen container mx-auto flex items-center justify-center text-white">
         {/* Header */}
-        <header className="absolute top-0 left-0 w-full flex justify-between items-center p-6 backdrop-blur-sm bg-white/10">
+        <header className="absolute top-0 left-0 w-full flex justify-between items-center p-6 bg-gray-900/50 backdrop-blur-xl border-b border-gray-800">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">C</span>
+            <div className="w-10 h-10 bg-gradient-to-r from-emerald-400 to-cyan-400 rounded-lg flex items-center justify-center">
+              <span className="text-black font-bold text-lg">C</span>
             </div>
-            <Link to={"/"} className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              CourseShip
+            <Link to={"/"} className="text-2xl font-bold text-white">
+              Course<span className="text-emerald-400">Ship</span>
             </Link>
           </div>
           <div className="flex items-center space-x-3">
             <Link
               to={"/login"}
-              className="bg-transparent text-white px-4 py-2 border-2 border-cyan-400 rounded-full font-medium hover:bg-cyan-400 hover:text-black transition-all duration-300"
+              className="text-gray-300 hover:text-white px-4 py-2 border border-gray-700 hover:border-gray-600 rounded-lg font-medium transition-all duration-300"
             >
               Login
             </Link>
             <Link
               to={"/courses"}
-              className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-300"
             >
               Explore
             </Link>
@@ -74,12 +74,12 @@ function Signup() {
         </header>
 
         {/* Signup Form */}
-        <div className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-white/20 shadow-2xl w-[500px] m-8 md:m-0 mt-20">
-          <h2 className="text-3xl font-bold mb-4 text-center">
-            Welcome to <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">CourseShip</span>
+        <div className="bg-gray-900 p-8 rounded-xl border border-gray-800 shadow-2xl w-[500px] m-8 md:m-0 mt-20">
+          <h2 className="text-3xl font-bold mb-4 text-center text-white">
+            Welcome to <span className="text-emerald-400">CourseShip</span>
           </h2>
-          <p className="text-center text-gray-300 mb-8">
-            🚀 Join us and start your learning journey!
+          <p className="text-center text-gray-400 mb-8">
+            Join us and start your learning journey
           </p>
 
           <form onSubmit={handleSubmit}>
@@ -93,7 +93,7 @@ function Signup() {
                   id="firstname"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full p-4 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-white placeholder-gray-400"
+                  className="w-full p-4 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder-gray-400"
                   placeholder="Enter first name"
                   required
                 />
@@ -107,7 +107,7 @@ function Signup() {
                   id="lastname"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  className="w-full p-4 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-white placeholder-gray-400"
+                  className="w-full p-4 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder-gray-400"
                   placeholder="Enter last name"
                   required
                 />
@@ -123,7 +123,7 @@ function Signup() {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-4 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-white placeholder-gray-400"
+                className="w-full p-4 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder-gray-400"
                 placeholder="name@example.com"
                 required
               />
@@ -138,7 +138,7 @@ function Signup() {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-4 rounded-xl bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent backdrop-blur-sm text-white placeholder-gray-400"
+                  className="w-full p-4 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white placeholder-gray-400"
                   placeholder="Create a strong password"
                   required
                 />
@@ -151,14 +151,14 @@ function Signup() {
             )}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-white py-4 px-6 rounded-xl font-semibold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-300"
             >
-              🚀 Create Account
+              Create Account
             </button>
             
             <p className="text-center text-gray-400 mt-6">
               Already have an account?{" "}
-              <Link to="/login" className="text-cyan-400 hover:text-cyan-300 font-medium">
+              <Link to="/login" className="text-emerald-400 hover:text-emerald-300 font-medium">
                 Sign in here
               </Link>
             </p>
