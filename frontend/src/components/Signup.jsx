@@ -13,7 +13,7 @@ function Signup() {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // for navigation after signup
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // page reload na ho form submit krne pe
@@ -36,7 +36,7 @@ function Signup() {
       );
       console.log("Sugnup successful: ", response.data);
       toast.success(response.data.message);
-      navigate("/login");
+      navigate("/login"); // navigate to login page after signup
     } catch (error) {
       if (error.response) {
         setErrorMessage(error.response.data.errors || "Signup failed!!!");
