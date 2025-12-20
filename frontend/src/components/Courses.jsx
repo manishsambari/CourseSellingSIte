@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import axios for API call
 import { FaCircleUser } from "react-icons/fa6";
 import { RiHome2Fill } from "react-icons/ri";
@@ -11,7 +10,7 @@ import { FiSearch } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi"; // Import menu and close icons
 import logo from "../../public/logo.webp";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../utils/utils";
 
 function Courses() {
@@ -39,20 +38,11 @@ function Courses() {
         const response = await axios.get(`${BACKEND_URL}/course/courses`, {
           withCredentials: true,
         });
-        console.log('Full response:', response);
-        console.log('Response data:', response.data);
-        console.log('Courses array:', response.data.courses);
-        const validCourses = (response.data.courses || []).filter(course => 
-          course && typeof course === 'object' && course._id
-        );
-        console.log('Valid courses:', validCourses);
-        setCourses(validCourses);
+        console.log(response.data.courses);
+        setCourses(response.data.courses);
         setLoading(false);
       } catch (error) {
         console.log("error in fetchCourses ", error);
-        console.log('Error response:', error.response);
-        setCourses([]);
-        setLoading(false);
       }
     };
     fetchCourses();
@@ -90,8 +80,9 @@ function Courses() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 md:static`}
+        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 md:static`}
       >
         <div className="flex items-center mb-10 mt-10 md:mt-0">
           <img src={logo} alt="Profile" className="rounded-full h-12 w-12" />
@@ -121,7 +112,7 @@ function Courses() {
             <li>
               {isLoggedIn ? (
                 <Link to={"/"}
-
+                  
                   className="flex items-center"
                   onClick={handleLogout}
                 >
@@ -161,39 +152,32 @@ function Courses() {
         <div className="overflow-y-auto h-[75vh]">
           {loading ? (
             <p className="text-center text-gray-500">Loading...</p>
-          ) : !courses || courses.length === 0 ? (
-            <div className="text-center text-gray-500">
-              <p>No course posted yet by admin</p>
-              <p className="text-sm mt-2">Debug: courses = {JSON.stringify(courses)}</p>
-            </div>
+          ) : courses.length === 0 ? (
+            // Check if courses array is empty
+            <p className="text-center text-gray-500">
+              No course posted yet by admin
+            </p>
           ) : (
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {courses.map((course, index) => {
-                if (!course || !course._id) {
-                  console.log('Invalid course at index:', index, course);
-                  return null;
-                }
-                return (
+              {courses.map((course) => (
                 <div
                   key={course._id}
                   className="border border-gray-200 rounded-lg p-4 shadow-sm"
                 >
                   <img
-                    src={course.image?.url || '/placeholder.jpg'}
-                    alt={course.title || 'Course'}
+                    src={course.image.url}
+                    alt={course.title}
                     className="rounded mb-4"
                   />
-                  <h2 className="font-bold text-lg mb-2">{course.title || 'No title'}</h2>
+                  <h2 className="font-bold text-lg mb-2">{course.title}</h2>
                   <p className="text-gray-600 mb-4">
-                    {course.description
-                      ? course.description.length > 100
-                        ? `${course.description.slice(0, 100)}...`
-                        : course.description
-                      : 'No description'}
+                    {course.description.length > 100
+                      ? `${course.description.slice(0, 100)}...`
+                      : course.description}
                   </p>
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-bold text-xl">
-                      ₹{course.price || 0}{" "}
+                      ₹{course.price}{" "}
                       <span className="text-gray-500 line-through">5999</span>
                     </span>
                     <span className="text-green-600">20% off</span>
@@ -201,14 +185,13 @@ function Courses() {
 
                   {/* Buy page */}
                   <Link
-                    to={`/buy/${course._id || ''}`} // Pass courseId in URL
+                    to={`/buy/${course._id}`} // Pass courseId in URL
                     className="bg-orange-500 w-full text-white px-4 py-2 rounded-lg hover:bg-blue-900 duration-300"
                   >
                     Buy Now
                   </Link>
                 </div>
-                );
-              })}
+              ))}
             </div>
           )}
         </div>
