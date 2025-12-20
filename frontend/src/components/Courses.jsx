@@ -174,9 +174,11 @@ function Courses() {
                   />
                   <h2 className="font-bold text-lg mb-2">{course.title || 'No title'}</h2>
                   <p className="text-gray-600 mb-4">
-                    {course.description && course.description.length > 100
-                      ? `${course.description.slice(0, 100)}...`
-                      : course.description || 'No description'}
+                    {course.description
+                      ? course.description.length > 100
+                        ? `${course.description.slice(0, 100)}...`
+                        : course.description
+                      : 'No description'}
                   </p>
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-bold text-xl">
