@@ -40,10 +40,12 @@ function Courses() {
           withCredentials: true,
         });
         console.log(response.data.courses);
-        setCourses(response.data.courses);
+        setCourses(response.data.courses || []);
         setLoading(false);
       } catch (error) {
         console.log("error in fetchCourses ", error);
+        setCourses([]);
+        setLoading(false);
       }
     };
     fetchCourses();
@@ -153,8 +155,8 @@ function Courses() {
         <div className="overflow-y-auto h-[75vh]">
           {loading ? (
             <p className="text-center text-gray-500">Loading...</p>
-          ) : courses.length === 0 ? (
-            // Check if courses array is empty
+          ) : !courses || courses.length === 0 ? (
+            // Check if courses array is empty or undefined
             <p className="text-center text-gray-500">
               No course posted yet by admin
             </p>
