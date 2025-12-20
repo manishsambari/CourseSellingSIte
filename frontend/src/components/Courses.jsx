@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios"; // Import axios for API call
 import { FaCircleUser } from "react-icons/fa6";
 import { RiHome2Fill } from "react-icons/ri";
@@ -11,7 +11,7 @@ import { FiSearch } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi"; // Import menu and close icons
 import logo from "../../public/logo.webp";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../utils/utils";
 
 function Courses() {
@@ -42,7 +42,11 @@ function Courses() {
         console.log('Full response:', response);
         console.log('Response data:', response.data);
         console.log('Courses array:', response.data.courses);
-        setCourses(response.data.courses || []);
+        const validCourses = (response.data.courses || []).filter(course => 
+          course && typeof course === 'object' && course._id
+        );
+        console.log('Valid courses:', validCourses);
+        setCourses(validCourses);
         setLoading(false);
       } catch (error) {
         console.log("error in fetchCourses ", error);
@@ -86,9 +90,8 @@ function Courses() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:static`}
+        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:static`}
       >
         <div className="flex items-center mb-10 mt-10 md:mt-0">
           <img src={logo} alt="Profile" className="rounded-full h-12 w-12" />
@@ -118,7 +121,7 @@ function Courses() {
             <li>
               {isLoggedIn ? (
                 <Link to={"/"}
-                  
+
                   className="flex items-center"
                   onClick={handleLogout}
                 >
@@ -165,7 +168,12 @@ function Courses() {
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {courses.map((course) => (
+              {courses.map((course, index) => {
+                if (!course || !course._id) {
+                  console.log('Invalid course at index:', index, course);
+                  return null;
+                }
+                return (
                 <div
                   key={course._id}
                   className="border border-gray-200 rounded-lg p-4 shadow-sm"
@@ -199,7 +207,8 @@ function Courses() {
                     Buy Now
                   </Link>
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
