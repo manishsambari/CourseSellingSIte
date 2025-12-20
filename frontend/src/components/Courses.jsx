@@ -39,11 +39,14 @@ function Courses() {
         const response = await axios.get(`${BACKEND_URL}/course/courses`, {
           withCredentials: true,
         });
-        console.log(response.data.courses);
+        console.log('Full response:', response);
+        console.log('Response data:', response.data);
+        console.log('Courses array:', response.data.courses);
         setCourses(response.data.courses || []);
         setLoading(false);
       } catch (error) {
         console.log("error in fetchCourses ", error);
+        console.log('Error response:', error.response);
         setCourses([]);
         setLoading(false);
       }
@@ -156,10 +159,10 @@ function Courses() {
           {loading ? (
             <p className="text-center text-gray-500">Loading...</p>
           ) : !courses || courses.length === 0 ? (
-            // Check if courses array is empty or undefined
-            <p className="text-center text-gray-500">
-              No course posted yet by admin
-            </p>
+            <div className="text-center text-gray-500">
+              <p>No course posted yet by admin</p>
+              <p className="text-sm mt-2">Debug: courses = {JSON.stringify(courses)}</p>
+            </div>
           ) : (
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
               {courses.map((course) => (
