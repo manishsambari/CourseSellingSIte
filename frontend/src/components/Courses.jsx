@@ -166,19 +166,19 @@ function Courses() {
                   className="border border-gray-200 rounded-lg p-4 shadow-sm"
                 >
                   <img
-                    src={course.image.url}
-                    alt={course.title}
+                    src={course.image?.url || '/placeholder.jpg'}
+                    alt={course.title || 'Course'}
                     className="rounded mb-4"
                   />
-                  <h2 className="font-bold text-lg mb-2">{course.title}</h2>
+                  <h2 className="font-bold text-lg mb-2">{course.title || 'Untitled Course'}</h2>
                   <p className="text-gray-600 mb-4">
-                    {course.description.length > 100
+                    {course.description && course.description.length > 100
                       ? `${course.description.slice(0, 100)}...`
-                      : course.description}
+                      : course.description || "No description available"}
                   </p>
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-bold text-xl">
-                      ₹{course.price}{" "}
+                      ₹{course.price || 0}{" "}
                       <span className="text-gray-500 line-through">5999</span>
                     </span>
                     <span className="text-green-600">20% off</span>
@@ -186,7 +186,7 @@ function Courses() {
 
                   {/* Buy page */}
                   <Link
-                    to={`/buy/${course._id}`} // Pass courseId in URL
+                    to={`/buy/${course._id || ''}`} // Pass courseId in URL
                     className="bg-orange-500 w-full text-white px-4 py-2 rounded-lg hover:bg-blue-900 duration-300"
                   >
                     Buy Now
