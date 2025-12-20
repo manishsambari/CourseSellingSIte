@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios"; // Import axios for API call
 import { FaCircleUser } from "react-icons/fa6";
 import { RiHome2Fill } from "react-icons/ri";
@@ -10,7 +10,7 @@ import { FiSearch } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi"; // Import menu and close icons
 import logo from "../../public/logo.webp";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BACKEND_URL } from "../utils/utils";
 
 function Courses() {
@@ -39,10 +39,12 @@ function Courses() {
           withCredentials: true,
         });
         console.log(response.data.courses);
-        setCourses(response.data.courses);
+        setCourses(response.data.courses || []);
         setLoading(false);
       } catch (error) {
         console.log("error in fetchCourses ", error);
+        setCourses([]);
+        setLoading(false);
       }
     };
     fetchCourses();
@@ -80,9 +82,8 @@ function Courses() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:static`}
+        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } md:translate-x-0 md:static`}
       >
         <div className="flex items-center mb-10 mt-10 md:mt-0">
           <img src={logo} alt="Profile" className="rounded-full h-12 w-12" />
@@ -112,7 +113,7 @@ function Courses() {
             <li>
               {isLoggedIn ? (
                 <Link to={"/"}
-                  
+
                   className="flex items-center"
                   onClick={handleLogout}
                 >
@@ -152,8 +153,8 @@ function Courses() {
         <div className="overflow-y-auto h-[75vh]">
           {loading ? (
             <p className="text-center text-gray-500">Loading...</p>
-          ) : courses.length === 0 ? (
-            // Check if courses array is empty
+          ) : !courses || courses.length === 0 ? (
+            // Check if courses array is empty or undefined
             <p className="text-center text-gray-500">
               No course posted yet by admin
             </p>

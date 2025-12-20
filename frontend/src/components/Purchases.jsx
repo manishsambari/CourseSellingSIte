@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaDiscourse, FaDownload } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
@@ -48,7 +48,7 @@ function Purchases() {
         });
         setPurchase(response.data.courseData);
       } catch (error) {
-        setErrorMessage("Failed to fetch purchase data");
+        setErrorMessage(error.response.data.errors || "Failed to fetch purchase data");
       }
     };
     fetchPurchases();
