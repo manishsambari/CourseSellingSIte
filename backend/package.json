@@ -2,7 +2,7 @@
   "name": "course-app",
   "version": "1.0.0",
   "description": "full stack course-selling-app",
-  "main": "index.js",
+  "main": "index.js", 
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
