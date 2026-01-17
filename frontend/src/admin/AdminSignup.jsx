@@ -44,6 +44,7 @@ function AdminSignup() {
       } else {
         setErrorMessage("Network error - backend might be sleeping");
       }
+    }
   };
 
   return (
