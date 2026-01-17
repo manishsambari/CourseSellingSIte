@@ -37,10 +37,13 @@ function AdminSignup() {
       toast.success(response.data.message);
       navigate("/admin/login");
     } catch (error) {
+      console.error('Full error:', error);
       if (error.response) {
+        console.error('Error response:', error.response.data);
         setErrorMessage(error.response.data.errors || "AdminSignup failed!!!");
+      } else {
+        setErrorMessage("Network error - backend might be sleeping");
       }
-    }
   };
 
   return (
@@ -91,6 +94,7 @@ function AdminSignup() {
                 onChange={(e) => setFirstName(e.target.value)}
                 className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Type your firstname"
+                required
               />
             </div>
             <div className="mb-4">

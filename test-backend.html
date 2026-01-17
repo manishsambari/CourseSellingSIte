@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Backend</title>
+</head>
+<body>
+    <script>
+        // Test if backend is responding
+        fetch('https://coursesellingsite-6dns.onrender.com/api/v1/admin/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                firstName: 'Test',
+                lastName: 'Admin',
+                email: 'test@admin.com',
+                password: 'password123'
+            })
+        })
+        .then(response => {
+            console.log('Status:', response.status);
+            return response.text();
+        })
+        .then(data => {
+            console.log('Response:', data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    </script>
+</body>
+</html>
