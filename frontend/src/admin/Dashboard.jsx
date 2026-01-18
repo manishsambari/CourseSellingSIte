@@ -23,7 +23,7 @@ function Dashboard() {
       <div className="w-64 bg-gray-100 p-5">
         <div className="flex items-center flex-col mb-10">
           <img src={logo} alt="Profile" className="rounded-full h-20 w-20" />
-          <h2 className="text-lg font-semibold mt-4">I'm Admin</h2>
+          <h2 className="text-lg font-semibold mt-4">Im Admin</h2>
         </div>
         <nav className="flex flex-col space-y-4">
           <Link to="/admin/our-courses">

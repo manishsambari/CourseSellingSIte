@@ -18,6 +18,16 @@ const port = process.env.PORT || 3000
 const app = express()
 dotenv.config()
 
+
+const DB_URI = process.env.MONGO_URI //1.connect mongodb
+try {
+  await mongoose.connect(DB_URI)
+  console.log("Connected to MongoDB")
+} catch (error) {
+  console.log(error)
+}
+
+
 //middleware after get data from req body
 app.use(express.json()) // get json data from req body
 app.use(cookieParser())
@@ -39,13 +49,6 @@ app.use(
   })
 )
 
-const DB_URI = process.env.MONGO_URI //1.connect mongodb
-try {
-  await mongoose.connect(DB_URI)
-  console.log("Connected to MongoDB")
-} catch (error) {
-  console.log(error)
-}
 
 // defining routes
 app.use("/api/v1/course", courseRoute)
