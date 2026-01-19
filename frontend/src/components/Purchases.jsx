@@ -13,7 +13,7 @@ import { BACKEND_URL } from "../utils/utils";
 function Purchases() {
   const [purchases, setPurchase] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar open state
 
   const navigate = useNavigate();
@@ -47,12 +47,23 @@ function Purchases() {
           withCredentials: true,
         });
         setPurchase(response.data.courseData);
+        setErrorMessage(""); // Clear error on success
       } catch (error) {
-        setErrorMessage(error.response.data.errors || "Failed to fetch purchase data");
+        const errorMsg = error.response?.data?.errors || "Failed to fetch purchase data";
+        setErrorMessage(errorMsg);
+        
+        // If token is invalid/expired, redirect to login
+        if (error.response?.status === 401) {
+          localStorage.removeItem("user");
+          navigate("/login");
+        }
       }
     };
-    fetchPurchases();
-  }, []);
+    
+    if (token) {
+      fetchPurchases();
+    }
+  }, [token, navigate]);
 
   // Logout
   const handleLogout = async () => {

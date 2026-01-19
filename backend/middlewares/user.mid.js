@@ -17,8 +17,8 @@ function userMiddleware(req, res, next) {
     req.userId = decoded.id
     next()
   } catch (error) {
-    return res.status(401).json({ errors: "Invalid token or expired" })
     console.log("error in user middleware", error)
+    return res.status(401).json({ errors: "Invalid token or expired" })
   }
 }
 

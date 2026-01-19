@@ -66,7 +66,7 @@ export const login = async (req, res) => {
         id: user._id,
       },
       config.JWT_USER_PASSWORD,
-      { expiresIn: "1d" }
+      { expiresIn: "30d" },
     )
     const cookieOptions = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
