@@ -13,13 +13,12 @@ import cors from "cors"
 import fileUpload from "express-fileupload"
 import cookieParser from "cookie-parser"
 
-const port = process.env.PORT || 3000
-
-const app = express()
 dotenv.config()
 
+const port = process.env.PORT || 3000
+const app = express()
 
-const DB_URI = process.env.MONGO_URI //1.connect mongodb
+const DB_URI = process.env.MONGO_URI 
 try {
   await mongoose.connect(DB_URI)
   console.log("Connected to MongoDB")
@@ -27,6 +26,10 @@ try {
   console.log(error)
 }
 
+// Add this before your other routes
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", db: mongoose.connection.readyState })
+})
 
 //middleware after get data from req body
 app.use(express.json()) // get json data from req body
