@@ -85,14 +85,8 @@ function AdminSignup() {
                 id="firstname"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-<<<<<<< HEAD
-                className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Type your firstname"
-                required
-=======
                 className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all outline-none"
                 placeholder="Admin"
->>>>>>> courseship-update
               />
             </div>
             <div>
