@@ -10,7 +10,7 @@ function OurCourses() {
   const navigate = useNavigate();
 
   const admin = JSON.parse(localStorage.getItem("admin"));
-  const token = admin.token;
+  const token = admin?.token;
 
   if (!token) {
     toast.error("Please login to admin");
@@ -24,7 +24,6 @@ function OurCourses() {
         const response = await axios.get(`${BACKEND_URL}/course/courses`, {
           withCredentials: true,
         });
-        console.log(response.data.courses);
         setCourses(response.data.courses);
         setLoading(false);
       } catch (error) {
@@ -56,63 +55,92 @@ function OurCourses() {
   };
 
   if (loading) {
-    return <p className="text-center text-gray-500">Loading...</p>;
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50">
+         <p className="text-xl text-gray-500 font-medium">Loading courses...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-gray-100 p-8 space-y-4">
-      <h1 className="text-3xl font-bold text-center mb-8">Our Courses</h1>
-      <Link
-        className="bg-orange-400 py-2 px-4 rounded-lg text-white hover:bg-orange-950 duration-300"
-        to={"/admin/dashboard"}
-      >
-        Go to dashboard
-      </Link>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {courses.map((course) => (
-          <div key={course._id} className="bg-white shadow-md rounded-lg p-4">
-            {/* Course Image */}
-            <img
-              src={course?.image?.url}
-              alt={course.title}
-              className="h-40 w-full object-cover rounded-t-lg"
-            />
-            {/* Course Title */}
-            <h2 className="text-xl font-semibold mt-4 text-gray-800">
-              {course.title}
-            </h2>
-            {/* Course Description */}
-            <p className="text-gray-600 mt-2 text-sm">
-              {course.description.length > 200
-                ? `${course.description.slice(0, 200)}...`
-                : course.description}
-            </p>
-            {/* Course Price */}
-            <div className="flex justify-between mt-4 text-gray-800 font-bold">
-              <div>
-                {" "}
-                ₹{course.price}{" "}
-                <span className="line-through text-gray-500">₹300</span>
-              </div>
-              <div className="text-green-600 text-sm mt-2">10 % off</div>
-            </div>
-
-            <div className="flex justify-between">
-              <Link
-                to={`/admin/update-course/${course._id}`}
-                className="bg-orange-500 text-white py-2 px-4 mt-4 rounded hover:bg-blue-600"
-              >
-                Update
-              </Link>
-              <button
-                onClick={() => handleDelete(course._id)}
-                className="bg-red-500 text-white py-2 px-4 mt-4 rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
+    <div className="bg-gray-50 min-h-screen p-8 relative">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Our Courses</h1>
+            <p className="text-gray-600 mt-1">Manage and organize all your platform courses</p>
           </div>
-        ))}
+          <Link
+            className="mt-4 md:mt-0 flex items-center bg-white border-2 border-gray-300 text-gray-700 py-2 px-6 rounded-lg font-semibold hover:border-purple-600 hover:text-purple-600 transition"
+            to={"/admin/dashboard"}
+          >
+            <i className="fas fa-arrow-left mr-2"></i> Back to Dashboard
+          </Link>
+        </div>
+
+        {courses.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i className="fas fa-book-open text-2xl text-gray-400"></i>
+            </div>
+            <p className="text-gray-500 font-medium text-lg">No courses found. Time to create some!</p>
+            <Link to="/admin/create-course" className="inline-block mt-4 gradient-bg text-white px-6 py-2 rounded-lg font-medium hover:opacity-90 transition">
+              Create First Course
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {courses.map((course) => (
+              <div key={course._id} className="bg-white shadow-lg rounded-2xl p-5 border border-gray-100 card-hover flex flex-col">
+                <div className="relative mb-4">
+                  <img
+                    src={course?.image?.url}
+                    alt={course.title}
+                    className="h-48 w-full object-cover rounded-xl"
+                  />
+                  <div className="absolute top-3 right-3 bg-white text-gray-900 px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                    Published
+                  </div>
+                </div>
+                
+                <div className="flex-1 flex flex-col">
+                  <h2 className="text-lg font-bold text-gray-900 line-clamp-2 mb-2">
+                    {course.title}
+                  </h2>
+                  <p className="text-gray-600 text-sm flex-1 mb-4">
+                    {course.description.length > 100
+                      ? `${course.description.slice(0, 100)}...`
+                      : course.description}
+                  </p>
+                  
+                  <div className="flex justify-between items-center bg-gray-50 p-3 rounded-lg mb-4">
+                    <div className="font-bold text-gray-900 text-lg">
+                      ₹{course.price}
+                    </div>
+                    <div className="text-gray-500 line-through text-sm">
+                      ₹{course.price * 2}
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mt-auto">
+                    <Link
+                      to={`/admin/update-course/${course._id}`}
+                      className="bg-purple-100 text-purple-700 py-2 px-4 rounded-lg font-semibold hover:bg-purple-200 transition text-center flex items-center justify-center"
+                    >
+                      <i className="fas fa-edit mr-2"></i> Edit
+                    </Link>
+                    <button
+                      onClick={() => handleDelete(course._id)}
+                      className="bg-red-50 text-red-600 py-2 px-4 rounded-lg font-semibold hover:bg-red-100 transition flex items-center justify-center"
+                    >
+                      <i className="fas fa-trash-alt mr-2"></i> Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
