@@ -5,7 +5,8 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
 import { BACKEND_URL } from "../utils/utils";
 import { FaArrowLeft, FaShieldAlt, FaLock, FaCreditCard, FaPaypal, FaGooglePay, FaApplePay } from "react-icons/fa";
-import { SiVisa, SiMastercard, SiAmex } from "react-icons/si";
+import { SiVisa, SiMastercard } from "react-icons/si";
+import { BiCreditCard } from "react-icons/bi";
 import logo from "../../public/logo.webp";
 
 const styles = `
@@ -352,7 +353,7 @@ function Buy() {
                       <div className="flex justify-end gap-2 mb-2">
                         <SiVisa className="text-2xl text-gray-500" />
                         <SiMastercard className="text-2xl text-gray-500" />
-                        <SiAmex className="text-2xl text-gray-500" />
+                        <BiCreditCard className="text-2xl text-gray-500" />
                       </div>
                       
                       {/* Stripe Card Element */}
