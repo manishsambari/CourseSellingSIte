@@ -515,7 +515,7 @@ function Courses() {
                 <div key={course._id} className="course-card">
                   <div className="card-img-wrap">
                     <img
-                      src={course.image?.url || course.image?.url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"}
+                      src={course.image?.url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"}
                       alt={course.title}
                       onError={e => { e.target.src = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600" }}
                     />
