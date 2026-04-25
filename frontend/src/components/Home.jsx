@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import toast from "react-hot-toast";
 import { BACKEND_URL } from "../utils/utils";
+import logo from "../../public/logo.webp";
 
 function Home() {
   const [courses, setCourses] = useState([]);  // jo courses backend se aayenge unko store karne ke liye aur frontend me dikhane ke liye
