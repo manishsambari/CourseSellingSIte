@@ -15,16 +15,8 @@ function AdminLogin() {
     e.preventDefault();
     try {
       const response = await axios.post(
-<<<<<<< HEAD
-        `${BACKEND_URL}/admin/login`,
-        {
-          email,
-          password,
-        },
-=======
         `${BACKEND_URL}/user/login`,
         { email, password },
->>>>>>> courseship-update
         {
           withCredentials: true,
           headers: {

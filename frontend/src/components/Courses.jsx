@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { useState, useEffect } from "react";
-=======
 import React, { useState, useEffect } from "react";
->>>>>>> courseship-update
 import axios from "axios"; // Import axios for API call
 import { FaCircleUser } from "react-icons/fa6";
 import { RiHome2Fill } from "react-icons/ri";
@@ -86,14 +82,9 @@ function Courses() {
 
       {/* Sidebar */}
       <aside
-<<<<<<< HEAD
-        className={`fixed top-0 left-0 h-screen bg-gray-100 w-64 p-5 transform z-10 transition-transform duration-300 ease-in-out ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:translate-x-0 md:static`}
-=======
         className={`fixed top-0 left-0 h-screen bg-white border-r border-gray-200 w-64 p-5 transform z-20 transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         } md:translate-x-0 md:static md:shadow-none`}
->>>>>>> courseship-update
       >
         <div className="flex items-center mb-10 mt-10 md:mt-0 space-x-3">
           <div className="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center">
@@ -126,12 +117,7 @@ function Courses() {
             <li className="pt-4 mt-4 border-t border-gray-100">
               {isLoggedIn ? (
                 <Link to={"/"}
-<<<<<<< HEAD
-
-                  className="flex items-center"
-=======
                   className="flex items-center p-3 text-red-600 hover:bg-red-50 rounded-lg transition font-medium"
->>>>>>> courseship-update
                   onClick={handleLogout}
                 >
                   <IoLogOut className="mr-3 text-xl" /> Logout
@@ -166,14 +152,6 @@ function Courses() {
         {/* Vertically Scrollable Courses Section */}
         <div className="overflow-y-auto h-[75vh] pb-10 pr-2">
           {loading ? (
-<<<<<<< HEAD
-            <p className="text-center text-gray-500">Loading...</p>
-          ) : !courses || courses.length === 0 ? (
-            // Check if courses array is empty or undefined
-            <p className="text-center text-gray-500">
-              No course posted yet by admin
-            </p>
-=======
             <p className="text-center text-gray-500 font-medium">Loading courses...</p>
           ) : courses.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
@@ -182,7 +160,6 @@ function Courses() {
               </div>
               <p className="text-gray-500 font-medium">No courses posted yet by admin</p>
             </div>
->>>>>>> courseship-update
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {courses.map((course) => (
@@ -190,25 +167,6 @@ function Courses() {
                   key={course._id}
                   className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover border border-gray-100 flex flex-col"
                 >
-<<<<<<< HEAD
-                  <img
-                    src={course.image?.url || '/placeholder.jpg'}
-                    alt={course.title || 'Course'}
-                    className="rounded mb-4"
-                  />
-                  <h2 className="font-bold text-lg mb-2">{course.title || 'Untitled Course'}</h2>
-                  <p className="text-gray-600 mb-4">
-                    {course.description && course.description.length > 100
-                      ? `${course.description.slice(0, 100)}...`
-                      : course.description || "No description available"}
-                  </p>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="font-bold text-xl">
-                      ₹{course.price || 0}{" "}
-                      <span className="text-gray-500 line-through">5999</span>
-                    </span>
-                    <span className="text-green-600">20% off</span>
-=======
                   <div className="relative">
                     <img
                       src={course.image.url}
@@ -218,7 +176,6 @@ function Courses() {
                     <div className="absolute top-4 right-4 bg-purple-400 text-white px-3 py-1 rounded-full text-sm font-semibold">
                       Featured
                     </div>
->>>>>>> courseship-update
                   </div>
                   <div className="p-6 flex-1 flex flex-col">
                     <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">{course.title}</h3>
@@ -237,15 +194,6 @@ function Courses() {
                       </span>
                     </div>
 
-<<<<<<< HEAD
-                  {/* Buy page */}
-                  <Link
-                    to={`/buy/${course._id || ''}`} // Pass courseId in URL
-                    className="bg-orange-500 w-full text-white px-4 py-2 rounded-lg hover:bg-blue-900 duration-300"
-                  >
-                    Buy Now
-                  </Link>
-=======
                     {/* Buy page */}
                     <Link
                       to={`/buy/${course._id}`} // Pass courseId in URL
@@ -254,7 +202,6 @@ function Courses() {
                       Buy Now
                     </Link>
                   </div>
->>>>>>> courseship-update
                 </div>
               ))}
             </div>
