@@ -23,6 +23,7 @@ import logo from "../../public/logo.webp";
 function Dashboard() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   const admin = JSON.parse(localStorage.getItem("admin") || "null");
@@ -70,8 +71,28 @@ function Dashboard() {
       <div className="fixed top-20 right-20 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" />
       <div className="fixed bottom-20 left-1/3 w-[450px] h-[450px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" style={{ animationDelay: "2s" }} />
 
+      {/* Mobile Hamburger Button */}
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="lg:hidden fixed top-5 left-5 z-50 p-2.5 rounded-xl glass-card border border-white/10 text-gray-300 hover:text-white shadow-lg"
+      >
+        {isSidebarOpen ? "✕" : "☰"}
+      </button>
+
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div
+          onClick={() => setIsSidebarOpen(false)}
+          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+        />
+      )}
+
       {/* ── ADMIN SIDEBAR ── */}
-      <aside className="w-72 bg-[#0d0d15] border-r border-white/5 flex flex-col p-6 fixed top-0 bottom-0 left-0 z-40 hidden lg:flex">
+      <aside
+        className={`w-72 bg-[#0d0d15] border-r border-white/5 flex flex-col p-6 fixed top-0 bottom-0 left-0 z-40 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
+        }`}
+      >
         {/* Brand */}
         <Link to="/" className="flex items-center gap-3 mb-10 group">
           <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
@@ -142,7 +163,7 @@ function Dashboard() {
 
       {/* ── MAIN ADMIN VIEW ── */}
       <main className="flex-1 lg:ml-72 min-h-screen p-4 sm:p-8 lg:p-12 overflow-y-auto">
-        <div className="max-w-7xl mx-auto space-y-10">
+        <div className="max-w-7xl mx-auto space-y-10 pt-12 lg:pt-0">
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>

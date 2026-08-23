@@ -30,10 +30,7 @@ function App() {
         {/* Admin Routes */}
         <Route path="/admin/signup" element={<AdminSignup />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin/dashboard"
-          element={admin?.token ? <Dashboard /> : <Navigate to="/admin/login" />}
-        />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
         <Route path="/admin/create-course" element={<CourseCreate />} />
         <Route path="/admin/update-course/:id" element={<UpdateCourse />} />
         <Route path="/admin/our-courses" element={<OurCourses />} />
