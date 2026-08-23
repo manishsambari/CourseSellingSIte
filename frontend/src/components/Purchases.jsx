@@ -1,366 +1,51 @@
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { FaDiscourse, FaDownload } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
-import { IoLogIn, IoLogOut } from "react-icons/io5";
-import { RiHome2Fill } from "react-icons/ri";
-import { HiMenu, HiX } from "react-icons/hi";
+import {
+  FaPlay,
+  FaCheck,
+  FaGraduationCap,
+  FaAward,
+  FaClock,
+  FaCode,
+  FaDownload,
+  FaStar,
+  FaArrowRight,
+  FaLock,
+  FaCheckCircle,
+} from "react-icons/fa";
+import {
+  FiBookOpen,
+  FiShoppingBag,
+  FiLogOut,
+  FiLogIn,
+  FiHome,
+  FiUser,
+  FiSearch,
+  FiX,
+  FiLayers,
+  FiFileText,
+  FiExternalLink,
+} from "react-icons/fi";
+import { RiDashboardLine } from "react-icons/ri";
+import { HiMenu, HiX, HiSparkles } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../utils/utils";
 import logo from "../../public/logo.webp";
 
-const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
-
-  .purchases-root {
-    font-family: 'DM Sans', sans-serif;
-    background: #0a0a0f;
-    min-height: 100vh;
-    color: #e8e6f0;
-  }
-
-  .sidebar {
-    background: #0f0f18;
-    border-right: 1px solid rgba(255,255,255,0.06);
-    width: 240px;
-    min-height: 100vh;
-    position: fixed;
-    top: 0; left: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 32px 20px;
-    z-index: 30;
-    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .sidebar-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    letter-spacing: 2px;
-    background: linear-gradient(135deg, #a78bfa, #60a5fa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
-    border-radius: 10px;
-    color: #6b6b80;
-    font-size: 14px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-  }
-
-  .nav-item:hover {
-    background: rgba(167,139,250,0.08);
-    color: #c4b5fd;
-  }
-
-  .nav-item.active {
-    background: rgba(167,139,250,0.12);
-    color: #a78bfa;
-    border: 1px solid rgba(167,139,250,0.2);
-  }
-
-  .nav-item.danger:hover {
-    background: rgba(239,68,68,0.08);
-    color: #f87171;
-  }
-
-  .main-content {
-    margin-left: 240px;
-    padding: 36px 40px;
-    min-height: 100vh;
-  }
-
-  .topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 40px;
-  }
-
-  .page-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 48px;
-    letter-spacing: 3px;
-    background: linear-gradient(135deg, #fff 40%, #a78bfa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-  }
-
-  .count-badge {
-    background: rgba(167,139,250,0.15);
-    color: #a78bfa;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 4px 12px;
-    border-radius: 50px;
-    border: 1px solid rgba(167,139,250,0.2);
-    margin-top: 8px;
-    display: inline-block;
-  }
-
-  .purchases-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
-  }
-
-  .purchase-card {
-    background: #13131f;
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 20px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    animation: fadeUp 0.5s ease both;
-  }
-
-  .purchase-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(167,139,250,0.3);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(167,139,250,0.1);
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .purchase-card:nth-child(1) { animation-delay: 0.05s; }
-  .purchase-card:nth-child(2) { animation-delay: 0.10s; }
-  .purchase-card:nth-child(3) { animation-delay: 0.15s; }
-  .purchase-card:nth-child(4) { animation-delay: 0.20s; }
-  .purchase-card:nth-child(5) { animation-delay: 0.25s; }
-  .purchase-card:nth-child(6) { animation-delay: 0.30s; }
-
-  .card-img-wrap {
-    position: relative;
-    height: 190px;
-    overflow: hidden;
-  }
-
-  .card-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-  }
-
-  .purchase-card:hover .card-img-wrap img {
-    transform: scale(1.06);
-  }
-
-  .card-img-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, #13131f 0%, transparent 60%);
-  }
-
-  .owned-badge {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: rgba(52,211,153,0.85);
-    backdrop-filter: blur(8px);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 50px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-  }
-
-  .card-body {
-    padding: 20px 22px 22px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .card-title {
-    font-size: 17px;
-    font-weight: 600;
-    color: #f0eeff;
-    margin-bottom: 8px;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-desc {
-    font-size: 13px;
-    color: #6b6b80;
-    line-height: 1.6;
-    flex: 1;
-    margin-bottom: 18px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 16px;
-  }
-
-  .price-tag {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    letter-spacing: 1px;
-    color: #34d399;
-  }
-
-  .paid-tag {
-    background: rgba(52,211,153,0.12);
-    color: #34d399;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 50px;
-    border: 1px solid rgba(52,211,153,0.2);
-  }
-
-  .access-btn {
-    display: block;
-    text-align: center;
-    background: linear-gradient(135deg, #059669, #0d9488);
-    color: #fff;
-    padding: 13px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    transition: opacity 0.2s, transform 0.2s;
-    letter-spacing: 0.3px;
-  }
-
-  .access-btn:hover {
-    opacity: 0.9;
-    transform: scale(0.99);
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 80px 20px;
-    color: #4a4a60;
-  }
-
-  .empty-icon {
-    font-size: 56px;
-    margin-bottom: 20px;
-    opacity: 0.2;
-  }
-
-  .browse-btn {
-    display: inline-block;
-    margin-top: 20px;
-    background: linear-gradient(135deg, #7c3aed, #4f46e5);
-    color: #fff;
-    padding: 12px 28px;
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    transition: opacity 0.2s;
-  }
-
-  .browse-btn:hover { opacity: 0.85; }
-
-  .skeleton {
-    background: linear-gradient(90deg, #1a1a28 25%, #22223a 50%, #1a1a28 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: 12px;
-  }
-
-  @keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  .skeleton-card {
-    background: #13131f;
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 20px;
-    overflow: hidden;
-  }
-
-  .hamburger-btn {
-    display: none;
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    z-index: 40;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: #e8e6f0;
-    border-radius: 10px;
-    padding: 8px;
-    cursor: pointer;
-    font-size: 22px;
-  }
-
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 20;
-    backdrop-filter: blur(2px);
-  }
-
-  .error-banner {
-    background: rgba(239,68,68,0.1);
-    border: 1px solid rgba(239,68,68,0.2);
-    color: #f87171;
-    padding: 12px 18px;
-    border-radius: 12px;
-    margin-bottom: 24px;
-    font-size: 14px;
-  }
-
-  @media (max-width: 768px) {
-    .hamburger-btn { display: flex; align-items: center; justify-content: center; }
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); box-shadow: 0 0 60px rgba(0,0,0,0.8); }
-    .sidebar-overlay.open { display: block; }
-    .main-content { margin-left: 0; padding: 24px 16px; }
-    .page-title { font-size: 36px; }
-    .topbar { flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 48px; }
-  }
-`;
-
 function SkeletonCard() {
   return (
-    <div className="skeleton-card">
-      <div className="skeleton" style={{ height: 190 }} />
-      <div style={{ padding: "20px 22px 22px" }}>
-        <div className="skeleton" style={{ height: 18, marginBottom: 10, width: "70%" }} />
-        <div className="skeleton" style={{ height: 13, marginBottom: 6 }} />
-        <div className="skeleton" style={{ height: 13, marginBottom: 20, width: "80%" }} />
-        <div className="skeleton" style={{ height: 44, borderRadius: 12 }} />
+    <div className="glass-card rounded-3xl overflow-hidden border border-white/5 flex flex-col">
+      <div className="skeleton-box h-48 w-full" />
+      <div className="p-6 space-y-4 flex-1 flex flex-col">
+        <div className="skeleton-box h-4 w-1/3 rounded-md" />
+        <div className="skeleton-box h-6 w-3/4 rounded-md" />
+        <div className="skeleton-box h-3 w-full rounded-md" />
+        <div className="skeleton-box h-3 w-4/5 rounded-md" />
+        <div className="pt-4 border-t border-white/5 flex justify-between items-center mt-auto">
+          <div className="skeleton-box h-8 w-20 rounded-md" />
+          <div className="skeleton-box h-10 w-28 rounded-xl" />
+        </div>
       </div>
     </div>
   );
@@ -372,15 +57,23 @@ function Purchases() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  
+  // Interactive Modals
+  const [activeCourseModal, setActiveCourseModal] = useState(null);
+  const [activeCertificateModal, setActiveCertificateModal] = useState(null);
+  const [activeLesson, setActiveLesson] = useState(1);
 
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "null");
   const token = user?.token;
 
   useEffect(() => {
     setIsLoggedIn(!!token);
-    if (!token) navigate("/login");
-  }, []);
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     if (!token) return;
@@ -393,7 +86,8 @@ function Purchases() {
         setPurchases(response.data.courseData || []);
         setErrorMessage("");
       } catch (error) {
-        const errorMsg = error.response?.data?.errors || "Failed to fetch purchase data";
+        const errorMsg =
+          error.response?.data?.errors || "Failed to fetch purchase data";
         setErrorMessage(errorMsg);
         if (error.response?.status === 401) {
           localStorage.removeItem("user");
@@ -408,8 +102,10 @@ function Purchases() {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/user/logout`, { withCredentials: true });
-      toast.success(response.data.message);
+      const response = await axios.get(`${BACKEND_URL}/user/logout`, {
+        withCredentials: true,
+      });
+      toast.success(response.data?.message || "Logged out successfully");
       localStorage.removeItem("user");
       navigate("/login");
       setIsLoggedIn(false);
@@ -418,121 +114,471 @@ function Purchases() {
     }
   };
 
+  const filteredPurchases = useMemo(() => {
+    if (!search.trim()) return purchases;
+    const q = search.toLowerCase();
+    return purchases.filter(
+      (p) =>
+        p.title?.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q)
+    );
+  }, [purchases, search]);
+
+  const mockLessons = [
+    { id: 1, title: "1. Course Overview & Environment Setup", duration: "18m", type: "video" },
+    { id: 2, title: "2. Architecture & Production Best Practices", duration: "25m", type: "video" },
+    { id: 3, title: "3. Building the Core Application Features", duration: "42m", type: "code" },
+    { id: 4, title: "4. State Management, APIs & Database Integration", duration: "35m", type: "video" },
+    { id: 5, title: "5. Automated Testing & Performance Tuning", duration: "28m", type: "code" },
+    { id: 6, title: "6. Production Deployment & Capstone Submission", duration: "30m", type: "project" },
+  ];
+
   return (
-    <>
-      <style>{styles}</style>
-      <div className="purchases-root">
+    <div className="bg-[#0a0a0f] text-[#e8e6f0] min-h-screen flex selection:bg-purple-600 selection:text-white font-sans">
+      {/* Ambient background glows */}
+      <div className="fixed top-20 right-20 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" />
+      <div className="fixed bottom-20 left-1/3 w-[450px] h-[450px] bg-emerald-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" style={{ animationDelay: "2s" }} />
 
-        {/* Hamburger */}
-        <button className="hamburger-btn" onClick={() => setIsSidebarOpen(o => !o)}>
-          {isSidebarOpen ? <HiX /> : <HiMenu />}
-        </button>
+      {/* Mobile Hamburger Button */}
+      <button
+        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        className="lg:hidden fixed top-5 left-5 z-50 p-2.5 rounded-xl glass-card border border-white/10 text-gray-300 hover:text-white shadow-lg"
+      >
+        {isSidebarOpen ? <HiX size={22} /> : <HiMenu size={22} />}
+      </button>
 
-        {/* Overlay */}
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
         <div
-          className={`sidebar-overlay ${isSidebarOpen ? "open" : ""}`}
           onClick={() => setIsSidebarOpen(false)}
+          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
         />
+      )}
 
-        {/* Sidebar */}
-        <aside className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 40 }}>
-            <img src={logo} alt="logo" style={{ width: 36, height: 36, borderRadius: 8, objectFit: "cover" }} />
-            <span className="sidebar-logo">CourseShip</span>
+      {/* ── SIDEBAR ── */}
+      <aside
+        className={`fixed top-0 bottom-0 left-0 z-40 w-72 bg-[#0d0d15] border-r border-white/5 flex flex-col p-6 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+          isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
+        }`}
+      >
+        {/* Brand */}
+        <Link to="/" className="flex items-center gap-3 mb-10 group">
+          <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
+            <img src={logo} alt="CourseShip" className="w-6 h-6 rounded-md object-cover" />
           </div>
-          <nav style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
-            <Link to="/" className="nav-item"><RiHome2Fill size={18} /> Home</Link>
-            <Link to="/courses" className="nav-item"><FaDiscourse size={16} /> Courses</Link>
-            <a href="#" className="nav-item active"><FaDownload size={16} /> Purchases</a>
-            <a href="#" className="nav-item"><IoMdSettings size={18} /> Settings</a>
-          </nav>
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 16 }}>
-            {isLoggedIn ? (
-              <button className="nav-item danger" onClick={handleLogout} style={{ color: "#f87171" }}>
-                <IoLogOut size={18} /> Logout
-              </button>
-            ) : (
-              <Link to="/login" className="nav-item">
-                <IoLogIn size={18} /> Login
-              </Link>
-            )}
+          <div className="flex flex-col">
+            <span className="text-xl font-bold tracking-tight text-white flex items-center gap-1">
+              Course<span className="gradient-text">Ship</span>
+            </span>
+            <span className="text-[10px] text-purple-400 font-mono tracking-widest uppercase">Student Portal</span>
           </div>
-        </aside>
+        </Link>
 
-        {/* Main */}
-        <main className="main-content">
-          <div className="topbar">
+        {/* Navigation */}
+        <nav className="space-y-1.5 flex-1 text-sm font-medium">
+          <Link
+            to="/"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition"
+          >
+            <FiHome size={18} />
+            <span>Home</span>
+          </Link>
+          <Link
+            to="/courses"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition"
+          >
+            <FiBookOpen size={18} />
+            <span>All Courses</span>
+          </Link>
+          <Link
+            to="/purchases"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-600/15 text-purple-300 border border-purple-500/25 font-semibold"
+          >
+            <FiShoppingBag size={18} className="text-purple-400" />
+            <span>My Learning</span>
+          </Link>
+          <Link
+            to="/admin/login"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-purple-400 hover:bg-white/5 transition"
+          >
+            <RiDashboardLine size={18} />
+            <span>Admin Portal</span>
+          </Link>
+        </nav>
+
+        {/* User Card & Logout */}
+        <div className="pt-6 border-t border-white/5 space-y-4">
+          <div className="glass-card p-3 rounded-2xl flex items-center gap-3 border border-white/5">
+            <div className="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center text-white font-bold text-sm shadow-sm flex-shrink-0">
+              {user?.user?.firstName ? user.user.firstName[0].toUpperCase() : <FiUser />}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-bold text-white truncate">
+                {user?.user?.firstName} {user?.user?.lastName}
+              </div>
+              <div className="text-[11px] text-gray-400 truncate">{user?.user?.email}</div>
+            </div>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/20 text-red-400 hover:bg-red-500/10 text-xs font-semibold transition"
+          >
+            <FiLogOut size={14} />
+            <span>Log Out</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* ── MAIN CONTENT AREA ── */}
+      <main className="flex-1 lg:ml-72 min-h-screen p-4 sm:p-8 lg:p-12 overflow-y-auto">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Bar */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pt-12 lg:pt-0">
             <div>
-              <div className="page-title">My Purchases</div>
-              {!loading && (
-                <span className="count-badge">
-                  {purchases.length} course{purchases.length !== 1 ? "s" : ""} owned
-                </span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold uppercase tracking-wider mb-2">
+                <FaGraduationCap /> Student Dashboard
+              </div>
+              <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+                My Enrolled Courses
+              </h1>
+              <p className="text-gray-400 text-sm mt-1">
+                Access your active masterclasses, source codes, and certificates.
+              </p>
+            </div>
+
+            {/* Search within Purchases */}
+            <div className="relative w-full sm:w-72">
+              <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <input
+                type="text"
+                placeholder="Search your library..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-11 pr-10 py-3 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                >
+                  <FiX size={16} />
+                </button>
               )}
             </div>
           </div>
 
-          {/* Error */}
-          {errorMessage && (
-            <div className="error-banner">⚠ {errorMessage}</div>
+          {/* Quick Learning Stats Row */}
+          {!loading && purchases.length > 0 && (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
+              <div className="glass-card p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl gradient-bg flex items-center justify-center text-white text-lg shadow-glow">
+                  <FiBookOpen />
+                </div>
+                <div>
+                  <div className="text-2xl font-black text-white font-mono">{purchases.length}</div>
+                  <div className="text-xs text-gray-400">Courses Enrolled</div>
+                </div>
+              </div>
+
+              <div className="glass-card p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg">
+                  <FaClock />
+                </div>
+                <div>
+                  <div className="text-2xl font-black text-white font-mono">{purchases.length * 18}h</div>
+                  <div className="text-xs text-gray-400">Hours of Content</div>
+                </div>
+              </div>
+
+              <div className="glass-card p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">
+                  <FaAward />
+                </div>
+                <div>
+                  <div className="text-2xl font-black text-white font-mono">{purchases.length}</div>
+                  <div className="text-xs text-gray-400">Certificates Earned</div>
+                </div>
+              </div>
+
+              <div className="glass-card p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-lg">
+                  <FaCode />
+                </div>
+                <div>
+                  <div className="text-2xl font-black text-white font-mono">{purchases.length * 4}</div>
+                  <div className="text-xs text-gray-400">Projects Available</div>
+                </div>
+              </div>
+            </div>
           )}
 
-          {/* Grid */}
-          {loading ? (
-            <div className="purchases-grid">
-              {[...Array(4)].map((_, i) => <SkeletonCard key={i} />)}
+          {/* Error Banner if any */}
+          {errorMessage && (
+            <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm mb-6 flex items-center gap-3">
+              <span>⚠️</span>
+              <span>{errorMessage}</span>
             </div>
-          ) : purchases.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">🎒</div>
-              <p style={{ fontSize: 20, fontWeight: 600, color: "#6b6b80", marginBottom: 8 }}>
-                No purchases yet
+          )}
+
+          {/* Courses Grid */}
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[...Array(3)].map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : filteredPurchases.length === 0 ? (
+            <div className="glass-card rounded-3xl p-16 text-center border border-white/5">
+              <div className="w-16 h-16 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center mx-auto mb-4 text-2xl">
+                <FiShoppingBag />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-2">
+                {search ? "No matching enrolled courses" : "Your learning shelf is empty"}
+              </h3>
+              <p className="text-gray-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
+                {search
+                  ? "Try searching for a different keyword or view all your enrolled courses."
+                  : "You have not enrolled in any masterclasses yet. Explore our curated catalog and start building real projects today."}
               </p>
-              <p style={{ fontSize: 14, color: "#4a4a60" }}>
-                Start learning by enrolling in a course below.
-              </p>
-              <Link to="/courses" className="browse-btn">Browse Courses →</Link>
+              <Link
+                to="/courses"
+                className="btn-primary px-8 py-3.5 rounded-2xl text-sm font-bold shadow-glow inline-flex items-center gap-2"
+              >
+                <span>Browse All Courses</span>
+                <FaArrowRight size={14} />
+              </Link>
             </div>
           ) : (
-            <div className="purchases-grid">
-              {purchases.map((purchase, index) => (
-                <div key={purchase._id || index} className="purchase-card">
-                  <div className="card-img-wrap">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredPurchases.map((purchase, idx) => (
+                <div
+                  key={purchase._id || idx}
+                  className="glass-card-hover rounded-3xl overflow-hidden flex flex-col group border border-white/5"
+                >
+                  {/* Thumbnail */}
+                  <div className="relative h-48 overflow-hidden">
                     <img
-                      src={purchase.image?.url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"}
+                      src={
+                        purchase.image?.url ||
+                        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
+                      }
                       alt={purchase.title || "Course"}
-                      onError={e => { e.target.src = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"; }}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600";
+                      }}
                     />
-                    <div className="card-img-overlay" />
-                    <span className="owned-badge">✓ Owned</span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#13131f] via-transparent to-transparent opacity-80" />
+                    <span className="absolute top-4 right-4 bg-emerald-500/90 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1.5">
+                      <FaCheckCircle size={11} /> Owned
+                    </span>
                   </div>
-                  <div className="card-body">
-                    <h3 className="card-title">{purchase.title || "Untitled Course"}</h3>
-                    <p className="card-desc">
-                      {/* BUG FIX: safely access description */}
-                      {purchase.description
-                        ? purchase.description.length > 100
-                          ? `${purchase.description.slice(0, 100)}...`
-                          : purchase.description
-                        : "No description available."}
+
+                  {/* Body */}
+                  <div className="p-6 flex-1 flex flex-col">
+                    <h3 className="text-lg font-bold text-white group-hover:text-purple-300 transition-colors mb-2 line-clamp-2">
+                      {purchase.title || "Untitled Course"}
+                    </h3>
+
+                    <p className="text-gray-400 text-sm line-clamp-2 mb-6 flex-1">
+                      {purchase.description ||
+                        "Full curriculum with practical coding labs, starter code, and verified certificate."}
                     </p>
-                    <div className="card-footer">
-                      <span className="price-tag">
-                        ₹{purchase.price ?? "—"}
-                      </span>
-                      <span className="paid-tag">✓ Paid</span>
+
+                    {/* Progress Indicator */}
+                    <div className="mb-6 space-y-2">
+                      <div className="flex justify-between text-xs text-gray-400 font-medium">
+                        <span>Course Progress</span>
+                        <span className="text-emerald-400 font-bold">100% Ready</span>
+                      </div>
+                      <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-purple-500 to-emerald-400 rounded-full w-3/4" />
+                      </div>
                     </div>
-                    <Link to={`/course/${purchase._id}`} className="access-btn">
-                      Access Course →
-                    </Link>
+
+                    {/* Action buttons */}
+                    <div className="grid grid-cols-2 gap-3 pt-2 border-t border-white/5">
+                      <button
+                        onClick={() => setActiveCourseModal(purchase)}
+                        className="btn-primary py-2.5 px-3 rounded-xl text-xs font-bold shadow-glow flex items-center justify-center gap-1.5"
+                      >
+                        <FaPlay size={10} />
+                        <span>Start Learning</span>
+                      </button>
+                      <button
+                        onClick={() => setActiveCertificateModal(purchase)}
+                        className="btn-secondary py-2.5 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 hover:border-emerald-500/40 hover:text-emerald-300"
+                      >
+                        <FaAward size={13} className="text-yellow-400" />
+                        <span>Certificate</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </main>
-      </div>
-    </>
+        </div>
+      </main>
+
+      {/* ── COURSE LEARNING PLAYER MODAL ── */}
+      {activeCourseModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="glass-card w-full max-w-4xl rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col max-h-[90vh]">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#13131f]">
+              <div className="min-w-0 pr-4">
+                <span className="text-xs font-bold text-purple-400 uppercase tracking-wider">
+                  Course Learning Portal
+                </span>
+                <h3 className="text-xl font-bold text-white truncate mt-0.5">
+                  {activeCourseModal.title}
+                </h3>
+              </div>
+              <button
+                onClick={() => setActiveCourseModal(null)}
+                className="w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition"
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 overflow-y-auto flex-1 grid lg:grid-cols-12 gap-6 bg-[#0a0a0f]">
+              {/* Left Video Player Simulation */}
+              <div className="lg:col-span-7 space-y-4">
+                <div className="relative aspect-video rounded-2xl bg-black overflow-hidden border border-white/10 flex items-center justify-center group">
+                  <img
+                    src={activeCourseModal.image?.url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"}
+                    alt="Lesson preview"
+                    className="w-full h-full object-cover opacity-40"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div className="w-16 h-16 rounded-full gradient-bg flex items-center justify-center text-white shadow-glow hover:scale-110 transition cursor-pointer mb-2">
+                      <FaPlay size={20} className="ml-1" />
+                    </div>
+                    <span className="text-xs font-medium text-gray-300 bg-black/60 px-3 py-1 rounded-full border border-white/10">
+                      Playing Lesson #{activeLesson}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="glass-card p-4 rounded-2xl border border-white/5 space-y-2">
+                  <div className="text-sm font-bold text-white">Lesson Resources & Downloads</div>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    <a
+                      href="https://github.com"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-purple-300 flex items-center gap-1.5 border border-purple-500/20"
+                    >
+                      <FaCode /> Starter GitHub Repo <FiExternalLink size={11} />
+                    </a>
+                    <button
+                      onClick={() => toast.success("Resource package downloaded!")}
+                      className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-emerald-300 flex items-center gap-1.5 border border-emerald-500/20"
+                    >
+                      <FaDownload /> Download Cheat Sheet
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Curriculum / Lessons List */}
+              <div className="lg:col-span-5 space-y-3">
+                <div className="text-sm font-bold text-white flex justify-between items-center mb-2">
+                  <span>Course Syllabus</span>
+                  <span className="text-xs text-purple-400 font-mono">6 Modules</span>
+                </div>
+                <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1">
+                  {mockLessons.map((lesson) => (
+                    <button
+                      key={lesson.id}
+                      onClick={() => setActiveLesson(lesson.id)}
+                      className={`w-full text-left p-3.5 rounded-xl border text-xs font-medium transition flex items-center justify-between ${
+                        activeLesson === lesson.id
+                          ? "bg-purple-600/20 border-purple-500/40 text-purple-200"
+                          : "bg-white/5 border-white/5 text-gray-400 hover:text-white hover:bg-white/10"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 truncate">
+                        {activeLesson === lesson.id ? (
+                          <FaPlay className="text-purple-400 flex-shrink-0 text-[10px]" />
+                        ) : (
+                          <FaCheckCircle className="text-emerald-500 flex-shrink-0 text-[11px]" />
+                        )}
+                        <span className="truncate">{lesson.title}</span>
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono ml-2 flex-shrink-0">
+                        {lesson.duration}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── CERTIFICATE VIEWER MODAL ── */}
+      {activeCertificateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="glass-card w-full max-w-2xl rounded-3xl overflow-hidden border border-white/10 shadow-2xl p-6 sm:p-10 relative">
+            <button
+              onClick={() => setActiveCertificateModal(null)}
+              className="absolute top-6 right-6 w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center transition"
+            >
+              <FiX size={20} />
+            </button>
+
+            {/* Certificate Canvas Preview */}
+            <div className="p-8 rounded-2xl border-2 border-yellow-500/30 bg-gradient-to-b from-[#181829] to-[#0c0c14] text-center relative overflow-hidden shadow-2xl">
+              <div className="w-16 h-16 rounded-full gradient-bg flex items-center justify-center text-white mx-auto mb-4 shadow-glow">
+                <FaAward size={28} />
+              </div>
+              <span className="text-[11px] font-mono tracking-widest text-purple-400 uppercase">
+                Certificate of Completion
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white mt-2 mb-2 font-serif">
+                {user?.user?.firstName} {user?.user?.lastName || "Developer"}
+              </h2>
+              <p className="text-xs text-gray-400 max-w-md mx-auto mb-4">
+                has successfully demonstrated proficiency and completed all practical capstone projects for
+              </p>
+              <h3 className="text-lg font-bold gradient-text mb-6">
+                {activeCertificateModal.title}
+              </h3>
+
+              <div className="flex justify-between items-center text-[10px] text-gray-500 border-t border-white/10 pt-4 font-mono">
+                <span>ID: CS-{Math.random().toString(36).substring(2, 9).toUpperCase()}</span>
+                <span>Date: {new Date().toLocaleDateString()}</span>
+                <span>CourseShip Verified</span>
+              </div>
+            </div>
+
+            <div className="flex gap-4 justify-center mt-6">
+              <button
+                onClick={() => toast.success("Certificate PDF downloading!")}
+                className="btn-primary px-6 py-3 rounded-xl text-xs font-bold shadow-glow flex items-center gap-2"
+              >
+                <FaDownload /> Download Certificate PDF
+              </button>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast.success("Certificate link copied to clipboard!");
+                }}
+                className="btn-secondary px-6 py-3 rounded-xl text-xs font-semibold"
+              >
+                Share Certificate Link
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

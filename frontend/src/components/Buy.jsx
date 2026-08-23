@@ -1,105 +1,25 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import toast from "react-hot-toast";
 import { BACKEND_URL } from "../utils/utils";
-import { FaArrowLeft, FaShieldAlt, FaLock, FaCreditCard, FaPaypal, FaGooglePay, FaApplePay } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaShieldAlt,
+  FaLock,
+  FaCreditCard,
+  FaPaypal,
+  FaGooglePay,
+  FaApplePay,
+  FaCheck,
+  FaStar,
+  FaQrcode,
+} from "react-icons/fa";
 import { SiVisa, SiMastercard } from "react-icons/si";
-import { BiCreditCard } from "react-icons/bi";
+import { FiCheckCircle, FiHelpCircle, FiClock, FiAward, FiCopy } from "react-icons/fi";
+import { HiSparkles } from "react-icons/hi";
 import logo from "../../public/logo.webp";
-
-const styles = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap');
-  
-  .buy-root {
-    font-family: 'DM Sans', sans-serif;
-    background: #0a0a0f;
-    min-height: 100vh;
-    color: #e8e6f0;
-  }
-  
-  .glow-card {
-    background: linear-gradient(135deg, rgba(30,30,45,0.95) 0%, rgba(20,20,35,0.98) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(167,139,250,0.15);
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 0 1px rgba(167,139,250,0.05);
-  }
-  
-  .price-glow {
-    background: linear-gradient(135deg, #a78bfa, #60a5fa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .stripe-element {
-    padding: 16px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    transition: all 0.2s ease;
-  }
-  
-  .stripe-element:focus-within {
-    border-color: rgba(167,139,250,0.5);
-    background: rgba(167,139,250,0.05);
-    box-shadow: 0 0 0 3px rgba(167,139,250,0.1);
-  }
-  
-  .payment-method-btn {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 12px;
-    transition: all 0.2s ease;
-    cursor: pointer;
-  }
-  
-  .payment-method-btn:hover {
-    background: rgba(167,139,250,0.08);
-    border-color: rgba(167,139,250,0.3);
-    transform: translateY(-1px);
-  }
-  
-  .payment-method-btn.active {
-    background: rgba(167,139,250,0.12);
-    border-color: #a78bfa;
-    box-shadow: 0 0 0 1px #a78bfa;
-  }
-  
-  .order-item {
-    background: rgba(255,255,255,0.02);
-    border-radius: 20px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,0.05);
-  }
-  
-  .secure-badge {
-    background: rgba(52,211,153,0.1);
-    border: 1px solid rgba(52,211,153,0.2);
-    border-radius: 100px;
-    padding: 8px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    color: #34d399;
-  }
-  
-  @keyframes fadeSlideUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  
-  .animate-fade-up {
-    animation: fadeSlideUp 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
-  }
-  
-  .card-brand-icons {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-`;
 
 function Buy() {
   const { courseId } = useParams();
@@ -111,8 +31,9 @@ function Buy() {
   const [error, setError] = useState("");
   const [activeMethod, setActiveMethod] = useState("card");
   const [cardError, setCardError] = useState("");
+  const [showTestCardInfo, setShowTestCardInfo] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user") || "null");
   const token = user?.token;
 
   const stripe = useStripe();
@@ -135,14 +56,14 @@ function Buy() {
             withCredentials: true,
           }
         );
-        setCourse(response.data.course);
-        setClientSecret(response.data.clientSecret);
+        setCourse(response.data.course || {});
+        setClientSecret(response.data.clientSecret || "");
       } catch (error) {
         if (error?.response?.status === 400) {
-          setError("You have already purchased this course");
-          setTimeout(() => navigate("/purchases"), 2000);
+          setError("You have already enrolled in this course!");
+          setTimeout(() => navigate("/purchases"), 2500);
         } else {
-          setError(error?.response?.data?.errors || "Something went wrong");
+          setError(error?.response?.data?.errors || "Checkout failed to initialize");
         }
       } finally {
         setInitialLoading(false);
@@ -154,24 +75,25 @@ function Buy() {
   const handlePurchase = async (event) => {
     event.preventDefault();
     if (!stripe || !elements || !clientSecret) {
-      toast.error("Payment system not ready. Please try again.");
+      toast.error("Payment system not ready. Please refresh.");
       return;
     }
 
     setLoading(true);
+    setCardError("");
     const cardElement = elements.getElement(CardElement);
     if (!cardElement) {
       setLoading(false);
       return;
     }
 
-    const { error: pmError, paymentMethod } = await stripe.createPaymentMethod({
+    const { error: pmError } = await stripe.createPaymentMethod({
       type: "card",
       card: cardElement,
     });
 
     if (pmError) {
-      setCardError(pmError.message);
+      setCardError(pmError.message || "Invalid card details");
       setLoading(false);
       return;
     }
@@ -182,7 +104,7 @@ function Buy() {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name: user?.user?.firstName,
+            name: `${user?.user?.firstName || ""} ${user?.user?.lastName || ""}`.trim() || "Student",
             email: user?.user?.email,
           },
         },
@@ -190,27 +112,27 @@ function Buy() {
     );
 
     if (confirmError) {
-      setCardError(confirmError.message);
+      setCardError(confirmError.message || "Payment confirmation failed");
       setLoading(false);
-    } else if (paymentIntent.status === "succeeded") {
+    } else if (paymentIntent?.status === "succeeded") {
       const paymentInfo = {
         email: user?.user?.email,
-        userId: user.user._id,
+        userId: user?.user?._id,
         courseId: courseId,
         paymentId: paymentIntent.id,
         amount: paymentIntent.amount,
         status: paymentIntent.status,
       };
-      
+
       try {
         await axios.post(`${BACKEND_URL}/order`, paymentInfo, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
-        toast.success("Payment Successful! 🎉");
+        toast.success("Payment Successful! Welcome aboard 🎉");
         navigate("/purchases");
       } catch (err) {
-        toast.error("Payment recorded but order failed. Contact support.");
+        toast.error("Payment confirmed, but order record failed. Please contact support.");
       }
     }
     setLoading(false);
@@ -218,12 +140,10 @@ function Buy() {
 
   if (initialLoading) {
     return (
-      <div className="buy-root">
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 border-3 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-400">Loading secure checkout...</p>
-          </div>
+      <div className="bg-[#0a0a0f] text-[#e8e6f0] min-h-screen flex items-center justify-center font-sans">
+        <div className="text-center space-y-4">
+          <div className="w-14 h-14 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mx-auto shadow-glow" />
+          <p className="text-gray-400 text-sm font-medium">Initializing secure checkout session...</p>
         </div>
       </div>
     );
@@ -231,226 +151,302 @@ function Buy() {
 
   if (error) {
     return (
-      <div className="buy-root">
-        <div className="min-h-screen flex items-center justify-center px-4">
-          <div className="glow-card rounded-2xl p-8 max-w-md text-center animate-fade-up">
-            <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-white mb-2">Checkout Unavailable</h2>
-            <p className="text-gray-400 mb-6">{error}</p>
-            <Link to="/purchases" className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium">
-              <FaArrowLeft size={14} /> Go to My Purchases
-            </Link>
+      <div className="bg-[#0a0a0f] text-[#e8e6f0] min-h-screen flex items-center justify-center px-4 font-sans">
+        <div className="glass-card rounded-3xl p-8 sm:p-10 max-w-md w-full text-center border border-white/10 shadow-2xl">
+          <div className="w-16 h-16 bg-red-500/10 text-red-400 rounded-2xl flex items-center justify-center mx-auto mb-6 text-2xl">
+            <FaShieldAlt />
           </div>
+          <h2 className="text-2xl font-bold text-white mb-2">Enrollment Notice</h2>
+          <p className="text-gray-400 text-sm mb-8 leading-relaxed">{error}</p>
+          <Link
+            to="/purchases"
+            className="btn-primary w-full py-3.5 rounded-xl text-sm font-bold shadow-glow flex items-center justify-center gap-2"
+          >
+            <FaArrowLeft size={13} />
+            <span>Go to My Enrolled Courses</span>
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <>
-      <style>{styles}</style>
-      <div className="buy-root">
-        {/* Simple Header */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/5">
-          <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-3">
-              <img src={logo} alt="CourseShip" className="w-10 h-10 rounded-xl object-cover" />
-              <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">CourseShip</span>
-            </Link>
-            <Link to="/courses" className="text-gray-400 hover:text-white transition flex items-center gap-2">
-              <FaArrowLeft size={14} /> Back to Courses
-            </Link>
-          </div>
-        </header>
+    <div className="bg-[#0a0a0f] text-[#e8e6f0] min-h-screen selection:bg-purple-600 selection:text-white font-sans">
+      {/* Ambient background glows */}
+      <div className="fixed top-20 right-20 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" />
+      <div className="fixed bottom-20 left-1/4 w-[450px] h-[450px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" style={{ animationDelay: "2s" }} />
 
-        {/* Main Content */}
-        <div className="max-w-6xl mx-auto px-4 pt-28 pb-16">
-          <div className="grid lg:grid-cols-5 gap-8 animate-fade-up">
-            {/* Order Summary - Left Side */}
-            <div className="lg:col-span-2 order-2 lg:order-1">
-              <div className="glow-card rounded-2xl overflow-hidden sticky top-28">
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={course.image?.url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"} 
-                    alt={course.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f18] via-transparent to-transparent"></div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">{course.title}</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                    {course.description || "Comprehensive course with expert instruction, hands-on projects, and lifetime access."}
+      {/* ── HEADER ── */}
+      <header className="fixed top-0 left-0 right-0 z-50 glass-nav">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
+              <img src={logo} alt="CourseShip" className="w-6 h-6 rounded-md object-cover" />
+            </div>
+            <span className="text-xl font-bold text-white tracking-tight">CourseShip</span>
+          </Link>
+          <Link
+            to="/courses"
+            className="text-xs font-semibold text-gray-400 hover:text-white transition flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10"
+          >
+            <FaArrowLeft size={11} />
+            <span>Back to Courses</span>
+          </Link>
+        </div>
+      </header>
+
+      {/* ── MAIN CHECKOUT LAYOUT ── */}
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* LEFT: Order Summary */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl space-y-6">
+              <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-purple-400 font-mono">
+                  Order Summary
+                </span>
+                <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-bold border border-emerald-500/20">
+                  Instant Access
+                </span>
+              </div>
+
+              {/* Course Card Preview */}
+              <div className="flex gap-4 items-center">
+                <img
+                  src={
+                    course.image?.url ||
+                    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
+                  }
+                  alt={course.title}
+                  className="w-20 h-20 rounded-2xl object-cover border border-white/10 flex-shrink-0"
+                />
+                <div className="min-w-0">
+                  <h3 className="text-base font-bold text-white line-clamp-2 leading-snug">
+                    {course.title}
+                  </h3>
+                  <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                    <FiClock /> Full Lifetime Access
                   </p>
-                  
-                  <div className="border-t border-white/10 pt-6 space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-400">Order Total</span>
-                      <div className="text-right">
-                        <span className="text-3xl font-bold price-glow">₹{course.price}</span>
-                        <span className="text-gray-500 text-sm line-through ml-2">₹5,999</span>
-                      </div>
-                    </div>
-                    <div className="flex justify-between text-sm text-gray-400">
-                      <span>Course fee</span>
-                      <span>₹{course.price}</span>
-                    </div>
-                    <div className="flex justify-between text-sm text-gray-400">
-                      <span>Tax (GST)</span>
-                      <span>Included</span>
-                    </div>
-                    <div className="border-t border-white/10 pt-4 mt-2">
-                      <div className="flex justify-between font-semibold text-white">
-                        <span>Total Amount</span>
-                        <span className="text-xl price-glow">₹{course.price}</span>
-                      </div>
-                    </div>
+                </div>
+              </div>
+
+              {/* What You Get Checklist */}
+              <div className="space-y-2.5 pt-4 border-t border-white/5 text-xs text-gray-300">
+                <div className="font-semibold text-white mb-2">Included in this enrollment:</div>
+                {[
+                  "Complete video curriculum with HD streaming",
+                  "Full starter code & production repositories",
+                  "Certificate of completion (verifiable)",
+                  "24/7 student Discord community support",
+                  "30-day money-back guarantee",
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <FaCheck className="text-emerald-400 text-[10px] flex-shrink-0" />
+                    <span>{item}</span>
                   </div>
+                ))}
+              </div>
+
+              {/* Price Breakdown */}
+              <div className="pt-6 border-t border-white/5 space-y-3 text-sm">
+                <div className="flex justify-between text-gray-400">
+                  <span>Regular Price</span>
+                  <span className="line-through font-mono">₹{Number(course.price || 0) * 4 || 4999}</span>
+                </div>
+                <div className="flex justify-between text-emerald-400 font-medium">
+                  <span>Special Promotion (75% OFF)</span>
+                  <span className="font-mono">-₹{(Number(course.price || 0) * 3) || 3999}</span>
+                </div>
+                <div className="flex justify-between text-gray-400">
+                  <span>Estimated Tax & GST</span>
+                  <span className="text-emerald-400">Included</span>
+                </div>
+                <div className="pt-4 border-t border-white/10 flex justify-between items-baseline">
+                  <span className="text-base font-bold text-white">Total Amount Due</span>
+                  <span className="text-3xl font-black gradient-text font-mono">
+                    ₹{course.price}
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Payment Section - Right Side */}
-            <div className="lg:col-span-3 order-1 lg:order-2">
-              <div className="glow-card rounded-2xl p-6 md:p-8">
-                <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-                  <h2 className="text-2xl font-bold text-white">Complete Payment</h2>
-                  <div className="secure-badge flex items-center gap-2">
-                    <FaLock size={12} /> Secured by Stripe
+            {/* Test Credentials Helper Card */}
+            <div className="glass-card rounded-2xl p-4 border border-purple-500/20 text-xs space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-purple-300 flex items-center gap-1.5">
+                  <HiSparkles /> Testing Checkout?
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setShowTestCardInfo(!showTestCardInfo)}
+                  className="text-[11px] text-purple-400 hover:text-purple-300 underline"
+                >
+                  {showTestCardInfo ? "Hide Test Info" : "View Test Card"}
+                </button>
+              </div>
+              {showTestCardInfo && (
+                <div className="bg-purple-950/40 p-3 rounded-xl border border-purple-500/20 font-mono text-[11px] space-y-1 text-purple-200">
+                  <div>Card Number: <strong>4242 4242 4242 4242</strong></div>
+                  <div>Expiry: <strong>12/28</strong> · CVC: <strong>123</strong></div>
+                  <div>Postal Code: <strong>Any (e.g. 560001)</strong></div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* RIGHT: Payment Options & Card Element */}
+          <div className="lg:col-span-7">
+            <div className="glass-card rounded-3xl p-6 sm:p-10 border border-white/10 shadow-2xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+                <div>
+                  <h2 className="text-2xl font-black text-white tracking-tight">Payment Details</h2>
+                  <p className="text-xs text-gray-400 mt-1">Select your preferred payment method</p>
+                </div>
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold border border-emerald-500/20">
+                  <FaLock size={10} /> 256-Bit Encrypted
+                </div>
+              </div>
+
+              {/* Payment Method Selector Tabs */}
+              <div className="grid grid-cols-4 gap-2.5 mb-8">
+                {[
+                  { id: "card", icon: <FaCreditCard size={18} />, label: "Credit Card" },
+                  { id: "upi", icon: <FaQrcode size={18} />, label: "UPI / QR" },
+                  { id: "paypal", icon: <FaPaypal size={18} />, label: "PayPal" },
+                  { id: "gpay", icon: <FaGooglePay size={20} />, label: "Google Pay" },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setActiveMethod(tab.id)}
+                    className={`p-3 rounded-2xl border text-xs font-semibold flex flex-col items-center gap-2 transition-all ${
+                      activeMethod === tab.id
+                        ? "bg-purple-600/20 border-purple-500 text-purple-300 shadow-glow"
+                        : "bg-white/5 border-white/5 text-gray-400 hover:text-white hover:bg-white/10"
+                    }`}
+                  >
+                    <span>{tab.icon}</span>
+                    <span className="text-[11px] truncate w-full text-center">{tab.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Card Form */}
+              {activeMethod === "card" && (
+                <form onSubmit={handlePurchase} className="space-y-6">
+                  {/* Card Brand Header */}
+                  <div className="flex items-center justify-between text-xs text-gray-400">
+                    <label className="font-semibold text-gray-300">Card Information</label>
+                    <div className="flex items-center gap-2 text-xl text-gray-400">
+                      <SiVisa />
+                      <SiMastercard />
+                    </div>
                   </div>
-                </div>
 
-                {/* Payment Methods Tabs */}
-                <div className="grid grid-cols-4 gap-2 mb-8">
-                  {[
-                    { id: "card", icon: <FaCreditCard />, label: "Card" },
-                    { id: "paypal", icon: <FaPaypal />, label: "PayPal" },
-                    { id: "gpay", icon: <FaGooglePay />, label: "Google Pay" },
-                    { id: "apple", icon: <FaApplePay />, label: "Apple Pay" },
-                  ].map((method) => (
-                    <button
-                      key={method.id}
-                      onClick={() => setActiveMethod(method.id)}
-                      className={`payment-method-btn flex flex-col items-center gap-2 text-sm font-medium transition-all ${
-                        activeMethod === method.id ? "active text-purple-400" : "text-gray-400"
-                      }`}
-                    >
-                      <span className="text-xl">{method.icon}</span>
-                      <span>{method.label}</span>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Card Payment Form */}
-                {activeMethod === "card" && (
-                  <form onSubmit={handlePurchase}>
-                    <div className="space-y-6">
-                      {/* Card Brand Icons */}
-                      <div className="flex justify-end gap-2 mb-2">
-                        <SiVisa className="text-2xl text-gray-500" />
-                        <SiMastercard className="text-2xl text-gray-500" />
-                        <BiCreditCard className="text-2xl text-gray-500" />
-                      </div>
-                      
-                      {/* Stripe Card Element */}
-                      <div className="stripe-element">
-                        <CardElement
-                          options={{
-                            style: {
-                              base: {
-                                fontSize: "16px",
-                                color: "#e8e6f0",
-                                fontFamily: "'DM Sans', sans-serif",
-                                "::placeholder": { color: "#4a4a60" },
-                                iconColor: "#a78bfa",
-                              },
-                              invalid: { color: "#f87171" },
+                  {/* Stripe Card Element Container */}
+                  <div className="p-4 rounded-2xl glass-input">
+                    <CardElement
+                      options={{
+                        style: {
+                          base: {
+                            fontSize: "15px",
+                            color: "#ffffff",
+                            fontFamily: "Inter, sans-serif",
+                            "::placeholder": {
+                              color: "#6b7280",
                             },
-                            hidePostalCode: true,
-                          }}
-                        />
-                      </div>
-
-                      {cardError && (
-                        <p className="text-red-400 text-sm flex items-center gap-2">
-                          <span>⚠️</span> {cardError}
-                        </p>
-                      )}
-
-                      {/* Contact Info Display */}
-                      <div className="bg-purple-500/5 rounded-xl p-4 border border-purple-500/10">
-                        <p className="text-sm text-gray-400 mb-1">Billing contact</p>
-                        <p className="text-white font-medium">{user?.user?.firstName} {user?.user?.lastName}</p>
-                        <p className="text-gray-400 text-sm">{user?.user?.email}</p>
-                      </div>
-
-                      {/* Submit Button */}
-                      <button
-                        type="submit"
-                        disabled={!stripe || loading}
-                        className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-4 rounded-xl transition-all duration-200 transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-3 text-lg"
-                      >
-                        {loading ? (
-                          <>
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                            Processing Payment...
-                          </>
-                        ) : (
-                          <>
-                            <FaLock size={16} /> Pay ₹{course.price}
-                          </>
-                        )}
-                      </button>
-
-                      {/* Secure Notice */}
-                      <div className="flex items-center justify-center gap-2 text-xs text-gray-500 pt-2">
-                        <FaShieldAlt size={12} />
-                        <span>Your payment information is encrypted and secure</span>
-                      </div>
-                    </div>
-                  </form>
-                )}
-
-                {/* Placeholder for other payment methods */}
-                {activeMethod !== "card" && (
-                  <div className="text-center py-12">
-                    <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      {activeMethod === "paypal" && <FaPaypal className="text-3xl text-blue-400" />}
-                      {activeMethod === "gpay" && <FaGooglePay className="text-3xl text-green-400" />}
-                      {activeMethod === "apple" && <FaApplePay className="text-3xl text-gray-300" />}
-                    </div>
-                    <h3 className="text-white font-semibold mb-2">Coming Soon</h3>
-                    <p className="text-gray-400 text-sm">This payment method will be available shortly.</p>
-                    <button 
-                      onClick={() => setActiveMethod("card")}
-                      className="mt-4 text-purple-400 hover:text-purple-300 text-sm font-medium"
-                    >
-                      Use Credit/Debit Card instead →
-                    </button>
+                          },
+                          invalid: {
+                            color: "#ef4444",
+                          },
+                        },
+                      }}
+                    />
                   </div>
-                )}
-              </div>
 
-              {/* Trust Badges */}
-              <div className="flex flex-wrap justify-center gap-6 mt-8 text-xs text-gray-500">
-                <span className="flex items-center gap-2">
-                  <FaLock size={10} /> PCI Compliant
-                </span>
-                <span className="flex items-center gap-2">
-                  <FaShieldAlt size={10} /> 256-bit SSL
-                </span>
-                <span>⭐ 30-Day Refund Policy</span>
-                <span>⏱️ Lifetime Access</span>
-              </div>
+                  {cardError && (
+                    <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                      <span>⚠️</span>
+                      <span>{cardError}</span>
+                    </div>
+                  )}
+
+                  {/* Customer Billing Summary */}
+                  <div className="p-4 rounded-2xl bg-white/5 border border-white/5 text-xs text-gray-400 space-y-1">
+                    <div className="text-gray-300 font-semibold">Billing Contact</div>
+                    <div>{user?.user?.firstName} {user?.user?.lastName} ({user?.user?.email})</div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={!stripe || loading}
+                    className="btn-primary w-full py-4 rounded-2xl text-base font-bold shadow-glow flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Processing Payment...</span>
+                      </>
+                    ) : (
+                      <>
+                        <FaLock size={14} />
+                        <span>Complete Enrollment • ₹{course.price}</span>
+                      </>
+                    )}
+                  </button>
+
+                  <div className="text-center text-[11px] text-gray-500 flex items-center justify-center gap-2">
+                    <FaShieldAlt size={12} className="text-emerald-400" />
+                    <span>Guaranteed safe & secure checkout powered by Stripe PCI Level 1</span>
+                  </div>
+                </form>
+              )}
+
+              {/* UPI Tab */}
+              {activeMethod === "upi" && (
+                <div className="text-center py-8 space-y-4">
+                  <div className="w-40 h-40 bg-white p-3 rounded-2xl mx-auto flex items-center justify-center shadow-lg">
+                    <FaQrcode size={120} className="text-gray-900" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-sm">Scan with Any UPI App</h4>
+                    <p className="text-xs text-gray-400 mt-1">GPay, PhonePe, Paytm, BHIM</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setActiveMethod("card")}
+                    className="btn-primary px-6 py-2.5 rounded-xl text-xs font-bold shadow-glow"
+                  >
+                    Pay with Card Instead
+                  </button>
+                </div>
+              )}
+
+              {/* Other Methods */}
+              {(activeMethod === "paypal" || activeMethod === "gpay") && (
+                <div className="text-center py-12 space-y-4">
+                  <div className="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center mx-auto text-2xl">
+                    <HiSparkles />
+                  </div>
+                  <h4 className="font-bold text-white text-base">Instant 1-Click Checkout</h4>
+                  <p className="text-xs text-gray-400 max-w-sm mx-auto">
+                    Use our primary Credit/Debit card checkout for instant automatic provisioning of your course access.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setActiveMethod("card")}
+                    className="btn-primary px-6 py-2.5 rounded-xl text-xs font-bold shadow-glow"
+                  >
+                    Switch to Card Payment
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </main>
+    </div>
   );
 }
 
