@@ -216,13 +216,6 @@ function Courses() {
             <FiShoppingBag size={18} />
             <span>My Learning</span>
           </Link>
-          <Link
-            to="/admin/login"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-purple-400 hover:bg-white/5 transition"
-          >
-            <RiDashboardLine size={18} />
-            <span>Admin Portal</span>
-          </Link>
         </nav>
 
         {/* Bottom User Area */}

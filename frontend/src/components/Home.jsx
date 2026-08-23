@@ -229,12 +229,6 @@ function Home() {
               ) : (
                 <div className="flex items-center gap-3">
                   <Link
-                    to="/admin/login"
-                    className="text-xs text-gray-400 hover:text-purple-400 transition font-medium mr-1"
-                  >
-                    Admin
-                  </Link>
-                  <Link
                     to="/login"
                     className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:text-white transition hover:bg-white/5"
                   >
