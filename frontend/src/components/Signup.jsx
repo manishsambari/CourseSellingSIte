@@ -1,20 +1,26 @@
-import { useState } from "react";
-// import logo from "../../public/logo.webp";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
+import { HiSparkles } from "react-icons/hi";
 import { BACKEND_URL } from "../utils/utils";
+import logo from "../../public/logo.webp";
 
 function Signup() {
-  const [firstName, setFirstName] = useState("");  // vlaue mai dalne ke liye
+  const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage("");
+    setLoading(true);
     try {
       const response = await axios.post(
         `${BACKEND_URL}/user/signup`,
@@ -26,135 +32,179 @@ function Signup() {
           },
         }
       );
-      toast.success(response.data.message);
-      navigate("/login"); // navigate to login page after signup
+      toast.success(response.data.message || "Account created successfully! Please log in.");
+      navigate("/login");
     } catch (error) {
       if (error.response) {
-        setErrorMessage(error.response.data.errors || "Signup failed!!!");
+        setErrorMessage(error.response.data.errors || "Signup failed. Please check your details.");
+      } else {
+        setErrorMessage("Network error. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen relative overflow-hidden flex items-center justify-center py-20 md:py-0">
-      <div className="blob w-96 h-96 bg-purple-400 top-0 -left-48"></div>
-      <div className="blob w-96 h-96 bg-blue-400 bottom-0 -right-48" style={{animationDelay: '2s'}}></div>
+    <div className="bg-[#0a0a0f] text-[#e8e6f0] min-h-screen relative overflow-hidden flex flex-col justify-between selection:bg-purple-600 selection:text-white font-sans">
+      {/* Ambient background glows */}
+      <div className="fixed top-0 right-1/4 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" />
+      <div className="fixed bottom-0 left-1/4 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" style={{ animationDelay: "2s" }} />
 
-      {/* Header */}
-      <header className="absolute top-0 left-0 w-full flex justify-between items-center p-6 z-20">
-        <div className="max-w-7xl mx-auto w-full flex justify-between items-center">
-          <Link to={"/"} className="flex items-center space-x-2">
-            <span className="text-2xl font-bold gradient-text hidden sm:block">CourseShip</span>
-          </Link>
-          <div className="flex items-center space-x-4">
-            <Link to={"/login"} className="text-gray-700 hover:text-purple-600 transition font-medium">
-              Login
-            </Link>
-            <Link to={"/courses"} className="gradient-bg text-white px-5 py-2 rounded-lg hover:opacity-90 transition font-medium">
-              Courses
-            </Link>
+      {/* ── HEADER ── */}
+      <header className="w-full max-w-7xl mx-auto p-6 flex justify-between items-center relative z-20">
+        <Link to="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
+            <img src={logo} alt="Logo" className="w-6 h-6 rounded-md object-cover" />
           </div>
+          <span className="text-xl font-bold text-white tracking-tight">CourseShip</span>
+        </Link>
+        <div className="flex items-center gap-4 text-xs font-semibold">
+          <Link to="/courses" className="text-gray-400 hover:text-white transition">
+            All Courses
+          </Link>
+          <Link
+            to="/login"
+            className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-purple-300 border border-purple-500/20 transition"
+          >
+            Sign In
+          </Link>
         </div>
       </header>
 
-      {/* Signup Form */}
-      <div className="bg-white p-8 sm:p-10 rounded-2xl shadow-xl w-full max-w-lg m-4 relative z-10 border border-gray-100 card-hover">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 gradient-bg rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <i className="fas fa-user-plus text-white text-2xl"></i>
-          </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Create an Account</h2>
-          <p className="text-gray-600">Join our community of learners today</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstname" className="block text-sm font-medium text-gray-700 mb-1">
-                First Name
-              </label>
-              <input
-                type="text"
-                id="firstname"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all outline-none"
-                placeholder="John"
-                required
-              />
+      {/* ── SIGNUP FORM CARD ── */}
+      <div className="max-w-lg w-full mx-auto px-4 py-8 relative z-10">
+        <div className="glass-card rounded-3xl p-8 sm:p-10 border border-white/10 shadow-2xl space-y-6">
+          {/* Header */}
+          <div className="text-center space-y-2">
+            <div className="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center text-white text-2xl mx-auto shadow-glow mb-4">
+              <HiSparkles />
             </div>
-            <div>
-              <label htmlFor="lastname" className="block text-sm font-medium text-gray-700 mb-1">
-                Last Name
-              </label>
-              <input
-                type="text"
-                id="lastname"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all outline-none"
-                placeholder="Doe"
-                required
-              />
-            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              Create Your Account
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-400">
+              Join 50,000+ developers mastering tech skills
+            </p>
           </div>
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all outline-none"
-              placeholder="name@example.com"
-              required
-            />
-          </div>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4 pt-2">
+            {/* Names */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-gray-300">First Name</label>
+                <div className="relative">
+                  <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="John"
+                    required
+                    className="w-full pl-10 pr-3 py-3 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none"
+                  />
+                </div>
+              </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-all outline-none"
-                placeholder="••••••••"
-                required
-              />
-              <span className="absolute right-4 top-3.5 text-gray-400 hover:text-purple-600 cursor-pointer transition">
-                <i className="fas fa-eye"></i>
-              </span>
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-gray-300">Last Name</label>
+                <div className="relative">
+                  <FiUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={15} />
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Doe"
+                    required
+                    className="w-full pl-10 pr-3 py-3 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
 
-          {errorMessage && (
-            <div className="bg-red-50 text-red-500 text-sm p-3 rounded-lg text-center border border-red-100">
-              {errorMessage}
+            {/* Email Field */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-gray-300">Email Address</label>
+              <div className="relative">
+                <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="name@example.com"
+                  required
+                  className="w-full pl-11 pr-4 py-3 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none"
+                />
+              </div>
             </div>
-          )}
 
-          <button
-            type="submit"
-            className="w-full gradient-bg text-white py-3 px-4 rounded-lg font-semibold hover:opacity-90 transition-all shadow-md transform active:scale-95 mt-6"
-          >
-            Create Account
-          </button>
-        </form>
-        
-        <div className="mt-8 text-center text-sm text-gray-600">
-          Already have an account?{" "}
-          <Link to="/login" className="text-purple-600 hover:text-purple-800 font-semibold transition">
-            Sign in
-          </Link>
+            {/* Password Field */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-gray-300">Password</label>
+              <div className="relative">
+                <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="•••••••• (min 6 characters)"
+                  required
+                  minLength={6}
+                  className="w-full pl-11 pr-11 py-3 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                >
+                  {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                </button>
+              </div>
+            </div>
+
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                <span>⚠️</span>
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full py-3.5 rounded-2xl text-sm font-bold shadow-glow flex items-center justify-center gap-2 mt-4 disabled:opacity-50"
+            >
+              {loading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Creating Account...</span>
+                </>
+              ) : (
+                <>
+                  <span>Create Account</span>
+                  <FiArrowRight size={15} />
+                </>
+              )}
+            </button>
+          </form>
+
+          {/* Footer Link */}
+          <div className="pt-4 border-t border-white/5 text-center text-xs text-gray-400">
+            Already have an account?{" "}
+            <Link to="/login" className="text-purple-400 hover:text-purple-300 font-semibold underline underline-offset-4">
+              Sign in
+            </Link>
+          </div>
         </div>
       </div>
+
+      {/* Bottom info */}
+      <footer className="p-6 text-center text-xs text-gray-500 relative z-10">
+        &copy; {new Date().getFullYear()} CourseShip. All rights reserved.
+      </footer>
     </div>
   );
 }
