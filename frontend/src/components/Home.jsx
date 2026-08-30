@@ -12,7 +12,15 @@ import {
   FiShield,
   FiCpu,
   FiZap,
-  FiFilter,
+  FiSearch,
+  FiCopy,
+  FiCheck,
+  FiChevronDown,
+  FiChevronUp,
+  FiLayers,
+  FiGitBranch,
+  FiActivity,
+  FiHelpCircle,
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import { RiShoppingBag3Line } from "react-icons/ri";
@@ -28,6 +36,10 @@ function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("cli");
+  const [copied, setCopied] = useState(false);
+  const [openFaq, setOpenFaq] = useState(null);
 
   useEffect(() => {
     const userRaw = localStorage.getItem("user");
@@ -75,26 +87,79 @@ function Home() {
   };
 
   const categories = [
-    { id: "all", label: "// ALL TRACKS" },
-    { id: "fullstack", label: "// 01 FULLSTACK" },
-    { id: "ai", label: "// 02 AI & AGENTS" },
-    { id: "backend", label: "// 03 DISTRIBUTED BACKEND" },
-    { id: "cloud", label: "// 04 CLOUD & DEVOPS" },
-    { id: "web3", label: "// 05 WEB3 & CRYPTO" },
+    { id: "all", label: "ALL TRACKS" },
+    { id: "fullstack", label: "FULLSTACK" },
+    { id: "ai", label: "AI & AGENTS" },
+    { id: "backend", label: "BACKEND & SYSTEMS" },
+    { id: "cloud", label: "DEVOPS & CLOUD" },
+    { id: "web3", label: "WEB3 & CRYPTO" },
   ];
 
   const filteredCourses = useMemo(() => {
-    if (activeCategory === "all") return courses;
     return courses.filter((c) => {
+      const matchesSearch =
+        !searchQuery.trim() ||
+        (c.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (c.description || "").toLowerCase().includes(searchQuery.toLowerCase());
+
+      if (!matchesSearch) return false;
+      if (activeCategory === "all") return true;
+
       const text = `${c.title} ${c.description}`.toLowerCase();
-      if (activeCategory === "fullstack") return text.includes("react") || text.includes("next") || text.includes("fullstack") || text.includes("mobile") || text.includes("frontend");
-      if (activeCategory === "ai") return text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("llm") || text.includes("generative");
-      if (activeCategory === "backend") return text.includes("backend") || text.includes("rust") || text.includes("golang") || text.includes("grpc") || text.includes("system design") || text.includes("websocket") || text.includes("data structure");
-      if (activeCategory === "cloud") return text.includes("cloud") || text.includes("kubernetes") || text.includes("docker") || text.includes("devops") || text.includes("aws");
-      if (activeCategory === "web3") return text.includes("web3") || text.includes("solidity") || text.includes("smart contract") || text.includes("cryptography") || text.includes("security") || text.includes("hacking");
+      if (activeCategory === "fullstack")
+        return text.includes("react") || text.includes("next") || text.includes("fullstack") || text.includes("mobile") || text.includes("frontend") || text.includes("typescript") || text.includes("mern");
+      if (activeCategory === "ai")
+        return text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("llm") || text.includes("generative") || text.includes("langgraph");
+      if (activeCategory === "backend")
+        return text.includes("backend") || text.includes("rust") || text.includes("golang") || text.includes("grpc") || text.includes("system design") || text.includes("websocket") || text.includes("data structure") || text.includes("node") || text.includes("java") || text.includes("linux");
+      if (activeCategory === "cloud")
+        return text.includes("cloud") || text.includes("kubernetes") || text.includes("docker") || text.includes("devops") || text.includes("aws");
+      if (activeCategory === "web3")
+        return text.includes("web3") || text.includes("solidity") || text.includes("smart contract") || text.includes("cryptography") || text.includes("security") || text.includes("pentesting");
       return true;
     });
-  }, [courses, activeCategory]);
+  }, [courses, activeCategory, searchQuery]);
+
+  const handleCopyCommand = (text) => {
+    navigator.clipboard?.writeText(text);
+    setCopied(true);
+    toast.success("Command copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const techStack = [
+    { name: "Next.js 15", color: "#00f0ff" },
+    { name: "React 19", color: "#38bdf8" },
+    { name: "TypeScript 5", color: "#60a5fa" },
+    { name: "Python 3.12", color: "#fbbf24" },
+    { name: "Rust", color: "#fb923c" },
+    { name: "Golang", color: "#2dd4bf" },
+    { name: "LangGraph AI", color: "#a855f7" },
+    { name: "Docker", color: "#38bdf8" },
+    { name: "Kubernetes", color: "#6366f1" },
+    { name: "Redis", color: "#f87171" },
+    { name: "Kafka", color: "#f43f5e" },
+    { name: "PostgreSQL", color: "#818cf8" },
+  ];
+
+  const faqs = [
+    {
+      q: "What do I get after mounting a track?",
+      a: "Instant lifetime access to the full video curriculum stream, private GitHub monorepo starter kits with Docker Compose files, lifetime updates, and a cryptographically verifiable SHA-256 certificate.",
+    },
+    {
+      q: "Are the architectures suitable for production use?",
+      a: "Yes. Every masterclass is designed with enterprise-grade standards including TurboRepo monorepo tooling, strict TypeScript typing, automated CI/CD GitHub workflows, and containerized Docker topologies.",
+    },
+    {
+      q: "Can I verify my certificates publicly on LinkedIn?",
+      a: "Yes. Each completed track issues a unique cryptographic ledger hash (e.g. SHA-256) with a permanent public verification URL and downloadable high-res credentials.",
+    },
+    {
+      q: "Can I expense this with my employer's learning budget?",
+      a: "Yes. We provide automated GST / VAT compliant tax invoices with company details upon transaction confirmation.",
+    },
+  ];
 
   return (
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-sans selection:bg-cyan-400 selection:text-black">
@@ -108,7 +173,7 @@ function Home() {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-7 text-xs font-mono tracking-wider uppercase text-zinc-400">
             <Link to="/courses" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
-              <span>// TRACKS</span>
+              <span>// TRACKS ({courses.length || 16})</span>
             </Link>
             <a href="#terminal" className="hover:text-cyan-400 transition-colors">
               // TELEMETRY
@@ -118,6 +183,9 @@ function Home() {
             </a>
             <a href="#matrix" className="hover:text-cyan-400 transition-colors">
               // BLUEPRINTS
+            </a>
+            <a href="#faqs" className="hover:text-cyan-400 transition-colors">
+              // FAQS
             </a>
           </nav>
 
@@ -138,7 +206,7 @@ function Home() {
                 >
                   EXIT
                 </button>
-                <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 text-cyan-300 font-mono font-bold flex items-center justify-center text-xs">
+                <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 text-cyan-300 font-mono font-bold flex items-center justify-center text-xs shadow-neon-cyan">
                   {userProfile?.firstName ? userProfile.firstName[0].toUpperCase() : <FiUser />}
                 </div>
               </div>
@@ -177,7 +245,7 @@ function Home() {
               onClick={() => setMobileMenuOpen(false)}
               className="block text-zinc-300 hover:text-cyan-400"
             >
-              // BROWSE TRACKS
+              // BROWSE TRACKS ({courses.length})
             </Link>
             <a
               href="#terminal"
@@ -192,6 +260,13 @@ function Home() {
               className="block text-zinc-300 hover:text-cyan-400"
             >
               // CURRICULUM OVERVIEW
+            </a>
+            <a
+              href="#faqs"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-zinc-300 hover:text-cyan-400"
+            >
+              // FREQUENTLY ASKED
             </a>
             {isLoggedIn ? (
               <div className="pt-3 border-t border-[#162034] space-y-2">
@@ -238,7 +313,8 @@ function Home() {
       <section className="pt-32 pb-14 sm:pt-40 sm:pb-20 px-4 sm:px-6 max-w-6xl mx-auto space-y-8">
         {/* System Tag */}
         <div className="flex justify-center">
-          <div className="badge-cyber">
+          <div className="badge-cyber animate-pulse">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 inline-block mr-1 shadow-neon-cyan" />
             <FiZap className="text-cyan-400" />
             <span>CORE PROTOCOL // 2026 DISTRIBUTED & AI SYSTEMS</span>
           </div>
@@ -246,10 +322,10 @@ function Home() {
 
         {/* Hero Title */}
         <div className="text-center space-y-4 max-w-4xl mx-auto">
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight uppercase leading-[1.1]">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight uppercase leading-[1.1] font-display">
             ENGINEER THE FUTURE. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">
-              DEPLOY AT SCALE.
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-400 drop-shadow-[0_0_25px_rgba(0,240,255,0.2)]">
+              DEPLOY ON THE EDGE.
             </span>
           </h1>
 
@@ -262,50 +338,129 @@ function Home() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <Link
             to="/courses"
-            className="btn-cyber-primary w-full sm:w-auto px-6 py-3 flex items-center justify-center gap-2"
+            className="btn-cyber-primary w-full sm:w-auto px-6 py-3 flex items-center justify-center gap-2 font-display"
           >
-            <span>INITIALIZE CURRICULUM</span>
+            <span>INITIALIZE CURRICULUM ({courses.length || 16} TRACKS)</span>
             <FiArrowRight size={14} />
           </Link>
           <a
-            href="#curriculum"
-            className="btn-cyber-outline w-full sm:w-auto px-6 py-3 text-center font-mono"
+            href="#terminal"
+            className="btn-cyber-outline w-full sm:w-auto px-6 py-3 text-center font-mono flex items-center justify-center gap-2"
           >
-            EXPLORE BLUEPRINTS
+            <FiTerminal size={14} className="text-cyan-400" />
+            <span>LIVE TERMINAL DEMO</span>
           </a>
         </div>
 
-        {/* ── LIVE CYBER TERMINAL SIMULATOR ── */}
+        {/* ── INTERACTIVE TECH STACK CHIPS ── */}
+        <div className="pt-4 flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
+          {techStack.map((tech) => (
+            <div
+              key={tech.name}
+              className="px-2.5 py-1 rounded-md bg-[#080c14] border border-[#162034] text-[11px] font-mono text-zinc-300 flex items-center gap-1.5 hover:border-cyan-500/40 transition-colors"
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: tech.color }} />
+              <span>{tech.name}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* ── LIVE INTERACTIVE MULTI-TAB TERMINAL SIMULATOR ── */}
         <div id="terminal" className="pt-6 max-w-3xl mx-auto">
-          <div className="terminal-box">
-            {/* Terminal Header */}
-            <div className="flex items-center justify-between border-b border-[#162034] pb-2.5 mb-3 text-zinc-500 text-[11px]">
+          <div className="terminal-box border border-cyan-500/30 shadow-2xl">
+            {/* Terminal Window Header & Tabs */}
+            <div className="flex flex-wrap items-center justify-between border-b border-[#162034] pb-2.5 mb-3 gap-2">
               <div className="flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
-                <span className="ml-2 text-zinc-400 font-mono">bash - courseship@production-node-01</span>
+                <span className="ml-2 text-zinc-400 font-mono text-[11px]">courseship@node-01: ~</span>
               </div>
-              <span className="text-cyan-400 font-mono">STATUS: LIVE</span>
+
+              {/* Tab Switchers */}
+              <div className="flex items-center gap-1 text-[11px] font-mono">
+                <button
+                  onClick={() => setActiveTab("cli")}
+                  className={`px-2 py-0.5 rounded transition ${
+                    activeTab === "cli" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40" : "text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  install.sh
+                </button>
+                <button
+                  onClick={() => setActiveTab("docker")}
+                  className={`px-2 py-0.5 rounded transition ${
+                    activeTab === "docker" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40" : "text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  docker.yml
+                </button>
+                <button
+                  onClick={() => setActiveTab("agent")}
+                  className={`px-2 py-0.5 rounded transition ${
+                    activeTab === "agent" ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40" : "text-zinc-500 hover:text-zinc-300"
+                  }`}
+                >
+                  agent_graph.py
+                </button>
+              </div>
+
+              <button
+                onClick={() => handleCopyCommand(
+                  activeTab === "cli" ? "npx courseship init --track=fullstack-ai-next15" :
+                  activeTab === "docker" ? "docker compose up -d redis postgres kafka" :
+                  "python -m langgraph.agent --model=claude-3.5-sonnet"
+                )}
+                className="text-zinc-400 hover:text-cyan-400 text-xs flex items-center gap-1 transition"
+                title="Copy snippet"
+              >
+                {copied ? <FiCheck className="text-emerald-400" /> : <FiCopy />}
+              </button>
             </div>
 
             {/* Terminal Code Body */}
-            <div className="space-y-1 text-[11px] sm:text-xs leading-relaxed font-mono">
-              <div className="text-zinc-400">
-                <span className="text-emerald-400">$</span> npx courseship init --track=fullstack-ai-next15
-              </div>
-              <div className="text-cyan-400">
-                [✓] Pulling architecture blueprints from registry...
-              </div>
-              <div className="text-zinc-300">
-                [✓] Mounting Docker Compose, Redis Cluster & Prisma schemas
-              </div>
-              <div className="text-purple-300">
-                [✓] Multi-agent LangGraph orchestrator initialized
-              </div>
-              <div className="text-emerald-400 font-bold pt-1">
-                ➔ System compiled successfully: {courses.length || 16} Production Blueprints Ready.
-              </div>
+            <div className="space-y-1 text-[11px] sm:text-xs leading-relaxed font-mono min-h-[120px]">
+              {activeTab === "cli" && (
+                <>
+                  <div className="text-zinc-400">
+                    <span className="text-emerald-400">$</span> npx courseship init --track=fullstack-ai-next15
+                  </div>
+                  <div className="text-cyan-400">
+                    [✓] Pulling architecture blueprints from registry (16 tracks indexed)...
+                  </div>
+                  <div className="text-zinc-300">
+                    [✓] Mounting Docker Compose, Redis Cluster & Prisma schemas
+                  </div>
+                  <div className="text-purple-300">
+                    [✓] Multi-agent LangGraph orchestrator initialized
+                  </div>
+                  <div className="text-emerald-400 font-bold pt-1">
+                    ➔ System compiled successfully: 16 Production Blueprints Ready.
+                  </div>
+                </>
+              )}
+
+              {activeTab === "docker" && (
+                <>
+                  <div className="text-zinc-500"># Production Infrastructure Topology</div>
+                  <div className="text-zinc-400"><span className="text-cyan-400">services:</span></div>
+                  <div className="text-zinc-300 pl-4"><span className="text-emerald-400">redis_cluster:</span> image: redis:7-alpine, ports: [6379:6379]</div>
+                  <div className="text-zinc-300 pl-4"><span className="text-indigo-400">postgres_db:</span> image: pgvector/pgvector:pg16, ports: [5432:5432]</div>
+                  <div className="text-zinc-300 pl-4"><span className="text-purple-400">kafka_broker:</span> image: confluentinc/cp-kafka:7.5.0</div>
+                  <div className="text-emerald-400 font-bold pt-1">➔ Container network mapped on 127.0.0.1:4000</div>
+                </>
+              )}
+
+              {activeTab === "agent" && (
+                <>
+                  <div className="text-zinc-500"># Autonomous Multi-Agent State Machine</div>
+                  <div className="text-zinc-400"><span className="text-cyan-400">from</span> langgraph.graph <span className="text-cyan-400">import</span> StateGraph, END</div>
+                  <div className="text-zinc-300">workflow = StateGraph(AgentState)</div>
+                  <div className="text-purple-300">workflow.add_node(<span className="text-amber-300">"planner"</span>, plan_architecture)</div>
+                  <div className="text-purple-300">workflow.add_node(<span className="text-amber-300">"executor"</span>, execute_code_sandboxes)</div>
+                  <div className="text-emerald-400 font-bold pt-1">➔ Compiled graph ready for sub-second streaming</div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -313,22 +468,30 @@ function Home() {
         {/* Telemetry Strip */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 text-left">
           <div className="cyber-card p-4 space-y-1">
-            <div className="text-[10px] font-mono text-cyan-400">// ACTIVE NODES</div>
+            <div className="text-[10px] font-mono text-cyan-400 flex items-center gap-1">
+              <FiActivity size={10} /> // ACTIVE NODES
+            </div>
             <div className="text-xl font-bold text-white font-mono">50,420+</div>
             <div className="text-[10px] text-zinc-500 font-mono">Global developers</div>
           </div>
           <div className="cyber-card p-4 space-y-1">
-            <div className="text-[10px] font-mono text-emerald-400">// MOUNTED TRACKS</div>
+            <div className="text-[10px] font-mono text-emerald-400 flex items-center gap-1">
+              <FiLayers size={10} /> // MOUNTED TRACKS
+            </div>
             <div className="text-xl font-bold text-white font-mono">{courses.length || 16} Active</div>
             <div className="text-[10px] text-zinc-500 font-mono">Production blueprints</div>
           </div>
           <div className="cyber-card p-4 space-y-1">
-            <div className="text-[10px] font-mono text-purple-400">// UPTIME PROTOCOL</div>
+            <div className="text-[10px] font-mono text-purple-400 flex items-center gap-1">
+              <FiGitBranch size={10} /> // UPTIME PROTOCOL
+            </div>
             <div className="text-xl font-bold text-white font-mono">99.98%</div>
             <div className="text-[10px] text-zinc-500 font-mono">Zero downtime SLA</div>
           </div>
           <div className="cyber-card p-4 space-y-1">
-            <div className="text-[10px] font-mono text-amber-400">// CRYPTO LEDGER</div>
+            <div className="text-[10px] font-mono text-amber-400 flex items-center gap-1">
+              <FiShield size={10} /> // CRYPTO LEDGER
+            </div>
             <div className="text-xl font-bold text-white font-mono">SHA-256</div>
             <div className="text-[10px] text-zinc-500 font-mono">Verifiable certificates</div>
           </div>
@@ -358,21 +521,36 @@ function Home() {
           </Link>
         </div>
 
-        {/* Category Pills on Home */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-4 scrollbar-none">
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono uppercase whitespace-nowrap transition-colors ${
-                activeCategory === cat.id
-                  ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
-                  : "bg-[#080c14] text-zinc-400 hover:text-white border border-[#162034]"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
+        {/* Search & Category Filter Controls */}
+        <div className="cyber-card p-3 mb-6 flex flex-col md:flex-row items-center justify-between gap-3">
+          {/* Quick Search */}
+          <div className="relative w-full md:w-80">
+            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={13} />
+            <input
+              type="text"
+              placeholder="$ filter --keyword..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-3.5 py-1.5 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
+            />
+          </div>
+
+          {/* Category Filter Pills */}
+          <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto scrollbar-none">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`px-3 py-1.5 rounded-md text-xs font-mono uppercase whitespace-nowrap transition-colors ${
+                  activeCategory === cat.id
+                    ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
+                    : "bg-[#080c14] text-zinc-400 hover:text-white border border-[#162034]"
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {loading ? (
@@ -384,12 +562,15 @@ function Home() {
         ) : filteredCourses.length === 0 ? (
           <div className="cyber-card p-12 text-center max-w-md mx-auto space-y-3 font-mono">
             <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-            <div className="text-sm text-zinc-300">// NO TRACKS FOUND FOR THIS CATEGORY</div>
+            <div className="text-sm text-zinc-300">// NO TRACKS FOUND FOR THIS QUERY</div>
             <button
-              onClick={() => setActiveCategory("all")}
+              onClick={() => {
+                setActiveCategory("all");
+                setSearchQuery("");
+              }}
               className="btn-cyber-outline text-xs px-3.5 py-1.5"
             >
-              SHOW ALL TRACKS
+              RESET FILTERS
             </button>
           </div>
         ) : (
@@ -414,7 +595,7 @@ function Home() {
                     }}
                   />
                   <div className="absolute top-2.5 left-2.5 badge-cyber text-[9px]">
-                    TRACK 0{idx + 1}
+                    NODE // 0{idx + 1}
                   </div>
                   <div className="absolute bottom-2.5 left-2.5 bg-[#060912]/95 border border-[#162034] px-2 py-0.5 rounded text-xs font-mono font-bold text-cyan-300 shadow-md">
                     ₹{course.price}
@@ -435,7 +616,7 @@ function Home() {
                   <div className="pt-2.5 border-t border-[#162034] flex items-center justify-between gap-2">
                     <div className="text-[10px] font-mono text-zinc-500 flex items-center gap-1">
                       <FiClock size={10} className="text-zinc-400" />
-                      <span>SELF-PACED</span>
+                      <span>LIFETIME</span>
                     </div>
                     <Link
                       to={`/buy/${course._id}`}
@@ -465,7 +646,7 @@ function Home() {
 
         <div className="grid md:grid-cols-3 gap-6">
           <div className="cyber-card p-6 space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg">
+            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg shadow-neon-cyan">
               <FiCode />
             </div>
             <h3 className="text-base font-bold text-white font-display uppercase">Monorepo Toolchain</h3>
@@ -475,7 +656,7 @@ function Home() {
           </div>
 
           <div className="cyber-card p-6 space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg">
+            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg shadow-neon-purple">
               <FiCpu />
             </div>
             <h3 className="text-base font-bold text-white font-display uppercase">Autonomous AI & RAG</h3>
@@ -485,7 +666,7 @@ function Home() {
           </div>
 
           <div className="cyber-card p-6 space-y-3">
-            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg">
+            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg shadow-neon-lime">
               <FiAward />
             </div>
             <h3 className="text-base font-bold text-white font-display uppercase">Verifiable Credentials</h3>
@@ -493,6 +674,38 @@ function Home() {
               Cryptographically verified completion certificates shareable on LinkedIn and verifiable through public URL hashes.
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* ── FREQUENTLY ASKED QUESTIONS ── */}
+      <section id="faqs" className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-[#162034]">
+        <div className="text-center space-y-2 mb-10">
+          <div className="badge-cyber">
+            <FiHelpCircle size={11} />
+            <span>KNOWLEDGE MATRIX // FAQS</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display">
+            FREQUENTLY ASKED QUESTIONS
+          </h2>
+        </div>
+
+        <div className="space-y-3 font-mono">
+          {faqs.map((faq, idx) => (
+            <div key={idx} className="cyber-card overflow-hidden">
+              <button
+                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                className="w-full p-4 text-left flex items-center justify-between text-xs font-bold text-white hover:text-cyan-400 transition"
+              >
+                <span>// {faq.q}</span>
+                {openFaq === idx ? <FiChevronUp size={14} className="text-cyan-400" /> : <FiChevronDown size={14} />}
+              </button>
+              {openFaq === idx && (
+                <div className="px-4 pb-4 text-xs text-zinc-400 leading-relaxed border-t border-[#162034] pt-3">
+                  {faq.a}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </section>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import {
@@ -14,6 +14,7 @@ import {
   FiAward,
   FiChevronDown,
   FiTerminal,
+  FiX,
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import toast from "react-hot-toast";
@@ -78,38 +79,40 @@ function Courses() {
   };
 
   const categories = [
-    { id: "all", label: "// ALL TRACKS" },
-    { id: "fullstack", label: "// 01 FULLSTACK" },
-    { id: "ai", label: "// 02 AI & AGENTS" },
-    { id: "backend", label: "// 03 DISTRIBUTED BACKEND" },
-    { id: "cloud", label: "// 04 DEVOPS & CLOUD" },
-    { id: "web3", label: "// 05 WEB3 & SMART CONTRACTS" },
+    { id: "all", label: "ALL TRACKS" },
+    { id: "fullstack", label: "01 FULLSTACK" },
+    { id: "ai", label: "02 AI & AGENTS" },
+    { id: "backend", label: "03 DISTRIBUTED BACKEND" },
+    { id: "cloud", label: "04 DEVOPS & CLOUD" },
+    { id: "web3", label: "05 WEB3 & SMART CONTRACTS" },
   ];
 
   // Filtering & Sorting
-  const filteredCourses = courses
-    .filter((course) => {
-      const matchesSearch =
-        (course.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (course.description || "").toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredCourses = useMemo(() => {
+    return courses
+      .filter((course) => {
+        const matchesSearch =
+          (course.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (course.description || "").toLowerCase().includes(searchQuery.toLowerCase());
 
-      if (!matchesSearch) return false;
-      if (selectedCategory === "all") return true;
+        if (!matchesSearch) return false;
+        if (selectedCategory === "all") return true;
 
-      const text = `${course.title} ${course.description}`.toLowerCase();
-      if (selectedCategory === "fullstack") return text.includes("react") || text.includes("next") || text.includes("web") || text.includes("frontend");
-      if (selectedCategory === "ai") return text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("llm");
-      if (selectedCategory === "cloud") return text.includes("aws") || text.includes("devops") || text.includes("docker") || text.includes("cloud");
-      if (selectedCategory === "backend") return text.includes("node") || text.includes("backend") || text.includes("microservice") || text.includes("grpc");
-      if (selectedCategory === "web3") return text.includes("solidity") || text.includes("web3") || text.includes("smart contract") || text.includes("crypto");
-      return true;
-    })
-    .sort((a, b) => {
-      if (sortBy === "price-low") return (a.price || 0) - (b.price || 0);
-      if (sortBy === "price-high") return (b.price || 0) - (a.price || 0);
-      if (sortBy === "alpha") return (a.title || "").localeCompare(b.title || "");
-      return 0;
-    });
+        const text = `${course.title} ${course.description}`.toLowerCase();
+        if (selectedCategory === "fullstack") return text.includes("react") || text.includes("next") || text.includes("web") || text.includes("frontend") || text.includes("typescript") || text.includes("mern") || text.includes("mobile");
+        if (selectedCategory === "ai") return text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("llm") || text.includes("generative");
+        if (selectedCategory === "cloud") return text.includes("aws") || text.includes("devops") || text.includes("docker") || text.includes("cloud") || text.includes("kubernetes");
+        if (selectedCategory === "backend") return text.includes("node") || text.includes("backend") || text.includes("microservice") || text.includes("grpc") || text.includes("rust") || text.includes("golang") || text.includes("system design") || text.includes("java");
+        if (selectedCategory === "web3") return text.includes("solidity") || text.includes("web3") || text.includes("smart contract") || text.includes("crypto") || text.includes("security") || text.includes("pentesting");
+        return true;
+      })
+      .sort((a, b) => {
+        if (sortBy === "price-low") return (a.price || 0) - (b.price || 0);
+        if (sortBy === "price-high") return (b.price || 0) - (a.price || 0);
+        if (sortBy === "alpha") return (a.title || "").localeCompare(b.title || "");
+        return 0;
+      });
+  }, [courses, searchQuery, selectedCategory, sortBy]);
 
   return (
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-cyan-400 selection:text-black">
@@ -159,7 +162,7 @@ function Courses() {
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#0c121e] text-cyan-300 font-bold border border-cyan-500/30"
           >
             <FiBookOpen size={14} className="text-cyan-400" />
-            <span>// 01 TRACKS</span>
+            <span>// 01 TRACKS ({courses.length})</span>
           </Link>
           <Link
             to="/purchases"
@@ -175,7 +178,7 @@ function Courses() {
           {isLoggedIn ? (
             <div className="space-y-2.5">
               <div className="p-2.5 rounded-lg bg-[#0c121e] border border-[#162034] flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
+                <div className="w-7 h-7 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold flex items-center justify-center text-xs flex-shrink-0 shadow-neon-cyan">
                   {userProfile?.firstName ? userProfile.firstName[0].toUpperCase() : <FiUser />}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -218,7 +221,7 @@ function Courses() {
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <div className="badge-cyber mb-1.5">
+              <div className="badge-cyber mb-1.5 font-mono text-[10px]">
                 <FiTerminal size={11} />
                 <span>CATALOG MATRIX // ACTIVE</span>
               </div>
@@ -231,32 +234,40 @@ function Courses() {
             </div>
 
             <div className="badge-cyber text-xs self-start sm:self-auto font-mono">
-              MOUNTED: <span className="text-cyan-400 font-bold ml-1">{filteredCourses.length}</span> TRACKS
+              MOUNTED: <span className="text-cyan-400 font-bold ml-1">{filteredCourses.length}</span> / {courses.length} TRACKS
             </div>
           </div>
 
           {/* Search & Filter Controls */}
           <div className="cyber-card p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
             {/* Search Input */}
-            <div className="relative w-full sm:w-80">
-              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={14} />
+            <div className="relative w-full sm:w-80 font-mono">
+              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={13} />
               <input
                 type="text"
                 placeholder="$ grep --track keyword..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:outline-none"
+                className="w-full pl-9 pr-8 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                >
+                  <FiX size={13} />
+                </button>
+              )}
             </div>
 
             {/* Sort Dropdown */}
-            <div className="relative w-full sm:w-auto flex items-center justify-end gap-2">
-              <span className="text-xs text-zinc-400 hidden sm:inline font-mono">// SORT:</span>
+            <div className="relative w-full sm:w-auto flex items-center justify-end gap-2 font-mono">
+              <span className="text-xs text-zinc-400 hidden sm:inline">// SORT:</span>
               <div className="relative w-full sm:w-auto">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full sm:w-auto appearance-none pl-3 pr-8 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white outline-none cursor-pointer"
+                  className="w-full sm:w-auto appearance-none pl-3 pr-8 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white outline-none cursor-pointer"
                 >
                   <option value="default" className="bg-[#090d18] text-white">RECOMMENDED</option>
                   <option value="price-low" className="bg-[#090d18] text-white">PRICE: LOW TO HIGH</option>
@@ -280,7 +291,7 @@ function Courses() {
                     : "bg-[#080c14] text-zinc-400 hover:text-white border border-[#162034]"
                 }`}
               >
-                {cat.label}
+                // {cat.label}
               </button>
             ))}
           </div>
@@ -321,19 +332,19 @@ function Courses() {
                     <img
                       src={
                         course.image?.url ||
-                        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
+                        "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&auto=format&fit=crop&q=80"
                       }
                       alt={course.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                       onError={(e) => {
                         e.target.src =
-                          "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600";
+                          "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&auto=format&fit=crop&q=80";
                       }}
                     />
                     <div className="absolute top-3 left-3 badge-cyber text-[10px]">
                       NODE // 0{idx + 1}
                     </div>
-                    <div className="absolute bottom-3 left-3 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded text-xs font-mono font-bold text-cyan-300">
+                    <div className="absolute bottom-3 left-3 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded text-xs font-mono font-bold text-cyan-300 shadow-md">
                       ₹{course.price}
                     </div>
                   </div>
