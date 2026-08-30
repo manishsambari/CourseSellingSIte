@@ -14,9 +14,8 @@ import UpdateCourse from "./admin/UpdateCourse";
 import OurCourses from "./admin/OurCourses";
 
 function App() {
-  const admin = JSON.parse(localStorage.getItem("admin") || "null");
   return (
-    <div className="bg-[#0a0a0f] min-h-screen text-[#e8e6f0]">
+    <div className="bg-[#09090b] min-h-screen text-[#f4f4f5] font-sans antialiased">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -34,30 +33,34 @@ function App() {
         <Route path="/admin/create-course" element={<CourseCreate />} />
         <Route path="/admin/update-course/:id" element={<UpdateCourse />} />
         <Route path="/admin/our-courses" element={<OurCourses />} />
+
+        {/* Catch-all fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+
       <Toaster
         position="top-right"
         toastOptions={{
           style: {
-            background: "#161622",
-            color: "#f3f4f6",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-            boxShadow: "0 20px 40px -15px rgba(0,0,0,0.6)",
+            background: "#18181b",
+            color: "#f4f4f5",
+            border: "1px solid #27272a",
+            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.8)",
             fontSize: "13px",
             fontWeight: "500",
-            borderRadius: "14px",
-            padding: "12px 18px",
+            borderRadius: "12px",
+            padding: "10px 16px",
           },
           success: {
             iconTheme: {
               primary: "#10b981",
-              secondary: "#161622",
+              secondary: "#18181b",
             },
           },
           error: {
             iconTheme: {
-              primary: "#ef4444",
-              secondary: "#161622",
+              primary: "#f43f5e",
+              secondary: "#18181b",
             },
           },
         }}

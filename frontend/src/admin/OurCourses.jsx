@@ -12,26 +12,8 @@ import {
   FiX,
   FiCheckCircle,
 } from "react-icons/fi";
-import { RiShieldUserLine } from "react-icons/ri";
 import { BACKEND_URL } from "../utils/utils";
 import logo from "../../public/logo.webp";
-
-function SkeletonCard() {
-  return (
-    <div className="glass-card rounded-3xl overflow-hidden border border-white/5 flex flex-col">
-      <div className="skeleton-box h-48 w-full" />
-      <div className="p-6 space-y-4 flex-1 flex flex-col">
-        <div className="skeleton-box h-4 w-1/3 rounded-md" />
-        <div className="skeleton-box h-6 w-3/4 rounded-md" />
-        <div className="skeleton-box h-3 w-full rounded-md" />
-        <div className="pt-4 border-t border-white/5 flex justify-between items-center mt-auto">
-          <div className="skeleton-box h-8 w-20 rounded-md" />
-          <div className="skeleton-box h-9 w-24 rounded-xl" />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function OurCourses() {
   const [courses, setCourses] = useState([]);
@@ -96,157 +78,143 @@ function OurCourses() {
   }, [courses, search]);
 
   return (
-    <div className="bg-[#0a0a0f] text-[#e8e6f0] min-h-screen selection:bg-purple-600 selection:text-white font-sans p-4 sm:p-8 lg:p-12">
-      {/* Ambient background glows */}
-      <div className="fixed top-20 right-20 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" />
-      <div className="fixed bottom-20 left-1/4 w-[450px] h-[450px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" style={{ animationDelay: "2s" }} />
-
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen font-sans selection:bg-indigo-600 selection:text-white p-4 sm:p-8">
+      <div className="max-w-6xl mx-auto space-y-6">
         {/* Header Bar */}
-        <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="card-surface p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold uppercase tracking-wider mb-2">
-              <RiShieldUserLine /> Admin Management
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-              Course Catalog
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Manage Course Catalog
             </h1>
-            <p className="text-gray-400 text-sm mt-1">
-              Edit pricing, update curriculums, and manage published masterclasses.
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Edit pricing, update curriculums, and delete courses.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5">
             <Link
               to="/admin/create-course"
-              className="btn-primary px-5 py-3 rounded-2xl text-xs font-bold shadow-glow flex items-center gap-2"
+              className="btn-primary text-xs px-3.5 py-2 flex items-center gap-1.5"
             >
-              <FiPlusCircle size={15} />
-              <span>Create New Course</span>
+              <FiPlusCircle size={13} />
+              <span>Create Course</span>
             </Link>
             <Link
               to="/admin/dashboard"
-              className="btn-secondary px-5 py-3 rounded-2xl text-xs font-semibold flex items-center gap-2"
+              className="btn-secondary text-xs px-3.5 py-2 flex items-center gap-1.5"
             >
-              <FiArrowLeft size={13} />
+              <FiArrowLeft size={12} />
               <span>Dashboard</span>
             </Link>
           </div>
         </div>
 
-        {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+        {/* Search Bar */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
           <div className="relative w-full sm:w-80">
-            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
             <input
               type="text"
-              placeholder="Search published courses..."
+              placeholder="Filter courses..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-11 pr-10 py-3 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none"
+              className="w-full pl-9 pr-8 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
               >
-                <FiX size={16} />
+                <FiX size={14} />
               </button>
             )}
           </div>
-          <div className="text-xs text-gray-400 font-mono">
-            Showing <strong className="text-white">{filteredCourses.length}</strong> of{" "}
-            <strong className="text-white">{courses.length}</strong> total courses
+          <div className="text-xs font-mono text-zinc-500">
+            Showing {filteredCourses.length} of {courses.length} courses
           </div>
         </div>
 
         {/* Course Cards Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <SkeletonCard key={i} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[1, 2, 3].map((n) => (
+              <div key={n} className="card-surface h-72 animate-pulse p-4 space-y-3" />
             ))}
           </div>
         ) : filteredCourses.length === 0 ? (
-          <div className="glass-card rounded-3xl p-16 text-center border border-white/5">
-            <div className="w-16 h-16 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center mx-auto mb-4 text-2xl">
-              <FiBookOpen />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-2">No courses found</h3>
-            <p className="text-gray-400 text-sm max-w-md mx-auto mb-6">
-              {search
-                ? "No published courses match your search criteria."
-                : "Your catalog is empty. Start by publishing your first course."}
+          <div className="card-surface p-14 text-center max-w-md mx-auto space-y-3">
+            <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
+            <h3 className="text-base font-bold text-white">No courses found</h3>
+            <p className="text-xs text-zinc-400">
+              {search ? "No courses match your filter." : "Start by publishing your first course."}
             </p>
             <Link
               to="/admin/create-course"
-              className="btn-primary px-6 py-3 rounded-2xl text-xs font-bold shadow-glow inline-flex items-center gap-2"
+              className="btn-primary text-xs px-4 py-2 inline-flex items-center gap-1.5"
             >
-              <FiPlusCircle size={14} />
-              <span>Create Course Now</span>
+              <FiPlusCircle size={12} />
+              <span>Create Course</span>
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredCourses.map((course) => (
               <div
                 key={course._id}
-                className="glass-card-hover rounded-3xl overflow-hidden flex flex-col group border border-white/5"
+                className="card-surface-interactive overflow-hidden flex flex-col group justify-between"
               >
-                {/* Image Wrap */}
-                <div className="relative h-44 overflow-hidden">
+                {/* Image */}
+                <div className="relative h-40 overflow-hidden bg-zinc-950 border-b border-zinc-800">
                   <img
                     src={
                       course?.image?.url ||
                       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
                     }
                     alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       e.target.src =
                         "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600";
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#13131f] via-transparent to-transparent opacity-80" />
-                  <span className="absolute top-3 right-3 bg-emerald-500/90 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-md flex items-center gap-1">
-                    <FiCheckCircle size={10} /> Active
+                  <span className="absolute top-2.5 right-2.5 tag-badge-green text-[10px]">
+                    Active
                   </span>
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex-1 flex flex-col">
-                  <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors mb-1.5 line-clamp-2">
-                    {course.title}
-                  </h3>
-
-                  <p className="text-xs text-gray-400 line-clamp-2 mb-4 flex-1">
-                    {course.description || "Comprehensive technical course with code examples."}
-                  </p>
-
-                  <div className="flex justify-between items-baseline pt-3 border-t border-white/5 mb-4">
-                    <span className="text-xs text-gray-500 font-medium">Pricing</span>
-                    <span className="text-xl font-black text-emerald-400 font-mono">
-                      ₹{course.price}
-                    </span>
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-bold text-zinc-100 group-hover:text-white line-clamp-2 leading-snug">
+                      {course.title}
+                    </h3>
+                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                      {course.description}
+                    </p>
                   </div>
 
-                  {/* Actions */}
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link
-                      to={`/admin/update-course/${course._id}`}
-                      className="btn-secondary py-2 px-3 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 text-purple-300 hover:border-purple-500/40"
-                    >
-                      <FiEdit size={12} />
-                      <span>Edit</span>
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(course._id)}
-                      disabled={deletingId === course._id}
-                      className="py-2 px-3 rounded-xl text-xs font-semibold border border-red-500/20 text-red-400 hover:bg-red-500/10 flex items-center justify-center gap-1.5 transition disabled:opacity-50"
-                    >
-                      <FiTrash2 size={12} />
-                      <span>{deletingId === course._id ? "Deleting..." : "Delete"}</span>
-                    </button>
+                  <div className="pt-2.5 border-t border-zinc-800 flex items-center justify-between">
+                    <span className="font-mono text-sm font-bold text-zinc-200">
+                      ₹{course.price}
+                    </span>
+
+                    <div className="flex items-center gap-1.5">
+                      <Link
+                        to={`/admin/update-course/${course._id}`}
+                        className="btn-secondary text-xs px-2.5 py-1.5 flex items-center gap-1"
+                      >
+                        <FiEdit size={11} />
+                        <span>Edit</span>
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(course._id)}
+                        disabled={deletingId === course._id}
+                        className="p-1.5 rounded-lg border border-rose-500/20 text-rose-400 hover:bg-rose-500/10 text-xs transition"
+                        title="Delete Course"
+                      >
+                        <FiTrash2 size={13} />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

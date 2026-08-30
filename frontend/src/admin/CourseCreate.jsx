@@ -6,16 +6,9 @@ import {
   FiPlusCircle,
   FiUploadCloud,
   FiArrowLeft,
-  FiDollarSign,
-  FiType,
-  FiFileText,
-  FiImage,
-  FiX,
   FiCheckCircle,
 } from "react-icons/fi";
-import { RiShieldUserLine } from "react-icons/ri";
 import { BACKEND_URL } from "../utils/utils";
-import logo from "../../public/logo.webp";
 
 function CourseCreate() {
   const [title, setTitle] = useState("");
@@ -82,77 +75,62 @@ function CourseCreate() {
   };
 
   return (
-    <div className="bg-[#0a0a0f] text-[#e8e6f0] min-h-screen selection:bg-purple-600 selection:text-white font-sans p-4 sm:p-8 lg:p-12">
-      {/* Ambient background glows */}
-      <div className="fixed top-20 right-20 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" />
-      <div className="fixed bottom-20 left-1/4 w-[450px] h-[450px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" style={{ animationDelay: "2s" }} />
-
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header Bar */}
-        <div className="glass-card rounded-3xl p-6 sm:p-8 border border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen font-sans selection:bg-indigo-600 selection:text-white p-4 sm:p-8">
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="card-surface p-5 sm:p-6 flex items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold uppercase tracking-wider mb-2">
-              <RiShieldUserLine /> Admin Studio
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-              Create New Masterclass
+            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+              Create New Course
             </h1>
-            <p className="text-gray-400 text-sm mt-1">
-              Publish a new technical course with syllabus & curriculum metadata.
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Publish a new technical course track with curriculum details.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link
-              to="/admin/our-courses"
-              className="btn-secondary px-5 py-3 rounded-2xl text-xs font-semibold flex items-center gap-2"
-            >
-              <FiArrowLeft size={13} />
-              <span>Back to Catalog</span>
-            </Link>
-          </div>
+          <Link
+            to="/admin/our-courses"
+            className="btn-secondary text-xs px-3.5 py-2 flex items-center gap-1.5"
+          >
+            <FiArrowLeft size={12} />
+            <span>Catalog</span>
+          </Link>
         </div>
 
-        {/* Creation Form Card */}
-        <div className="glass-card rounded-3xl p-6 sm:p-10 border border-white/10 shadow-2xl">
-          <form onSubmit={handleCreateCourse} className="space-y-6">
+        {/* Form */}
+        <div className="card-surface p-6 sm:p-8">
+          <form onSubmit={handleCreateCourse} className="space-y-4">
             {/* Title */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-                <FiType /> Course Title
-              </label>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-zinc-300">Course Title</label>
               <input
                 type="text"
-                placeholder="e.g. Next.js 15 & AI Engineering Masterclass"
+                placeholder="e.g. Full-Stack Next.js 15 & AI Engineering Masterclass"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full px-4 py-3.5 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
               />
             </div>
 
             {/* Description */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-                <FiFileText /> Curriculum & Course Description
-              </label>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-zinc-300">Description & Syllabus</label>
               <textarea
                 placeholder="Describe what students will build, technologies used, prerequisites, and learning outcomes..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 rows={4}
-                className="w-full p-4 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none resize-y min-h-[120px]"
+                className="w-full p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none resize-y min-h-[100px]"
               />
             </div>
 
             {/* Price */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-                <FiDollarSign /> Course Price (INR ₹)
-              </label>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-zinc-300">Price (INR ₹)</label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-mono font-bold">₹</span>
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-xs">₹</span>
                 <input
                   type="number"
                   placeholder="999"
@@ -160,18 +138,16 @@ function CourseCreate() {
                   onChange={(e) => setPrice(e.target.value)}
                   required
                   min={0}
-                  className="w-full pl-9 pr-4 py-3.5 rounded-2xl glass-input text-sm text-white placeholder:text-gray-500 outline-none font-mono"
+                  className="w-full pl-8 pr-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none font-mono"
                 />
               </div>
             </div>
 
-            {/* Thumbnail Upload Dropzone */}
-            <div className="space-y-2">
-              <label className="text-xs font-semibold text-gray-300 flex items-center gap-1.5">
-                <FiImage /> Course Cover Artwork
-              </label>
+            {/* Image Upload Dropzone */}
+            <div className="space-y-1 pt-1">
+              <label className="text-xs font-medium text-zinc-300">Course Thumbnail Artwork</label>
 
-              <div className="relative border-2 border-dashed border-white/10 rounded-2xl p-6 text-center hover:border-purple-500/50 transition-colors group bg-white/[0.02]">
+              <div className="border border-dashed border-zinc-700 rounded-xl p-5 text-center hover:border-zinc-500 transition-colors bg-zinc-900/40">
                 <input
                   type="file"
                   onChange={changePhotoHandler}
@@ -181,26 +157,26 @@ function CourseCreate() {
                 />
                 <label htmlFor="course-image-upload" className="cursor-pointer block">
                   {imagePreview ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        className="mx-auto max-h-56 rounded-xl object-contain border border-white/10 shadow-lg"
+                        className="mx-auto max-h-48 rounded-lg object-contain border border-zinc-800"
                       />
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 text-xs font-semibold">
-                        <FiCheckCircle /> Click to change thumbnail
+                      <div className="text-xs font-medium text-indigo-400 flex items-center justify-center gap-1">
+                        <FiCheckCircle size={12} /> Click to replace image
                       </div>
                     </div>
                   ) : (
-                    <div className="py-8 space-y-3">
-                      <div className="w-14 h-14 rounded-2xl gradient-bg flex items-center justify-center text-white text-2xl mx-auto shadow-glow group-hover:scale-110 transition-transform">
+                    <div className="py-6 space-y-2">
+                      <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300 text-lg mx-auto">
                         <FiUploadCloud />
                       </div>
-                      <div className="font-bold text-white text-sm">
-                        Click to upload course artwork
+                      <div className="text-xs font-medium text-zinc-200">
+                        Click to upload course image
                       </div>
-                      <p className="text-xs text-gray-400">
-                        High resolution recommended (16:9 aspect ratio, PNG, JPG, or WebP)
+                      <p className="text-[11px] text-zinc-500">
+                        16:9 ratio recommended (PNG, JPG, WebP)
                       </p>
                     </div>
                   )}
@@ -208,29 +184,26 @@ function CourseCreate() {
               </div>
             </div>
 
-            {/* Submit Bar */}
-            <div className="pt-4 border-t border-white/5 flex items-center justify-end gap-3">
+            {/* Actions */}
+            <div className="pt-3 border-t border-zinc-800 flex items-center justify-end gap-2.5">
               <button
                 type="button"
                 onClick={() => navigate("/admin/our-courses")}
-                className="btn-secondary px-6 py-3.5 rounded-xl text-xs font-semibold"
+                className="btn-secondary text-xs px-4 py-2"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-primary px-8 py-3.5 rounded-xl text-xs font-bold shadow-glow flex items-center gap-2 disabled:opacity-50"
+                className="btn-primary text-xs px-5 py-2 flex items-center gap-1.5"
               >
                 {loading ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Publishing...</span>
-                  </>
+                  <span>Publishing...</span>
                 ) : (
                   <>
-                    <FiPlusCircle size={15} />
-                    <span>Publish Masterclass</span>
+                    <FiPlusCircle size={13} />
+                    <span>Publish Course</span>
                   </>
                 )}
               </button>

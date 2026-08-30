@@ -77,11 +77,11 @@ function Courses() {
   };
 
   const categories = [
-    { id: "all", label: "All Topics" },
-    { id: "fullstack", label: "Full Stack" },
+    { id: "all", label: "All Tracks" },
+    { id: "fullstack", label: "Full-Stack" },
     { id: "ai", label: "AI & ML" },
+    { id: "backend", label: "Backend Systems" },
     { id: "cloud", label: "Cloud & DevOps" },
-    { id: "backend", label: "Backend" },
     { id: "web3", label: "Web3" },
   ];
 
@@ -111,24 +111,20 @@ function Courses() {
     });
 
   return (
-    <div className="bg-[#0a0a0f] text-[#e8e6f0] min-h-screen flex flex-col lg:flex-row selection:bg-purple-600 selection:text-white font-sans">
-      {/* Ambient background glows */}
-      <div className="fixed top-20 right-20 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" />
-      <div className="fixed bottom-20 left-1/3 w-[450px] h-[450px] bg-blue-600/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-glow" style={{ animationDelay: "2s" }} />
-
-      {/* ── MOBILE TOPBAR ── */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0d0d15]/95 backdrop-blur-md border-b border-white/5 sticky top-0 z-40">
+    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-indigo-600 selection:text-white">
+      {/* ── MOBILE HEADER ── */}
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0e0e11] border-b border-zinc-800 sticky top-0 z-40">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
+          <div className="w-7 h-7 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center">
             <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
           </div>
-          <span className="font-bold text-white tracking-tight">CourseShip</span>
+          <span className="font-bold text-white tracking-tight text-sm">CourseShip</span>
         </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white"
+          className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white"
         >
-          {isSidebarOpen ? <HiX size={20} /> : <HiMenu size={20} />}
+          {isSidebarOpen ? <HiX size={18} /> : <HiMenu size={18} />}
         </button>
       </div>
 
@@ -136,74 +132,72 @@ function Courses() {
       {isSidebarOpen && (
         <div
           onClick={() => setIsSidebarOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+          className="lg:hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-40"
         />
       )}
 
-      {/* ── SIDEBAR (DESKTOP & MOBILE DRAWER) ── */}
+      {/* ── SIDEBAR NAVIGATION ── */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-[#0d0d15] border-r border-white/5 flex flex-col p-6 transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#0e0e11] border-r border-zinc-800 flex flex-col p-5 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
-        {/* Brand */}
-        <Link to="/" className="flex items-center gap-3 mb-8 group">
-          <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
-            <img src={logo} alt="CourseShip" className="w-6 h-6 rounded-md object-cover" />
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2.5 mb-8">
+          <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden">
+            <img src={logo} alt="CourseShip" className="w-6 h-6 object-cover rounded" />
           </div>
           <div className="flex flex-col">
-            <span className="text-xl font-bold tracking-tight text-white flex items-center gap-1">
-              Course<span className="gradient-text">Ship</span>
-            </span>
-            <span className="text-[10px] text-purple-400 font-mono tracking-widest uppercase">Learning Hub</span>
+            <span className="text-sm font-bold tracking-tight text-white">CourseShip</span>
+            <span className="text-[10px] font-mono text-zinc-500 uppercase">Catalog</span>
           </div>
         </Link>
 
-        {/* Navigation Links */}
-        <nav className="space-y-1.5 flex-1 text-sm font-medium">
+        {/* Links */}
+        <nav className="space-y-1 flex-1 text-xs font-medium">
           <Link
             to="/"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
           >
-            <FiHome size={18} />
+            <FiHome size={15} />
             <span>Home</span>
           </Link>
           <Link
             to="/courses"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-600/15 text-purple-300 border border-purple-500/25 font-semibold"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-zinc-800 text-white font-semibold border border-zinc-700"
           >
-            <FiBookOpen size={18} className="text-purple-400" />
-            <span>All Courses</span>
+            <FiBookOpen size={15} className="text-indigo-400" />
+            <span>Courses</span>
           </Link>
           <Link
             to="/purchases"
-            className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition"
+            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
           >
-            <FiShoppingBag size={18} />
+            <FiShoppingBag size={15} />
             <span>My Learning</span>
           </Link>
         </nav>
 
-        {/* Bottom User Profile / Auth Area */}
-        <div className="pt-6 border-t border-white/5 space-y-3">
+        {/* User Card / Auth */}
+        <div className="pt-4 border-t border-zinc-800 space-y-3">
           {isLoggedIn ? (
-            <div className="space-y-3">
-              <div className="glass-card p-3 rounded-2xl flex items-center gap-3 border border-white/5">
-                <div className="w-9 h-9 rounded-xl gradient-bg flex items-center justify-center text-white font-bold text-xs shadow-sm flex-shrink-0">
+            <div className="space-y-2.5">
+              <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800 flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
                   {userProfile?.firstName ? userProfile.firstName[0].toUpperCase() : <FiUser />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-bold text-white truncate">
+                  <div className="text-xs font-medium text-white truncate">
                     {userProfile?.firstName} {userProfile?.lastName}
                   </div>
-                  <div className="text-[11px] text-gray-400 truncate">{userProfile?.email}</div>
+                  <div className="text-[10px] text-zinc-500 truncate">{userProfile?.email}</div>
                 </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-red-500/20 text-red-400 hover:bg-red-500/10 text-xs font-semibold transition"
+                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-rose-500/20 text-rose-400 hover:bg-rose-500/10 text-xs font-medium transition"
               >
-                <FiLogOut size={14} />
+                <FiLogOut size={13} />
                 <span>Log Out</span>
               </button>
             </div>
@@ -211,16 +205,16 @@ function Courses() {
             <div className="space-y-2">
               <Link
                 to="/login"
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/10 text-gray-300 hover:text-white hover:bg-white/5 text-xs font-semibold transition"
+                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 text-xs font-medium transition"
               >
-                <FiLogIn size={14} />
+                <FiLogIn size={13} />
                 <span>Sign In</span>
               </Link>
               <Link
                 to="/signup"
-                className="w-full flex items-center justify-center py-2.5 rounded-xl gradient-bg text-white text-xs font-bold shadow-glow hover:opacity-95 transition"
+                className="btn-primary w-full py-2 text-xs font-semibold"
               >
-                Create Account
+                Sign Up
               </Link>
             </div>
           )}
@@ -228,70 +222,67 @@ function Courses() {
       </aside>
 
       {/* ── MAIN CONTENT AREA ── */}
-      <main className="flex-1 lg:ml-72 min-h-screen p-4 sm:p-8 lg:p-10 overflow-y-auto">
-        <div className="max-w-7xl mx-auto space-y-8">
+      <main className="flex-1 lg:ml-64 min-h-screen p-4 sm:p-8 lg:p-10 overflow-y-auto">
+        <div className="max-w-6xl mx-auto space-y-7">
           {/* Header Bar */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold uppercase tracking-wider mb-2">
-                <FiBookOpen /> Masterclasses Catalog
-              </div>
-              <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                Explore Engineering Courses
+              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                Engineering Courses
               </h1>
-              <p className="text-gray-400 text-sm mt-1">
+              <p className="text-xs sm:text-sm text-zinc-400 mt-1">
                 Learn modern stacks through hands-on, production-grade applications.
               </p>
             </div>
 
-            <div className="text-xs font-mono text-gray-400 bg-white/5 border border-white/5 px-4 py-2 rounded-xl self-start md:self-auto">
-              <span className="text-white font-bold">{filteredCourses.length}</span> Courses Available
+            <div className="text-xs font-mono text-zinc-400 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg self-start sm:self-auto">
+              <span className="text-white font-semibold">{filteredCourses.length}</span> Courses
             </div>
           </div>
 
-          {/* Search & Filter Controls */}
-          <div className="glass-card p-4 rounded-2xl border border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Search & Sort Controls */}
+          <div className="card-surface p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
             {/* Search Input */}
             <div className="relative w-full sm:w-80">
-              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={15} />
               <input
                 type="text"
-                placeholder="Search courses, stacks, or keywords..."
+                placeholder="Search courses or stacks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl glass-input text-xs text-white placeholder:text-gray-500 outline-none"
+                className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
               />
             </div>
 
             {/* Sort Dropdown */}
             <div className="relative w-full sm:w-auto flex items-center justify-end gap-2">
-              <span className="text-xs text-gray-400 hidden sm:inline">Sort:</span>
+              <span className="text-xs text-zinc-400 hidden sm:inline font-mono">Sort:</span>
               <div className="relative w-full sm:w-auto">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full sm:w-auto appearance-none pl-3 pr-8 py-2.5 rounded-xl glass-input text-xs text-white outline-none cursor-pointer"
+                  className="w-full sm:w-auto appearance-none pl-3 pr-8 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white outline-none cursor-pointer"
                 >
-                  <option value="default" className="bg-[#141420] text-white">Recommended</option>
-                  <option value="price-low" className="bg-[#141420] text-white">Price: Low to High</option>
-                  <option value="price-high" className="bg-[#141420] text-white">Price: High to Low</option>
-                  <option value="alpha" className="bg-[#141420] text-white">Alphabetical (A-Z)</option>
+                  <option value="default" className="bg-[#121215] text-white">Recommended</option>
+                  <option value="price-low" className="bg-[#121215] text-white">Price: Low to High</option>
+                  <option value="price-high" className="bg-[#121215] text-white">Price: High to Low</option>
+                  <option value="alpha" className="bg-[#121215] text-white">Alphabetical (A-Z)</option>
                 </select>
-                <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
+                <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" size={13} />
               </div>
             </div>
           </div>
 
           {/* Category Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
                   selectedCategory === cat.id
-                    ? "gradient-bg text-white shadow-glow"
-                    : "glass-card text-gray-400 hover:text-white border border-white/5 hover:border-purple-500/30"
+                    ? "bg-white text-zinc-950 font-semibold"
+                    : "bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800"
                 }`}
               >
                 {cat.label}
@@ -303,28 +294,26 @@ function Courses() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((n) => (
-                <div key={n} className="glass-card rounded-3xl h-96 animate-pulse border border-white/5 p-6 space-y-4">
-                  <div className="h-44 bg-white/5 rounded-2xl" />
-                  <div className="h-4 bg-white/5 rounded w-3/4" />
-                  <div className="h-3 bg-white/5 rounded w-full" />
+                <div key={n} className="card-surface h-80 animate-pulse p-4 space-y-4">
+                  <div className="h-44 bg-zinc-800/60 rounded-xl" />
+                  <div className="h-4 bg-zinc-800 rounded w-3/4" />
+                  <div className="h-3 bg-zinc-800 rounded w-full" />
                 </div>
               ))}
             </div>
           ) : filteredCourses.length === 0 ? (
-            <div className="glass-card rounded-3xl p-16 text-center border border-white/5 max-w-md mx-auto space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center mx-auto text-2xl">
-                <FiBookOpen />
-              </div>
-              <h3 className="text-lg font-bold text-white">No matching courses found</h3>
-              <p className="text-xs text-gray-400">
-                Try searching for a different keyword or select another category filter.
+            <div className="card-surface p-14 text-center max-w-md mx-auto space-y-3">
+              <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
+              <h3 className="text-sm font-bold text-white">No courses match your search</h3>
+              <p className="text-xs text-zinc-400">
+                Try searching for a different keyword or reset active filters.
               </p>
               <button
                 onClick={() => {
                   setSearchQuery("");
                   setSelectedCategory("all");
                 }}
-                className="btn-secondary px-5 py-2 rounded-xl text-xs font-semibold"
+                className="btn-secondary text-xs px-4 py-2"
               >
                 Reset Filters
               </button>
@@ -334,54 +323,50 @@ function Courses() {
               {filteredCourses.map((course) => (
                 <div
                   key={course._id}
-                  className="glass-card-hover rounded-3xl overflow-hidden flex flex-col group border border-white/5"
+                  className="card-surface-interactive overflow-hidden flex flex-col group justify-between"
                 >
                   {/* Image */}
-                  <div className="relative h-48 overflow-hidden bg-black/40">
+                  <div className="relative h-48 overflow-hidden bg-zinc-950 border-b border-zinc-800">
                     <img
                       src={
                         course.image?.url ||
                         "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
                       }
                       alt={course.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       onError={(e) => {
                         e.target.src =
                           "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600";
                       }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#13131f] via-transparent to-transparent opacity-80" />
-                    <span className="absolute bottom-3 left-4 text-xs font-bold text-white font-mono bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
+                    <span className="absolute bottom-3 left-3 text-xs font-bold text-white font-mono bg-zinc-950/90 border border-zinc-800 px-2.5 py-1 rounded-md">
                       ₹{course.price}
-                    </span>
-                    <span className="absolute top-4 right-4 bg-emerald-500/90 text-black text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                      75% OFF
                     </span>
                   </div>
 
                   {/* Body */}
-                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div>
-                      <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors line-clamp-2 min-h-[3rem] leading-snug">
+                  <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                    <div className="space-y-1.5">
+                      <h3 className="text-sm sm:text-base font-bold text-zinc-100 group-hover:text-white line-clamp-2 leading-snug">
                         {course.title}
                       </h3>
-                      <p className="text-xs text-gray-400 line-clamp-2 mt-1 leading-relaxed">
+                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                         {course.description}
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-xs text-gray-400">
+                    <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-[11px] text-zinc-400 font-mono">
                         <span className="flex items-center gap-1">
-                          <FiClock size={13} className="text-purple-400" /> Lifetime
+                          <FiClock size={11} className="text-zinc-500" /> Lifetime
                         </span>
                         <span className="flex items-center gap-1">
-                          <FiAward size={13} className="text-emerald-400" /> Certificate
+                          <FiAward size={11} className="text-emerald-400" /> Cert
                         </span>
                       </div>
                       <Link
                         to={`/buy/${course._id}`}
-                        className="btn-primary px-4 py-2 rounded-xl text-xs font-bold shadow-glow flex items-center gap-1.5"
+                        className="btn-accent text-xs font-semibold py-2 px-3.5 rounded-lg flex items-center gap-1"
                       >
                         <span>Enroll</span>
                         <FiArrowRight size={12} />
