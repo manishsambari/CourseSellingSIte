@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   FiArrowRight,
@@ -12,6 +12,7 @@ import {
   FiShield,
   FiCpu,
   FiZap,
+  FiFilter,
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import { RiShoppingBag3Line } from "react-icons/ri";
@@ -26,6 +27,7 @@ function Home() {
   const [userProfile, setUserProfile] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("all");
 
   useEffect(() => {
     const userRaw = localStorage.getItem("user");
@@ -71,6 +73,28 @@ function Home() {
       toast.error(error.response?.data?.errors || "Error in logging out");
     }
   };
+
+  const categories = [
+    { id: "all", label: "// ALL TRACKS" },
+    { id: "fullstack", label: "// 01 FULLSTACK" },
+    { id: "ai", label: "// 02 AI & AGENTS" },
+    { id: "backend", label: "// 03 DISTRIBUTED BACKEND" },
+    { id: "cloud", label: "// 04 CLOUD & DEVOPS" },
+    { id: "web3", label: "// 05 WEB3 & CRYPTO" },
+  ];
+
+  const filteredCourses = useMemo(() => {
+    if (activeCategory === "all") return courses;
+    return courses.filter((c) => {
+      const text = `${c.title} ${c.description}`.toLowerCase();
+      if (activeCategory === "fullstack") return text.includes("react") || text.includes("next") || text.includes("fullstack") || text.includes("mobile") || text.includes("frontend");
+      if (activeCategory === "ai") return text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("llm") || text.includes("generative");
+      if (activeCategory === "backend") return text.includes("backend") || text.includes("rust") || text.includes("golang") || text.includes("grpc") || text.includes("system design") || text.includes("websocket") || text.includes("data structure");
+      if (activeCategory === "cloud") return text.includes("cloud") || text.includes("kubernetes") || text.includes("docker") || text.includes("devops") || text.includes("aws");
+      if (activeCategory === "web3") return text.includes("web3") || text.includes("solidity") || text.includes("smart contract") || text.includes("cryptography") || text.includes("security") || text.includes("hacking");
+      return true;
+    });
+  }, [courses, activeCategory]);
 
   return (
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-sans selection:bg-cyan-400 selection:text-black">
@@ -245,7 +269,7 @@ function Home() {
           </Link>
           <a
             href="#curriculum"
-            className="btn-cyber-outline w-full sm:w-auto px-6 py-3 text-center"
+            className="btn-cyber-outline w-full sm:w-auto px-6 py-3 text-center font-mono"
           >
             EXPLORE BLUEPRINTS
           </a>
@@ -280,7 +304,7 @@ function Home() {
                 [✓] Multi-agent LangGraph orchestrator initialized
               </div>
               <div className="text-emerald-400 font-bold pt-1">
-                ➔ System compiled successfully: 12 Production Blueprints Ready.
+                ➔ System compiled successfully: {courses.length || 16} Production Blueprints Ready.
               </div>
             </div>
           </div>
@@ -294,9 +318,9 @@ function Home() {
             <div className="text-[10px] text-zinc-500 font-mono">Global developers</div>
           </div>
           <div className="cyber-card p-4 space-y-1">
-            <div className="text-[10px] font-mono text-emerald-400">// REPO ACCESS</div>
-            <div className="text-xl font-bold text-white font-mono">100%</div>
-            <div className="text-[10px] text-zinc-500 font-mono">Unrestricted monorepos</div>
+            <div className="text-[10px] font-mono text-emerald-400">// MOUNTED TRACKS</div>
+            <div className="text-xl font-bold text-white font-mono">{courses.length || 16} Active</div>
+            <div className="text-[10px] text-zinc-500 font-mono">Production blueprints</div>
           </div>
           <div className="cyber-card p-4 space-y-1">
             <div className="text-[10px] font-mono text-purple-400">// UPTIME PROTOCOL</div>
@@ -311,14 +335,14 @@ function Home() {
         </div>
       </section>
 
-      {/* ── CURRICULUM SECTION ── */}
+      {/* ── PRODUCTION TRACKS SECTION ── */}
       <section id="curriculum" className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#162034]">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
           <div>
             <div className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest font-semibold">
-              // PRODUCTION TRACKS
+              // PRODUCTION TRACKS ({filteredCourses.length})
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase mt-1">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase font-display mt-1">
               ENGINEERING MASTERCLASSES
             </h2>
             <p className="text-xs text-zinc-400 font-mono mt-1">
@@ -327,57 +351,80 @@ function Home() {
           </div>
           <Link
             to="/courses"
-            className="btn-cyber-outline text-xs py-2 px-3.5 self-start sm:self-auto flex items-center gap-1.5 font-mono"
+            className="btn-cyber-outline text-xs py-2 px-3.5 self-start md:self-auto flex items-center gap-1.5 font-mono"
           >
-            <span>VIEW ALL TRACKS</span>
+            <span>EXPLORE ALL ({courses.length})</span>
             <FiArrowUpRight size={13} />
           </Link>
         </div>
 
+        {/* Category Pills on Home */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-4 scrollbar-none">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-mono uppercase whitespace-nowrap transition-colors ${
+                activeCategory === cat.id
+                  ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
+                  : "bg-[#080c14] text-zinc-400 hover:text-white border border-[#162034]"
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
+
         {loading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3].map((n) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
               <div key={n} className="cyber-card h-80 animate-pulse p-4 space-y-3" />
             ))}
           </div>
-        ) : courses.length === 0 ? (
+        ) : filteredCourses.length === 0 ? (
           <div className="cyber-card p-12 text-center max-w-md mx-auto space-y-3 font-mono">
             <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-            <div className="text-sm text-zinc-300">// NO TRACKS MOUNTED</div>
+            <div className="text-sm text-zinc-300">// NO TRACKS FOUND FOR THIS CATEGORY</div>
+            <button
+              onClick={() => setActiveCategory("all")}
+              className="btn-cyber-outline text-xs px-3.5 py-1.5"
+            >
+              SHOW ALL TRACKS
+            </button>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.slice(0, 6).map((course, idx) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredCourses.map((course, idx) => (
               <div
                 key={course._id}
                 className="cyber-card-interactive flex flex-col justify-between group"
               >
-                {/* Image Container */}
-                <div className="relative h-48 overflow-hidden bg-[#04060a] border-b border-[#162034]">
+                {/* Image Container with HD Cover */}
+                <div className="relative h-44 overflow-hidden bg-[#04060a] border-b border-[#162034]">
                   <img
                     src={
                       course.image?.url ||
-                      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
+                      "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&auto=format&fit=crop&q=80"
                     }
                     alt={course.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                     onError={(e) => {
                       e.target.src =
-                        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600";
+                        "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&auto=format&fit=crop&q=80";
                     }}
                   />
-                  <div className="absolute top-3 left-3 badge-cyber text-[10px]">
+                  <div className="absolute top-2.5 left-2.5 badge-cyber text-[9px]">
                     TRACK 0{idx + 1}
                   </div>
-                  <div className="absolute bottom-3 left-3 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded text-xs font-mono font-bold text-cyan-300">
+                  <div className="absolute bottom-2.5 left-2.5 bg-[#060912]/95 border border-[#162034] px-2 py-0.5 rounded text-xs font-mono font-bold text-cyan-300 shadow-md">
                     ₹{course.price}
                   </div>
                 </div>
 
                 {/* Card Content */}
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-1.5">
-                    <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug">
+                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                  <div className="space-y-1">
+                    <h3 className="font-display text-sm font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug">
                       {course.title}
                     </h3>
                     <p className="text-xs text-zinc-400 line-clamp-2 font-mono leading-relaxed">
@@ -385,17 +432,17 @@ function Home() {
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-[#162034] flex items-center justify-between gap-3">
-                    <div className="text-[11px] font-mono text-zinc-500 flex items-center gap-1">
-                      <FiClock size={11} className="text-zinc-400" />
+                  <div className="pt-2.5 border-t border-[#162034] flex items-center justify-between gap-2">
+                    <div className="text-[10px] font-mono text-zinc-500 flex items-center gap-1">
+                      <FiClock size={10} className="text-zinc-400" />
                       <span>SELF-PACED</span>
                     </div>
                     <Link
                       to={`/buy/${course._id}`}
-                      className="btn-cyber-primary text-xs py-2 px-3.5 flex items-center gap-1"
+                      className="btn-cyber-primary text-xs py-1.5 px-3 flex items-center gap-1"
                     >
                       <span>INITIALIZE</span>
-                      <FiArrowRight size={12} />
+                      <FiArrowRight size={11} />
                     </Link>
                   </div>
                 </div>
@@ -411,7 +458,7 @@ function Home() {
           <div className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest font-semibold">
             // ARCHITECTURE STANDARD
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight mt-1">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display mt-1">
             BUILT FOR ENTERPRISE READINESS
           </h2>
         </div>
