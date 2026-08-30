@@ -7,6 +7,7 @@ import {
   FiUploadCloud,
   FiArrowLeft,
   FiCheckCircle,
+  FiTerminal,
 } from "react-icons/fi";
 import { BACKEND_URL } from "../utils/utils";
 
@@ -38,7 +39,7 @@ function UpdateCourse() {
         }
       } catch (error) {
         console.error(error);
-        toast.error("Failed to fetch course data");
+        toast.error("Failed to fetch track data from registry");
       } finally {
         setInitialLoading(false);
       }
@@ -87,11 +88,11 @@ function UpdateCourse() {
           withCredentials: true,
         }
       );
-      toast.success(response.data?.message || "Course updated successfully!");
+      toast.success(response.data?.message || "Track updated in registry successfully!");
       navigate("/admin/our-courses");
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.errors || "Error updating course");
+      toast.error(error.response?.data?.errors || "Error updating track");
     } finally {
       setUpdating(false);
     }
@@ -99,86 +100,90 @@ function UpdateCourse() {
 
   if (initialLoading) {
     return (
-      <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen flex items-center justify-center font-sans">
+      <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex items-center justify-center font-mono">
         <div className="text-center space-y-3">
-          <div className="w-8 h-8 border-2 border-zinc-700 border-t-white rounded-full animate-spin mx-auto" />
-          <p className="text-zinc-400 text-xs font-mono">Loading course data...</p>
+          <div className="w-8 h-8 border-2 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin mx-auto" />
+          <p className="text-cyan-400 text-xs">// PULLING TRACK BUFFER...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen font-sans selection:bg-indigo-600 selection:text-white p-4 sm:p-8">
+    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-mono selection:bg-cyan-400 selection:text-black p-4 sm:p-8">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
-        <div className="card-surface p-5 sm:p-6 flex items-center justify-between gap-4">
+        <div className="cyber-card p-5 sm:p-6 flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Update Course
+            <div className="badge-cyber mb-1 text-[10px]">
+              <FiTerminal size={11} />
+              <span>REGISTRY BUFFER // PATCH</span>
+            </div>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight uppercase font-display">
+              UPDATE TRACK MATRIX
             </h1>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              Edit curriculum, adjust pricing, or upload new artwork.
+            <p className="text-xs text-zinc-400 font-mono mt-0.5">
+              Modify curriculum parameters, pricing, or artwork buffer.
             </p>
           </div>
 
           <Link
             to="/admin/our-courses"
-            className="btn-secondary text-xs px-3.5 py-2 flex items-center gap-1.5"
+            className="btn-cyber-outline text-xs px-3.5 py-2 flex items-center gap-1.5"
           >
             <FiArrowLeft size={12} />
-            <span>Catalog</span>
+            <span>CATALOG</span>
           </Link>
         </div>
 
         {/* Form */}
-        <div className="card-surface p-6 sm:p-8">
+        <div className="cyber-card p-6 sm:p-8">
           <form onSubmit={handleUpdateCourse} className="space-y-4">
             {/* Title */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-300">Course Title</label>
+              <label className="text-[11px] uppercase text-zinc-300">// TRACK TITLE</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
-                className="w-full px-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-[#080c14] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
               />
             </div>
 
             {/* Description */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-300">Description & Syllabus</label>
+              <label className="text-[11px] uppercase text-zinc-300">// DESCRIPTION & SYLLABUS</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 rows={4}
-                className="w-full p-3 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none resize-y min-h-[100px]"
+                className="w-full p-3 rounded-lg bg-[#080c14] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none resize-y min-h-[100px]"
               />
             </div>
 
             {/* Price */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-300">Price (INR ₹)</label>
+              <label className="text-[11px] uppercase text-zinc-300">// PRICE (INR ₹)</label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-500 font-mono text-xs">₹</span>
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 font-mono text-xs">₹</span>
                 <input
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   required
                   min={0}
-                  className="w-full pl-8 pr-3.5 py-2.5 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none font-mono"
+                  className="w-full pl-8 pr-3.5 py-2.5 rounded-lg bg-[#080c14] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none font-mono"
                 />
               </div>
             </div>
 
             {/* Thumbnail Preview and Upload */}
             <div className="space-y-1 pt-1">
-              <label className="text-xs font-medium text-zinc-300">Course Cover Artwork</label>
+              <label className="text-[11px] uppercase text-zinc-300">// COVER ARTWORK BUFFER</label>
 
-              <div className="border border-dashed border-zinc-700 rounded-xl p-5 text-center hover:border-zinc-500 transition-colors bg-zinc-900/40">
+              <div className="border border-dashed border-[#1c2a45] rounded-xl p-5 text-center hover:border-cyan-500/50 transition-colors bg-[#080c14]">
                 <input
                   type="file"
                   onChange={changePhotoHandler}
@@ -192,18 +197,18 @@ function UpdateCourse() {
                       <img
                         src={imagePreview}
                         alt="Preview"
-                        className="mx-auto max-h-48 rounded-lg object-contain border border-zinc-800"
+                        className="mx-auto max-h-48 rounded object-contain border border-[#162034]"
                       />
-                      <div className="text-xs font-medium text-indigo-400 flex items-center justify-center gap-1">
-                        <FiCheckCircle size={12} /> Click to replace cover image
+                      <div className="text-xs font-mono text-cyan-400 flex items-center justify-center gap-1">
+                        <FiCheckCircle size={12} /> CLICK TO REPLACE IMAGE BUFFER
                       </div>
                     </div>
                   ) : (
                     <div className="py-6 space-y-2">
-                      <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300 text-lg mx-auto">
+                      <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg mx-auto shadow-neon-cyan">
                         <FiUploadCloud />
                       </div>
-                      <div className="text-xs font-medium text-zinc-200">
+                      <div className="text-xs font-semibold text-white uppercase font-display">
                         Click to select new image
                       </div>
                     </div>
@@ -213,25 +218,25 @@ function UpdateCourse() {
             </div>
 
             {/* Actions */}
-            <div className="pt-3 border-t border-zinc-800 flex items-center justify-end gap-2.5">
+            <div className="pt-3 border-t border-[#162034] flex items-center justify-end gap-2.5 font-mono">
               <button
                 type="button"
                 onClick={() => navigate("/admin/our-courses")}
-                className="btn-secondary text-xs px-4 py-2"
+                className="btn-cyber-outline text-xs px-4 py-2"
               >
-                Cancel
+                CANCEL
               </button>
               <button
                 type="submit"
                 disabled={updating}
-                className="btn-primary text-xs px-5 py-2 flex items-center gap-1.5"
+                className="btn-cyber-primary text-xs px-5 py-2 flex items-center gap-1.5"
               >
                 {updating ? (
-                  <span>Saving...</span>
+                  <span>PATCHING BUFFER...</span>
                 ) : (
                   <>
                     <FiEdit size={13} />
-                    <span>Save Changes</span>
+                    <span>SAVE PATCH</span>
                   </>
                 )}
               </button>

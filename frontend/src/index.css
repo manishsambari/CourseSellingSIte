@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,7 +6,7 @@
 
 @layer base {
   * {
-    border-color: #27272a;
+    border-color: #162034;
   }
 
   html {
@@ -15,83 +15,91 @@
   }
 
   body {
-    @apply font-sans bg-[#09090b] text-[#f4f4f5] antialiased selection:bg-indigo-600 selection:text-white;
+    @apply font-sans bg-[#05070e] text-[#f1f5f9] antialiased selection:bg-[#00f0ff] selection:text-black;
     min-height: 100vh;
+    background-color: #05070e;
   }
 
-  /* Custom Clean Scrollbar */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+
+  /* Cyber Monospace Scrollbars */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #09090b;
+    background: #05070e;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #27272a;
-    border-radius: 9999px;
+    background: #1c2a45;
+    border-radius: 2px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #3f3f46;
+    background: #00f0ff;
   }
 }
 
 @layer components {
-  /* Subtle tactile grid */
-  .bg-dot-grid {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-    background-size: 24px 24px;
+  /* Cyber Grid Background */
+  .bg-grid-pattern {
+    background-size: 32px 32px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   }
 
-  /* Crisp Surface Cards */
-  .card-surface {
-    @apply bg-[#121215] border border-[#27272a] rounded-2xl;
+  .bg-radial-matrix {
+    background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08) 0%, rgba(157, 78, 221, 0.04) 40%, transparent 70%);
   }
 
-  .card-surface-interactive {
-    @apply bg-[#121215] border border-[#27272a] rounded-2xl transition-all duration-200 hover:border-zinc-700 hover:bg-[#18181c];
+  /* Cyber HUD Cards */
+  .cyber-card {
+    @apply bg-[#090d18]/90 border border-[#162034] rounded-xl relative overflow-hidden backdrop-blur-md;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.7), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
   }
 
-  /* Navbar */
-  .header-nav {
-    @apply bg-[#09090b]/85 backdrop-blur-md border-b border-[#27272a];
+  .cyber-card-interactive {
+    @apply bg-[#090d18]/90 border border-[#162034] rounded-xl relative overflow-hidden transition-all duration-200 hover:border-cyan-500/50 hover:bg-[#0c1322] hover:shadow-neon-cyan;
   }
 
-  /* Clean Inputs */
-  .input-field {
-    @apply bg-[#121215] border border-[#27272a] text-zinc-100 placeholder:text-zinc-500 rounded-xl px-3.5 py-2.5 text-sm transition-colors focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:outline-none;
+  /* Cyber Buttons */
+  .btn-cyber-primary {
+    @apply relative inline-flex items-center justify-center font-display font-semibold text-xs uppercase tracking-wider rounded-lg px-4 py-2.5 transition-all duration-150 bg-[#00f0ff] text-black hover:bg-[#38f8ff] active:scale-[0.98] shadow-neon-cyan disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  /* Buttons */
-  .btn-primary {
-    @apply inline-flex items-center justify-center font-medium text-sm rounded-xl px-4 py-2.5 transition-all duration-150 bg-white text-zinc-950 hover:bg-zinc-200 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+  .btn-cyber-outline {
+    @apply relative inline-flex items-center justify-center font-display font-medium text-xs uppercase tracking-wider rounded-lg px-4 py-2.5 transition-all duration-150 bg-[#0c121e] text-zinc-200 border border-[#1c2a45] hover:border-cyan-500/60 hover:text-cyan-300 hover:bg-[#101726] active:scale-[0.98] disabled:opacity-50;
   }
 
-  .btn-accent {
-    @apply inline-flex items-center justify-center font-medium text-sm rounded-xl px-4 py-2.5 transition-all duration-150 bg-indigo-600 text-white hover:bg-indigo-500 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+  .btn-cyber-accent {
+    @apply relative inline-flex items-center justify-center font-display font-semibold text-xs uppercase tracking-wider rounded-lg px-4 py-2.5 transition-all duration-150 bg-[#6366f1] text-white hover:bg-[#4f46e5] active:scale-[0.98] shadow-neon-purple disabled:opacity-50;
   }
 
-  .btn-secondary {
-    @apply inline-flex items-center justify-center font-medium text-sm rounded-xl px-4 py-2.5 transition-all duration-150 bg-[#18181c] text-zinc-200 border border-[#27272a] hover:bg-[#222228] hover:text-white hover:border-zinc-600 active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed;
+  /* Cyber Monospace Badges */
+  .badge-cyber {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[11px] font-mono uppercase tracking-wider rounded border border-[#1c2a45] bg-[#0c121e] text-cyan-300;
   }
 
-  .btn-ghost {
-    @apply inline-flex items-center justify-center font-medium text-sm rounded-xl px-3 py-2 transition-all duration-150 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60 active:scale-[0.99];
+  .badge-cyber-green {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[11px] font-mono uppercase tracking-wider rounded border border-emerald-500/30 bg-emerald-500/10 text-emerald-400;
   }
 
-  /* Micro Tags & Badges */
-  .tag-badge {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono rounded-md border border-[#27272a] bg-[#18181c] text-zinc-300;
+  .badge-cyber-amber {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[11px] font-mono uppercase tracking-wider rounded border border-amber-500/30 bg-amber-500/10 text-amber-300;
   }
 
-  .tag-badge-green {
-    @apply inline-flex items-center gap-1 px-2.5 py-0.5 text-xs font-mono font-medium rounded-md border border-emerald-500/20 bg-emerald-500/10 text-emerald-400;
+  /* Cyber Input */
+  .cyber-input {
+    @apply bg-[#080c14] border border-[#162034] text-zinc-100 placeholder:text-zinc-500 rounded-lg px-3.5 py-2.5 text-xs font-mono transition-colors focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 focus:outline-none;
   }
 
-  .tag-badge-indigo {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-medium rounded-md border border-indigo-500/25 bg-indigo-500/10 text-indigo-300;
+  /* Terminal Window */
+  .terminal-box {
+    @apply bg-[#060910] border border-[#162034] rounded-xl p-4 font-mono text-xs text-zinc-300 shadow-2xl;
   }
 }

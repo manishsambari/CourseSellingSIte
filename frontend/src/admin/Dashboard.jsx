@@ -11,7 +11,8 @@ import {
   FiDollarSign,
   FiActivity,
   FiArrowRight,
-  FiCheckCircle,
+  FiTerminal,
+  FiCpu,
 } from "react-icons/fi";
 import { RiDashboardLine, RiShieldUserLine } from "react-icons/ri";
 import { BACKEND_URL } from "../utils/utils";
@@ -52,7 +53,7 @@ function Dashboard() {
       const response = await axios.get(`${BACKEND_URL}/admin/logout`, {
         withCredentials: true,
       });
-      toast.success(response.data?.message || "Admin logged out successfully");
+      toast.success(response.data?.message || "Admin Session Terminated");
       localStorage.removeItem("admin");
       navigate("/admin/login");
     } catch (error) {
@@ -63,11 +64,11 @@ function Dashboard() {
   const totalRevenue = courses.reduce((acc, c) => acc + (Number(c.price) || 0) * 14, 0);
 
   return (
-    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen flex font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex font-sans selection:bg-cyan-400 selection:text-black">
       {/* Mobile Hamburger */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="lg:hidden fixed top-3.5 left-3.5 z-50 p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white shadow-md"
+        className="lg:hidden fixed top-3.5 left-3.5 z-50 p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400"
       >
         {isSidebarOpen ? "✕" : "☰"}
       </button>
@@ -82,73 +83,73 @@ function Dashboard() {
 
       {/* ── ADMIN SIDEBAR ── */}
       <aside
-        className={`w-64 bg-[#0e0e11] border-r border-zinc-800 flex flex-col p-5 fixed top-0 bottom-0 left-0 z-40 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`w-64 bg-[#080c14] border-r border-[#162034] flex flex-col p-5 fixed top-0 bottom-0 left-0 z-40 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
         {/* Brand */}
         <Link to="/" className="flex items-center gap-2.5 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden">
+          <div className="w-8 h-8 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-neon-cyan">
             <img src={logo} alt="CourseShip" className="w-6 h-6 object-cover rounded" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-tight text-white flex items-center gap-1.5">
-              CourseShip <span className="tag-badge-indigo text-[10px]">Admin</span>
+            <span className="font-display text-sm font-bold tracking-wider text-white uppercase flex items-center gap-1.5">
+              CourseShip <span className="badge-cyber text-[9px]">ROOT</span>
             </span>
           </div>
         </Link>
 
         {/* Navigation */}
-        <nav className="space-y-1 flex-1 text-xs font-medium">
+        <nav className="space-y-1.5 flex-1 text-xs font-mono">
           <Link
             to="/admin/dashboard"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-zinc-800 text-white font-semibold border border-zinc-700"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#0c121e] text-cyan-300 font-bold border border-cyan-500/30"
           >
-            <RiDashboardLine size={15} className="text-indigo-400" />
-            <span>Dashboard</span>
+            <RiDashboardLine size={14} className="text-cyan-400" />
+            <span>// 00 DASHBOARD</span>
           </Link>
           <Link
             to="/admin/our-courses"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
-            <FiBookOpen size={15} />
-            <span>Manage Courses</span>
+            <FiBookOpen size={14} />
+            <span>// 01 CATALOG</span>
           </Link>
           <Link
             to="/admin/create-course"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
-            <FiPlusCircle size={15} />
-            <span>Create Course</span>
+            <FiPlusCircle size={14} />
+            <span>// 02 MOUNT TRACK</span>
           </Link>
           <Link
             to="/courses"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-cyan-400 hover:bg-[#0c121e] transition"
           >
-            <FiHome size={15} />
-            <span>Student View</span>
+            <FiHome size={14} />
+            <span>// 03 CLIENT VIEW</span>
           </Link>
         </nav>
 
         {/* Admin Card & Logout */}
-        <div className="pt-4 border-t border-zinc-800 space-y-3">
-          <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800 flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-zinc-800 text-zinc-300 flex items-center justify-center text-xs flex-shrink-0">
-              <RiShieldUserLine size={16} />
+        <div className="pt-4 border-t border-[#162034] space-y-3 font-mono">
+          <div className="p-2.5 rounded-lg bg-[#0c121e] border border-[#162034] flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded bg-[#101726] text-cyan-400 flex items-center justify-center text-xs flex-shrink-0">
+              <RiShieldUserLine size={14} />
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-medium text-white truncate">
-                {admin?.admin?.firstName || "System"} {admin?.admin?.lastName || "Admin"}
+              <div className="text-xs font-semibold text-white truncate">
+                {admin?.admin?.firstName || "Root"} {admin?.admin?.lastName || "Admin"}
               </div>
-              <div className="text-[10px] text-zinc-500 font-mono">Administrator</div>
+              <div className="text-[10px] text-cyan-400 font-mono">ROOT // PRIVILEGE</div>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-rose-500/20 text-rose-400 hover:bg-rose-500/10 text-xs font-medium transition"
+            className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-[11px] transition"
           >
-            <FiLogOut size={13} />
-            <span>Log Out Admin</span>
+            <FiLogOut size={12} />
+            <span>DISCONNECT ROOT</span>
           </button>
         </div>
       </aside>
@@ -159,131 +160,135 @@ function Dashboard() {
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                System Analytics
+              <div className="badge-cyber mb-1.5">
+                <FiTerminal size={11} />
+                <span>ROOT TELEMETRY // ACTIVE</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight">
+                SYSTEM ANALYTICS MATRIX
               </h1>
-              <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-                Overview of marketplace catalog, enrollments, and course operations.
+              <p className="text-xs text-zinc-400 font-mono mt-0.5">
+                Live monitoring, course management & platform node telemetry.
               </p>
             </div>
 
             <Link
               to="/admin/create-course"
-              className="btn-primary text-xs px-4 py-2 flex items-center gap-1.5 self-start sm:self-auto"
+              className="btn-cyber-primary text-xs px-4 py-2 flex items-center gap-1.5 self-start sm:self-auto"
             >
               <FiPlusCircle size={13} />
-              <span>Publish Course</span>
+              <span>MOUNT NEW TRACK</span>
             </Link>
           </div>
 
           {/* Metrics Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-            <div className="card-surface p-5 space-y-2">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 font-mono">
+            <div className="cyber-card p-5 space-y-2">
               <div className="flex justify-between items-center text-zinc-400">
-                <span className="text-xs font-mono uppercase">COURSES</span>
-                <FiBookOpen className="text-indigo-400" />
+                <span className="text-xs uppercase font-bold">// ACTIVE TRACKS</span>
+                <FiBookOpen className="text-cyan-400" />
               </div>
-              <div className="text-2xl font-bold text-white font-mono">{courses.length}</div>
-              <div className="text-[11px] text-emerald-400">Live in marketplace</div>
+              <div className="text-2xl font-bold text-white">{courses.length}</div>
+              <div className="text-[10px] text-emerald-400">Mounted on registry</div>
             </div>
 
-            <div className="card-surface p-5 space-y-2">
+            <div className="cyber-card p-5 space-y-2">
               <div className="flex justify-between items-center text-zinc-400">
-                <span className="text-xs font-mono uppercase">GROSS REVENUE</span>
+                <span className="text-xs uppercase font-bold">// GROSS VOLUME</span>
                 <FiDollarSign className="text-emerald-400" />
               </div>
-              <div className="text-2xl font-bold text-white font-mono">₹{totalRevenue.toLocaleString()}</div>
-              <div className="text-[11px] text-zinc-500">Projected volume</div>
+              <div className="text-2xl font-bold text-white">₹{totalRevenue.toLocaleString()}</div>
+              <div className="text-[10px] text-zinc-500">Telemetry estimation</div>
             </div>
 
-            <div className="card-surface p-5 space-y-2">
+            <div className="cyber-card p-5 space-y-2">
               <div className="flex justify-between items-center text-zinc-400">
-                <span className="text-xs font-mono uppercase">LEARNERS</span>
-                <FiUsers className="text-blue-400" />
+                <span className="text-xs uppercase font-bold">// SUBSCRIBERS</span>
+                <FiUsers className="text-purple-400" />
               </div>
-              <div className="text-2xl font-bold text-white font-mono">{courses.length * 128 || 250}</div>
-              <div className="text-[11px] text-zinc-500">Registered accounts</div>
+              <div className="text-2xl font-bold text-white">{courses.length * 128 || 250}</div>
+              <div className="text-[10px] text-zinc-500">Active developer nodes</div>
             </div>
 
-            <div className="card-surface p-5 space-y-2">
+            <div className="cyber-card p-5 space-y-2">
               <div className="flex justify-between items-center text-zinc-400">
-                <span className="text-xs font-mono uppercase">HEALTH</span>
-                <FiActivity className="text-purple-400" />
+                <span className="text-xs uppercase font-bold">// PROTOCOL SLA</span>
+                <FiActivity className="text-cyan-400" />
               </div>
-              <div className="text-2xl font-bold text-white font-mono">99.9%</div>
-              <div className="text-[11px] text-emerald-400">Systems Operational</div>
+              <div className="text-2xl font-bold text-white">99.98%</div>
+              <div className="text-[10px] text-emerald-400">All Clusters Normal</div>
             </div>
           </div>
 
           {/* Recent Courses Table */}
-          <div className="card-surface p-5 sm:p-6 space-y-4">
+          <div className="cyber-card p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-white">Active Masterclasses</h3>
-                <p className="text-xs text-zinc-400">Manage published curriculum</p>
+                <h3 className="text-sm font-bold text-white uppercase font-display">// MOUNTED MASTERCLASSES</h3>
+                <p className="text-xs text-zinc-400 font-mono">Real-time database track records</p>
               </div>
               <Link
                 to="/admin/our-courses"
-                className="text-xs font-medium text-zinc-300 hover:text-white flex items-center gap-1"
+                className="text-xs font-mono text-cyan-400 hover:underline flex items-center gap-1"
               >
-                <span>View All</span>
-                <FiArrowRight size={12} />
+                <span>CATALOG</span>
+                <FiArrowRight size={11} />
               </Link>
             </div>
 
             {loading ? (
               <div className="py-8 text-center text-xs text-zinc-500 font-mono">
-                Loading courses...
+                Fetching catalog nodes...
               </div>
             ) : courses.length === 0 ? (
-              <div className="py-8 text-center text-xs text-zinc-500">
-                No courses published yet. Click "Publish Course" to add your first masterclass.
+              <div className="py-8 text-center text-xs text-zinc-500 font-mono">
+                No tracks mounted. Click "MOUNT NEW TRACK" to publish.
               </div>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
+                <table className="w-full text-left text-xs font-mono">
                   <thead>
-                    <tr className="border-b border-zinc-800 text-zinc-400 font-mono">
-                      <th className="pb-3 font-medium">COURSE</th>
-                      <th className="pb-3 font-medium">PRICE</th>
-                      <th className="pb-3 font-medium">STATUS</th>
-                      <th className="pb-3 font-medium text-right">ACTION</th>
+                    <tr className="border-b border-[#162034] text-zinc-400">
+                      <th className="pb-3 font-semibold uppercase">TRACK TITLE</th>
+                      <th className="pb-3 font-semibold uppercase">PRICE</th>
+                      <th className="pb-3 font-semibold uppercase">STATUS</th>
+                      <th className="pb-3 font-semibold uppercase text-right">ACTION</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-zinc-800/60">
+                  <tbody className="divide-y divide-[#162034]/60">
                     {courses.slice(0, 5).map((course) => (
-                      <tr key={course._id} className="hover:bg-zinc-850/40 transition">
+                      <tr key={course._id} className="hover:bg-[#0c121e]/50 transition">
                         <td className="py-3 pr-4">
                           <div className="flex items-center gap-3">
                             <img
                               src={course?.image?.url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"}
                               alt={course.title}
-                              className="w-10 h-10 rounded-lg object-cover border border-zinc-800 flex-shrink-0"
+                              className="w-10 h-10 rounded object-cover border border-[#162034] flex-shrink-0"
                             />
                             <div className="min-w-0">
-                              <div className="font-semibold text-white truncate max-w-xs sm:max-w-md">
+                              <div className="font-bold text-white truncate max-w-xs sm:max-w-md font-display">
                                 {course.title}
                               </div>
-                              <div className="text-[11px] text-zinc-500 truncate max-w-xs sm:max-w-md">
+                              <div className="text-[10px] text-zinc-500 truncate max-w-xs sm:max-w-md">
                                 {course.description}
                               </div>
                             </div>
                           </div>
                         </td>
-                        <td className="py-3 font-mono font-semibold text-zinc-200">
+                        <td className="py-3 font-bold text-cyan-300">
                           ₹{course.price}
                         </td>
                         <td className="py-3">
-                          <span className="tag-badge-green">
-                            Live
+                          <span className="badge-cyber-green text-[10px]">
+                            ACTIVE
                           </span>
                         </td>
                         <td className="py-3 text-right">
                           <Link
                             to={`/admin/update-course/${course._id}`}
-                            className="px-2.5 py-1 rounded-md bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium"
+                            className="btn-cyber-outline text-[11px] py-1 px-2.5"
                           >
-                            Edit
+                            EDIT
                           </Link>
                         </td>
                       </tr>

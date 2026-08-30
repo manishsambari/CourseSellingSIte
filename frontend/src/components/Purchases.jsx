@@ -6,7 +6,6 @@ import {
   FiBookOpen,
   FiAward,
   FiPlayCircle,
-  FiCheckCircle,
   FiSearch,
   FiHome,
   FiShoppingBag,
@@ -18,6 +17,8 @@ import {
   FiShare2,
   FiUser,
   FiX,
+  FiTerminal,
+  FiCpu,
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import { BACKEND_URL } from "../utils/utils";
@@ -59,7 +60,7 @@ function Purchases() {
         setPurchases(list);
       } catch (error) {
         console.error("Error in purchases fetch", error);
-        toast.error("Failed to load enrolled courses");
+        toast.error("Failed to mount enrolled nodes");
       } finally {
         setLoading(false);
       }
@@ -72,7 +73,7 @@ function Purchases() {
       const response = await axios.get(`${BACKEND_URL}/user/logout`, {
         withCredentials: true,
       });
-      toast.success(response.data?.message || "Logged out successfully");
+      toast.success(response.data?.message || "Session Disconnected");
       localStorage.removeItem("user");
       navigate("/login");
       setIsLoggedIn(false);
@@ -92,27 +93,27 @@ function Purchases() {
   }, [purchases, search]);
 
   const mockLessons = [
-    { id: 1, title: "1. Architecture Blueprint & System Topology", duration: "18m" },
-    { id: 2, title: "2. Setting Up Production Monorepo & Tooling", duration: "25m" },
-    { id: 3, title: "3. Core Data Layer, Schema & Migrations", duration: "42m" },
-    { id: 4, title: "4. State Management, APIs & Stream Processing", duration: "35m" },
-    { id: 5, title: "5. Automated Testing & Edge Reliability", duration: "28m" },
-    { id: 6, title: "6. Production CI/CD & Cloud Deployment", duration: "30m" },
+    { id: 1, title: "01. Architecture Blueprint & System Topology", duration: "18m" },
+    { id: 2, title: "02. Setting Up Production Monorepo & Toolchain", duration: "25m" },
+    { id: 3, title: "03. Core Data Layer, Schema & Migrations", duration: "42m" },
+    { id: 4, title: "04. State Management, APIs & Stream Processing", duration: "35m" },
+    { id: 5, title: "05. Automated Testing & Edge Reliability", duration: "28m" },
+    { id: 6, title: "06. Production CI/CD & Cloud Deployment", duration: "30m" },
   ];
 
   return (
-    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-cyan-400 selection:text-black">
       {/* ── MOBILE TOPBAR ── */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0e0e11] border-b border-zinc-800 sticky top-0 z-40">
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#060912] border-b border-[#162034] sticky top-0 z-40">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+          <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 flex items-center justify-center">
             <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
           </div>
-          <span className="font-bold text-white tracking-tight text-sm">CourseShip</span>
+          <span className="font-display font-bold text-white tracking-wider text-xs uppercase">CourseShip OS</span>
         </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white"
+          className="p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400"
         >
           {isSidebarOpen ? <HiX size={18} /> : <HiMenu size={18} />}
         </button>
@@ -128,65 +129,65 @@ function Purchases() {
 
       {/* ── SIDEBAR ── */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#0e0e11] border-r border-zinc-800 flex flex-col p-5 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#080c14] border-r border-[#162034] flex flex-col p-5 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden">
+          <div className="w-8 h-8 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-neon-cyan">
             <img src={logo} alt="CourseShip" className="w-6 h-6 object-cover rounded" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-tight text-white">CourseShip</span>
-            <span className="text-[10px] font-mono text-zinc-500 uppercase">Student Portal</span>
+            <span className="font-display text-sm font-bold tracking-wider text-white uppercase">CourseShip</span>
+            <span className="text-[10px] font-mono text-cyan-400">// COMMAND CENTER</span>
           </div>
         </Link>
 
         {/* Links */}
-        <nav className="space-y-1 flex-1 text-xs font-medium">
+        <nav className="space-y-1.5 flex-1 text-xs font-mono">
           <Link
             to="/"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
-            <FiHome size={15} />
-            <span>Home</span>
+            <FiHome size={14} />
+            <span>// 00 HOME</span>
           </Link>
           <Link
             to="/courses"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
-            <FiBookOpen size={15} />
-            <span>All Courses</span>
+            <FiBookOpen size={14} />
+            <span>// 01 TRACKS</span>
           </Link>
           <Link
             to="/purchases"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-zinc-800 text-white font-semibold border border-zinc-700"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#0c121e] text-cyan-300 font-bold border border-cyan-500/30"
           >
-            <FiShoppingBag size={15} className="text-indigo-400" />
-            <span>My Learning</span>
+            <FiShoppingBag size={14} className="text-cyan-400" />
+            <span>// 02 MY LEARNING</span>
           </Link>
         </nav>
 
-        {/* User Profile & Logout */}
-        <div className="pt-4 border-t border-zinc-800 space-y-3">
-          <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800 flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
+        {/* User Card & Logout */}
+        <div className="pt-4 border-t border-[#162034] space-y-3 font-mono">
+          <div className="p-2.5 rounded-lg bg-[#0c121e] border border-[#162034] flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
               {userProfile?.firstName ? userProfile.firstName[0].toUpperCase() : <FiUser />}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-medium text-white truncate">
+              <div className="text-xs font-semibold text-white truncate">
                 {userProfile?.firstName} {userProfile?.lastName}
               </div>
-              <div className="text-[10px] text-zinc-500 truncate">Enrolled Student</div>
+              <div className="text-[10px] text-cyan-400 truncate">NODE // ACTIVE</div>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-rose-500/20 text-rose-400 hover:bg-rose-500/10 text-xs font-medium transition"
+            className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-[11px] transition"
           >
-            <FiLogOut size={13} />
-            <span>Log Out</span>
+            <FiLogOut size={12} />
+            <span>DISCONNECT</span>
           </button>
         </div>
       </aside>
@@ -197,72 +198,76 @@ function Purchases() {
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                My Enrolled Courses
+              <div className="badge-cyber mb-1.5">
+                <FiCpu size={11} />
+                <span>ACTIVE NODES // MOUNTED</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight">
+                DEVELOPER COMMAND CENTER
               </h1>
-              <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-                Access your video curriculum, download starter repos, and claim verifiable certificates.
+              <p className="text-xs text-zinc-400 font-mono mt-0.5">
+                Access video streams, clone repositories, and claim verified ledger certificates.
               </p>
             </div>
 
             <Link
               to="/courses"
-              className="btn-secondary text-xs px-4 py-2 flex items-center gap-1.5 self-start sm:self-auto"
+              className="btn-cyber-outline text-xs px-3.5 py-2 flex items-center gap-1.5 self-start sm:self-auto font-mono"
             >
-              <FiBookOpen size={13} />
-              <span>Browse More Tracks</span>
+              <FiBookOpen size={12} />
+              <span>MOUNT MORE TRACKS</span>
             </Link>
           </div>
 
           {/* Overview Metrics Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-            <div className="card-surface p-4 space-y-1">
-              <div className="text-xs text-zinc-400 flex items-center gap-1.5 font-mono">
-                <FiBookOpen className="text-indigo-400" /> ENROLLED
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 font-mono">
+            <div className="cyber-card p-4 space-y-1">
+              <div className="text-xs text-cyan-400 flex items-center gap-1.5 font-bold">
+                <FiBookOpen /> // MOUNTED
               </div>
-              <div className="text-2xl font-bold text-white font-mono">{purchases.length}</div>
-              <div className="text-[11px] text-zinc-500">Lifetime Access</div>
+              <div className="text-2xl font-bold text-white">{purchases.length}</div>
+              <div className="text-[10px] text-zinc-500">Active Repos</div>
             </div>
 
-            <div className="card-surface p-4 space-y-1">
-              <div className="text-xs text-zinc-400 flex items-center gap-1.5 font-mono">
-                <FiClock className="text-blue-400" /> HOURS
+            <div className="cyber-card p-4 space-y-1">
+              <div className="text-xs text-emerald-400 flex items-center gap-1.5 font-bold">
+                <FiClock /> // HOURS
               </div>
-              <div className="text-2xl font-bold text-white font-mono">{purchases.length * 16}h</div>
-              <div className="text-[11px] text-zinc-500">Curriculum Content</div>
+              <div className="text-2xl font-bold text-white">{purchases.length * 16}h</div>
+              <div className="text-[10px] text-zinc-500">Video Walkthroughs</div>
             </div>
 
-            <div className="card-surface p-4 space-y-1">
-              <div className="text-xs text-zinc-400 flex items-center gap-1.5 font-mono">
-                <FiAward className="text-amber-400" /> CREDENTIALS
+            <div className="cyber-card p-4 space-y-1">
+              <div className="text-xs text-purple-400 flex items-center gap-1.5 font-bold">
+                <FiAward /> // CERTS
               </div>
-              <div className="text-2xl font-bold text-white font-mono">{purchases.length}</div>
-              <div className="text-[11px] text-emerald-400">Available to Claim</div>
+              <div className="text-2xl font-bold text-white">{purchases.length}</div>
+              <div className="text-[10px] text-zinc-500">SHA-256 Verified</div>
             </div>
 
-            <div className="card-surface p-4 space-y-1">
-              <div className="text-xs text-zinc-400 flex items-center gap-1.5 font-mono">
-                <FiCode className="text-emerald-400" /> REPOSITORIES
+            <div className="cyber-card p-4 space-y-1">
+              <div className="text-xs text-amber-400 flex items-center gap-1.5 font-bold">
+                <FiCode /> // BLUEPRINTS
               </div>
-              <div className="text-2xl font-bold text-white font-mono">{purchases.length * 3}</div>
-              <div className="text-[11px] text-zinc-500">Monorepo Templates</div>
+              <div className="text-2xl font-bold text-white">{purchases.length * 3}</div>
+              <div className="text-[10px] text-zinc-500">Monorepo Starters</div>
             </div>
           </div>
 
           {/* Search Library Filter */}
-          <div className="card-surface p-3 flex items-center justify-between gap-3">
+          <div className="cyber-card p-3 flex items-center justify-between gap-3">
             <div className="relative w-full sm:w-80">
-              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={15} />
+              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={14} />
               <input
                 type="text"
-                placeholder="Filter your enrolled courses..."
+                placeholder="$ grep --enrolled tracks..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
+                className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:outline-none"
               />
             </div>
             <div className="text-xs font-mono text-zinc-500 hidden sm:block">
-              {filteredPurchases.length} of {purchases.length} courses
+              // MOUNTED: {filteredPurchases.length} OF {purchases.length}
             </div>
           </div>
 
@@ -270,24 +275,24 @@ function Purchases() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {[1, 2, 3].map((n) => (
-                <div key={n} className="card-surface h-72 animate-pulse p-4 space-y-3" />
+                <div key={n} className="cyber-card h-72 animate-pulse p-4 space-y-3" />
               ))}
             </div>
           ) : filteredPurchases.length === 0 ? (
-            <div className="card-surface p-14 text-center max-w-md mx-auto space-y-3">
-              <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 flex items-center justify-center mx-auto text-xl">
+            <div className="cyber-card p-14 text-center max-w-md mx-auto space-y-3 font-mono">
+              <div className="w-12 h-12 rounded bg-[#0c121e] border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto text-xl">
                 <FiBookOpen />
               </div>
-              <h3 className="text-base font-bold text-white">No courses enrolled yet</h3>
+              <h3 className="text-sm font-bold text-white uppercase">// NO MOUNTED TRACKS</h3>
               <p className="text-xs text-zinc-400">
-                You have not enrolled in any masterclasses yet. Explore our technical tracks to start learning.
+                You have not mounted any curriculum nodes yet. Explore the tracks catalog.
               </p>
               <div className="pt-2">
                 <Link
                   to="/courses"
-                  className="btn-primary text-xs px-5 py-2.5 inline-flex items-center gap-1.5"
+                  className="btn-cyber-primary text-xs px-5 py-2.5 inline-flex items-center gap-1.5"
                 >
-                  <span>Explore Courses</span>
+                  <span>BROWSE TRACKS</span>
                   <FiArrowRight size={12} />
                 </Link>
               </div>
@@ -297,57 +302,57 @@ function Purchases() {
               {filteredPurchases.map((course, idx) => (
                 <div
                   key={course._id || idx}
-                  className="card-surface-interactive overflow-hidden flex flex-col group justify-between"
+                  className="cyber-card-interactive flex flex-col justify-between group"
                 >
                   {/* Thumbnail */}
-                  <div className="relative h-44 overflow-hidden bg-zinc-950 border-b border-zinc-800">
+                  <div className="relative h-44 overflow-hidden bg-[#04060a] border-b border-[#162034]">
                     <img
                       src={
                         course.image?.url ||
                         "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
                       }
                       alt={course.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                       onError={(e) => {
                         e.target.src =
                           "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600";
                       }}
                     />
-                    <span className="absolute top-3 right-3 tag-badge-green">
-                      Enrolled
+                    <span className="absolute top-2.5 right-2.5 badge-cyber-green text-[10px]">
+                      MOUNTED
                     </span>
                   </div>
 
                   {/* Body */}
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                     <div className="space-y-1.5">
-                      <h3 className="text-sm sm:text-base font-bold text-zinc-100 group-hover:text-white line-clamp-2 leading-snug">
-                        {course.title || "Masterclass"}
+                      <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug">
+                        {course.title || "Curriculum Track"}
                       </h3>
-                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-zinc-400 line-clamp-2 font-mono leading-relaxed">
                         {course.description || "Hands-on projects, starter repositories, and video walkthroughs."}
                       </p>
                     </div>
 
                     {/* Actions */}
-                    <div className="pt-3 border-t border-zinc-800 flex items-center gap-2">
+                    <div className="pt-3 border-t border-[#162034] flex items-center gap-2">
                       <button
                         onClick={() => {
                           setSelectedCourseForPlayer(course);
                           setActiveLesson(1);
                         }}
-                        className="btn-accent flex-1 py-2 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5"
+                        className="btn-cyber-primary flex-1 py-2 text-xs flex items-center justify-center gap-1.5"
                       >
-                        <FiPlayCircle size={14} />
-                        <span>Start Learning</span>
+                        <FiPlayCircle size={13} />
+                        <span>INITIALIZE STREAM</span>
                       </button>
 
                       <button
                         onClick={() => setSelectedCourseForCert(course)}
-                        className="btn-secondary px-3 py-2 rounded-lg text-xs text-zinc-300 hover:text-amber-400"
+                        className="btn-cyber-outline px-3 py-2 text-xs text-zinc-300 hover:text-amber-400"
                         title="View Certificate"
                       >
-                        <FiAward size={14} />
+                        <FiAward size={13} />
                       </button>
                     </div>
                   </div>
@@ -360,26 +365,26 @@ function Purchases() {
 
       {/* ── COURSE LEARNING PLAYER MODAL ── */}
       {selectedCourseForPlayer && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6">
-          <div className="card-surface rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-zinc-700 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 font-mono">
+          <div className="cyber-card w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col border border-cyan-500/40 shadow-2xl">
             {/* Modal Header */}
-            <div className="p-4 border-b border-zinc-800 flex items-center justify-between bg-[#121215]">
+            <div className="p-4 border-b border-[#162034] flex items-center justify-between bg-[#060910]">
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300 text-xs">
+                <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xs">
                   <FiPlayCircle />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white line-clamp-1">
+                  <h3 className="text-xs sm:text-sm font-bold text-white font-display line-clamp-1">
                     {selectedCourseForPlayer.title}
                   </h3>
-                  <p className="text-[10px] font-mono text-zinc-500">Interactive Curriculum View</p>
+                  <p className="text-[10px] text-cyan-400">// ACTIVE PLAYBACK STREAM</p>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedCourseForPlayer(null)}
-                className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition"
+                className="p-1.5 rounded bg-[#0c121e] hover:bg-[#162034] text-zinc-400 hover:text-white transition"
               >
-                <FiX size={16} />
+                <FiX size={15} />
               </button>
             </div>
 
@@ -387,50 +392,48 @@ function Purchases() {
             <div className="flex-1 overflow-y-auto grid lg:grid-cols-12 gap-5 p-5">
               {/* Left: Video Player */}
               <div className="lg:col-span-8 space-y-3">
-                <div className="relative aspect-video bg-black rounded-xl overflow-hidden border border-zinc-800 flex items-center justify-center group">
+                <div className="relative aspect-video bg-black rounded-lg overflow-hidden border border-[#162034] flex items-center justify-center group">
                   <img
                     src={selectedCourseForPlayer.image?.url || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800"}
                     alt="Lesson preview"
-                    className="w-full h-full object-cover opacity-25"
+                    className="w-full h-full object-cover opacity-30"
                   />
                   <div className="absolute inset-0 flex flex-col items-center justify-center space-y-2">
-                    <div className="w-14 h-14 rounded-full bg-white text-zinc-950 flex items-center justify-center text-xl shadow-lg cursor-pointer hover:scale-105 transition-transform">
+                    <div className="w-14 h-14 rounded-full bg-cyan-400 text-black flex items-center justify-center text-xl shadow-neon-cyan cursor-pointer hover:scale-105 transition-transform">
                       <FiPlayCircle />
                     </div>
-                    <span className="text-xs font-mono text-zinc-300">
-                      Lesson {activeLesson}: {mockLessons.find((l) => l.id === activeLesson)?.title}
+                    <span className="text-xs text-cyan-300 font-mono">
+                      STREAM 0{activeLesson}: {mockLessons.find((l) => l.id === activeLesson)?.title}
                     </span>
                   </div>
                 </div>
 
-                <div className="card-surface p-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono uppercase text-zinc-400 font-semibold">
-                      Starter Repos & Files
-                    </span>
-                    <span className="text-[10px] font-mono text-zinc-500">v1.0 Production</span>
+                <div className="terminal-box space-y-2">
+                  <div className="flex items-center justify-between text-zinc-400 text-[11px]">
+                    <span className="text-cyan-400 uppercase font-bold">// MOUNTED CODE BLUEPRINT</span>
+                    <span>v2.6 PRODUCTION</span>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-1">
                     <button
-                      onClick={() => toast.success("Downloading starter archive...")}
-                      className="btn-secondary text-xs py-1.5 px-3 rounded-lg flex items-center gap-1.5"
+                      onClick={() => toast.success("Pulling starter zip archive...")}
+                      className="btn-cyber-outline text-xs py-1.5 px-3 flex items-center gap-1.5"
                     >
-                      <FiDownload size={12} /> Download Code (.zip)
+                      <FiDownload size={11} /> CLONE REPO (.ZIP)
                     </button>
                     <button
                       onClick={() => toast.success("Opening repository in new tab...")}
-                      className="btn-secondary text-xs py-1.5 px-3 rounded-lg flex items-center gap-1.5"
+                      className="btn-cyber-outline text-xs py-1.5 px-3 flex items-center gap-1.5"
                     >
-                      <FiCode size={12} /> View GitHub Repo
+                      <FiCode size={11} /> GITHUB MASTER
                     </button>
                   </div>
                 </div>
               </div>
 
               {/* Right: Modules List */}
-              <div className="lg:col-span-4 space-y-2.5 flex flex-col">
-                <div className="text-xs font-mono uppercase text-zinc-400 font-semibold">
-                  Course Modules ({mockLessons.length})
+              <div className="lg:col-span-4 space-y-2.5 flex flex-col font-mono">
+                <div className="text-xs font-bold text-cyan-400 uppercase">
+                  // MODULE STREAMS ({mockLessons.length})
                 </div>
                 <div className="space-y-1.5 flex-1 overflow-y-auto max-h-72 lg:max-h-none">
                   {mockLessons.map((lesson) => (
@@ -439,12 +442,12 @@ function Purchases() {
                       onClick={() => setActiveLesson(lesson.id)}
                       className={`w-full text-left p-2.5 rounded-lg border text-xs transition flex items-center justify-between ${
                         activeLesson === lesson.id
-                          ? "bg-zinc-800 border-zinc-600 text-white font-medium"
-                          : "bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700"
+                          ? "bg-cyan-500/10 border-cyan-500 text-cyan-300 font-bold"
+                          : "bg-[#060910] border-[#162034] text-zinc-400 hover:text-white"
                       }`}
                     >
                       <span className="line-clamp-1">{lesson.title}</span>
-                      <span className="font-mono text-[10px] text-zinc-500">{lesson.duration}</span>
+                      <span className="text-[10px] text-zinc-500">{lesson.duration}</span>
                     </button>
                   ))}
                 </div>
@@ -456,36 +459,36 @@ function Purchases() {
 
       {/* ── CERTIFICATE MODAL ── */}
       {selectedCourseForCert && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6">
-          <div className="card-surface rounded-2xl w-full max-w-xl overflow-hidden flex flex-col border border-zinc-700 shadow-2xl p-6 space-y-5">
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
-              <div className="flex items-center gap-2 text-amber-400 font-semibold text-xs font-mono">
-                <FiAward size={16} /> VERIFIED COMPLETION CREDENTIAL
+        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 font-mono">
+          <div className="cyber-card w-full max-w-xl overflow-hidden flex flex-col border border-cyan-500/40 shadow-2xl p-6 space-y-5">
+            <div className="flex items-center justify-between border-b border-[#162034] pb-3">
+              <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs uppercase">
+                <FiAward size={15} /> VERIFIED CRYPTOGRAPHIC CERTIFICATE
               </div>
               <button
                 onClick={() => setSelectedCourseForCert(null)}
-                className="p-1 rounded-md bg-zinc-800 text-zinc-400 hover:text-white"
+                className="p-1 rounded bg-[#0c121e] text-zinc-400 hover:text-white"
               >
-                <FiX size={15} />
+                <FiX size={14} />
               </button>
             </div>
 
-            {/* Certificate Preview Card */}
-            <div className="p-6 rounded-xl bg-zinc-950 border border-zinc-800 text-center space-y-3">
-              <div className="text-xs uppercase tracking-widest text-zinc-500 font-mono">
-                Certificate of Engineering Achievement
+            {/* Certificate Canvas */}
+            <div className="p-6 rounded-lg bg-[#060910] border-2 border-cyan-500/30 text-center space-y-3 shadow-neon-cyan">
+              <div className="text-[11px] uppercase tracking-widest text-cyan-400 font-bold">
+                [ CERTIFICATE OF ENGINEERING MASTERY ]
               </div>
-              <div className="text-xs text-zinc-400">Awarded to</div>
-              <div className="text-xl font-bold text-white tracking-wide">
+              <div className="text-[11px] text-zinc-400">Awarded to Developer Node</div>
+              <div className="text-xl font-bold text-white tracking-wide font-display uppercase">
                 {userProfile?.firstName} {userProfile?.lastName}
               </div>
-              <div className="text-xs text-zinc-400">for successfully mastering</div>
-              <div className="text-sm font-bold text-amber-300">
+              <div className="text-[11px] text-zinc-400">for verified completion of track</div>
+              <div className="text-sm font-bold text-cyan-300 font-display">
                 {selectedCourseForCert.title}
               </div>
-              <div className="pt-3 border-t border-zinc-800 flex items-center justify-between text-[10px] text-zinc-500 font-mono">
-                <span>ID: CS-{selectedCourseForCert._id?.slice(-8).toUpperCase()}</span>
-                <span>Date: {new Date().toLocaleDateString()}</span>
+              <div className="pt-3 border-t border-[#162034] flex items-center justify-between text-[10px] text-zinc-500">
+                <span>HASH: SHA256-{selectedCourseForCert._id?.slice(-8).toUpperCase()}</span>
+                <span>TIMESTAMP: {new Date().toLocaleDateString()}</span>
               </div>
             </div>
 
@@ -494,19 +497,19 @@ function Purchases() {
               <button
                 onClick={() => {
                   navigator.clipboard?.writeText(window.location.href);
-                  toast.success("Credential link copied!");
+                  toast.success("Credential hash copied!");
                 }}
-                className="btn-secondary text-xs py-2 px-3.5 flex items-center gap-1.5"
+                className="btn-cyber-outline text-xs py-2 px-3.5 flex items-center gap-1.5"
               >
-                <FiShare2 size={12} />
-                <span>Share Link</span>
+                <FiShare2 size={11} />
+                <span>SHARE HASH</span>
               </button>
               <button
-                onClick={() => toast.success("Generating PDF download...")}
-                className="btn-primary text-xs py-2 px-4 flex items-center gap-1.5"
+                onClick={() => toast.success("Generating cryptographic PDF...")}
+                className="btn-cyber-primary text-xs py-2 px-4 flex items-center gap-1.5"
               >
-                <FiDownload size={12} />
-                <span>Download PDF</span>
+                <FiDownload size={11} />
+                <span>DOWNLOAD PDF</span>
               </button>
             </div>
           </div>

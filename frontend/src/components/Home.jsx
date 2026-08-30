@@ -4,14 +4,14 @@ import {
   FiArrowRight,
   FiAward,
   FiCode,
-  FiLayers,
   FiUser,
   FiBookOpen,
-  FiCheck,
   FiArrowUpRight,
   FiClock,
   FiTerminal,
   FiShield,
+  FiCpu,
+  FiZap,
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import { RiShoppingBag3Line } from "react-icons/ri";
@@ -63,7 +63,7 @@ function Home() {
       const response = await axios.get(`${BACKEND_URL}/user/logout`, {
         withCredentials: true,
       });
-      toast.success(response.data?.message || "Logged out successfully");
+      toast.success(response.data?.message || "Session Terminated");
       localStorage.removeItem("user");
       setIsLoggedIn(false);
       setUserProfile(null);
@@ -73,56 +73,55 @@ function Home() {
   };
 
   return (
-    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen font-sans selection:bg-indigo-600 selection:text-white">
-      {/* ── TOP HEADER / NAVBAR ── */}
-      <header className="header-nav fixed top-0 left-0 right-0 z-50">
+    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-sans selection:bg-cyan-400 selection:text-black">
+      {/* ── TOP NAV BAR ── */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#060912]/90 backdrop-blur-md border-b border-[#162034]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden">
+            <div className="w-8 h-8 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-neon-cyan">
               <img src={logo} alt="CourseShip Logo" className="w-6 h-6 object-cover rounded" />
             </div>
-            <span className="text-base font-bold tracking-tight text-white flex items-center gap-1">
-              CourseShip
-              <span className="text-[11px] font-mono text-zinc-400 font-normal ml-1 border border-zinc-800 px-1.5 py-0.5 rounded bg-zinc-900">
-                EDU
+            <div className="flex flex-col">
+              <span className="font-display text-sm font-bold tracking-wider text-white flex items-center gap-1.5 uppercase">
+                COURSESHIP <span className="text-[10px] font-mono text-cyan-400 font-normal">[OS.v2]</span>
               </span>
-            </span>
+            </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-7 text-xs font-medium text-zinc-400">
-            <Link to="/courses" className="hover:text-white transition-colors">
-              Courses
+          <nav className="hidden md:flex items-center gap-7 text-xs font-mono tracking-wider uppercase text-zinc-400">
+            <Link to="/courses" className="hover:text-cyan-400 transition-colors flex items-center gap-1">
+              <span>// TRACKS</span>
             </Link>
-            <a href="#curriculum" className="hover:text-white transition-colors">
-              Curriculum
+            <a href="#terminal" className="hover:text-cyan-400 transition-colors">
+              // TELEMETRY
             </a>
-            <a href="#features" className="hover:text-white transition-colors">
-              Why Us
+            <a href="#curriculum" className="hover:text-cyan-400 transition-colors">
+              // CURRICULUM
             </a>
-            <a href="#pricing" className="hover:text-white transition-colors">
-              Membership
+            <a href="#matrix" className="hover:text-cyan-400 transition-colors">
+              // BLUEPRINT
             </a>
           </nav>
 
           {/* User Auth CTAs */}
-          <div className="hidden md:flex items-center gap-3 text-xs">
+          <div className="hidden md:flex items-center gap-3">
             {isLoggedIn ? (
               <div className="flex items-center gap-3">
                 <Link
                   to="/purchases"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-200 hover:text-white hover:border-zinc-700 font-medium transition"
+                  className="btn-cyber-outline py-2 px-3 flex items-center gap-1.5"
                 >
-                  <RiShoppingBag3Line size={14} className="text-indigo-400" />
-                  <span>My Learning</span>
+                  <RiShoppingBag3Line size={13} className="text-cyan-400" />
+                  <span>[ LEARNING HUB ]</span>
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-zinc-400 hover:text-rose-400 transition font-medium px-2 py-1.5"
+                  className="text-xs font-mono text-zinc-400 hover:text-rose-400 transition"
                 >
-                  Log out
+                  EXIT
                 </button>
-                <div className="w-8 h-8 rounded-xl bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 font-bold flex items-center justify-center text-xs">
+                <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 text-cyan-300 font-mono font-bold flex items-center justify-center text-xs">
                   {userProfile?.firstName ? userProfile.firstName[0].toUpperCase() : <FiUser />}
                 </div>
               </div>
@@ -130,15 +129,15 @@ function Home() {
               <div className="flex items-center gap-2.5">
                 <Link
                   to="/login"
-                  className="px-3.5 py-2 rounded-xl text-zinc-300 hover:text-white font-medium transition"
+                  className="text-xs font-mono text-zinc-400 hover:text-white px-3 py-1.5 transition"
                 >
-                  Sign In
+                  [ SIGN IN ]
                 </Link>
                 <Link
                   to="/signup"
-                  className="btn-primary"
+                  className="btn-cyber-primary text-xs py-2 px-3.5"
                 >
-                  Get Started
+                  JOIN PROTOCOL
                 </Link>
               </div>
             )}
@@ -147,71 +146,70 @@ function Home() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-white rounded-lg bg-zinc-900 border border-zinc-800"
-            aria-label="Toggle menu"
+            className="md:hidden p-2 text-zinc-400 hover:text-white rounded bg-[#0c121e] border border-[#162034]"
           >
-            {mobileMenuOpen ? <HiX size={20} /> : <HiMenu size={20} />}
+            {mobileMenuOpen ? <HiX size={18} /> : <HiMenu size={18} />}
           </button>
         </div>
 
         {/* Mobile Dropdown */}
         {mobileMenuOpen && (
-          <div className="md:hidden bg-[#0e0e11] border-b border-zinc-800 px-6 py-5 space-y-4 text-sm">
+          <div className="md:hidden bg-[#080c14] border-b border-[#162034] px-6 py-5 space-y-4 text-xs font-mono">
             <Link
               to="/courses"
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-zinc-300 hover:text-white font-medium"
+              className="block text-zinc-300 hover:text-cyan-400"
             >
-              Browse All Courses
+              // BROWSE TRACKS
             </Link>
+            <a
+              href="#terminal"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-zinc-300 hover:text-cyan-400"
+            >
+              // TELEMETRY VIEW
+            </a>
             <a
               href="#curriculum"
               onClick={() => setMobileMenuOpen(false)}
-              className="block text-zinc-300 hover:text-white font-medium"
+              className="block text-zinc-300 hover:text-cyan-400"
             >
-              Curriculum Overview
-            </a>
-            <a
-              href="#features"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block text-zinc-300 hover:text-white font-medium"
-            >
-              Platform Features
+              // CURRICULUM OVERVIEW
             </a>
             {isLoggedIn ? (
-              <div className="pt-3 border-t border-zinc-800 space-y-2">
+              <div className="pt-3 border-t border-[#162034] space-y-2">
                 <Link
                   to="/purchases"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block text-indigo-400 font-semibold"
+                  className="block text-cyan-400 font-bold"
                 >
-                  My Learning Dashboard
+                  // MY LEARNING DASHBOARD
                 </Link>
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     handleLogout();
                   }}
-                  className="block text-rose-400 font-medium"
+                  className="block text-rose-400"
                 >
-                  Sign Out
+                  // DISCONNECT
                 </button>
               </div>
             ) : (
-              <div className="pt-3 border-t border-zinc-800 grid grid-cols-2 gap-2">
+              <div className="pt-3 border-t border-[#162034] grid grid-cols-2 gap-2">
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="btn-secondary text-center"
+                  className="btn-cyber-outline text-center py-2"
                 >
-                  Sign In
+                  SIGN IN
                 </Link>
                 <Link
                   to="/signup"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="btn-primary text-center"
+                  className="btn-cyber-primary text-center py-2"
                 >
-                  Get Started
+                  JOIN NOW
                 </Link>
               </div>
             )}
@@ -220,86 +218,125 @@ function Home() {
       </header>
 
       {/* ── HERO SECTION ── */}
-      <section className="pt-32 pb-16 sm:pt-40 sm:pb-24 px-4 sm:px-6 max-w-5xl mx-auto text-center space-y-7">
-        {/* Release Tag */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 text-xs font-mono">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>New: 2026 Full-Stack & AI Systems Tracks</span>
+      <section className="pt-32 pb-14 sm:pt-40 sm:pb-20 px-4 sm:px-6 max-w-6xl mx-auto space-y-8">
+        {/* System Tag */}
+        <div className="flex justify-center">
+          <div className="badge-cyber">
+            <FiZap className="text-cyan-400" />
+            <span>CORE RELEASE // 2026 DISTRIBUTED & AI ENGINEERING</span>
+          </div>
         </div>
 
         {/* Hero Title */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-[1.12]">
-          Build systems that scale. <br className="hidden sm:inline" />
-          <span className="text-zinc-400">Master production engineering.</span>
-        </h1>
+        <div className="text-center space-y-4 max-w-4xl mx-auto">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight uppercase leading-[1.1]">
+            ENGINEER THE FUTURE. <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">
+              DEPLOY AT SCALE.
+            </span>
+          </h1>
 
-        {/* Subtitle */}
-        <p className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto font-normal leading-relaxed">
-          Comprehensive, project-driven technical curriculum covering modern full-stack architectures,
-          distributed backend microservices, autonomous AI agents, and cloud deployments.
-        </p>
+          <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl mx-auto font-mono leading-relaxed">
+            High-throughput distributed systems, autonomous multi-agent AI frameworks, cloud native Kubernetes architectures, and verified monorepo codebases.
+          </p>
+        </div>
 
-        {/* CTAs */}
+        {/* Hero CTAs */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <Link
             to="/courses"
-            className="btn-primary w-full sm:w-auto px-6 py-3 text-xs font-semibold flex items-center justify-center gap-2"
+            className="btn-cyber-primary w-full sm:w-auto px-6 py-3 flex items-center justify-center gap-2"
           >
-            <span>Explore All Courses</span>
+            <span>INITIALIZE CURRICULUM</span>
             <FiArrowRight size={14} />
           </Link>
           <a
             href="#curriculum"
-            className="btn-secondary w-full sm:w-auto px-6 py-3 text-xs font-semibold"
+            className="btn-cyber-outline w-full sm:w-auto px-6 py-3 text-center"
           >
-            Browse Curriculum
+            EXPLORE BLUEPRINTS
           </a>
         </div>
 
-        {/* Trust Badges Bar */}
-        <div className="pt-10 grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-zinc-800/80 text-left">
-          <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/60">
-            <div className="text-xs font-mono text-zinc-400">ENROLLED</div>
-            <div className="text-xl font-bold text-white font-mono mt-0.5">50,000+</div>
-            <div className="text-[11px] text-zinc-500">Engineers learning worldwide</div>
+        {/* ── LIVE CYBER TERMINAL SIMULATOR ── */}
+        <div id="terminal" className="pt-6 max-w-3xl mx-auto">
+          <div className="terminal-box">
+            {/* Terminal Header */}
+            <div className="flex items-center justify-between border-b border-[#162034] pb-2.5 mb-3 text-zinc-500 text-[11px]">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
+                <span className="ml-2 text-zinc-400 font-mono">bash - courseship@production-node-01</span>
+              </div>
+              <span className="text-cyan-400 font-mono">STATUS: LIVE</span>
+            </div>
+
+            {/* Terminal Code Body */}
+            <div className="space-y-1 text-[11px] sm:text-xs leading-relaxed">
+              <div className="text-zinc-400">
+                <span className="text-emerald-400">$</span> npx courseship init --track=fullstack-ai-next15
+              </div>
+              <div className="text-cyan-400">
+                [✓] Pulling architecture blueprints from registry...
+              </div>
+              <div className="text-zinc-300">
+                [✓] Mounting Docker Compose, Redis Cluster & Prisma schemas
+              </div>
+              <div className="text-purple-300">
+                [✓] Multi-agent LangGraph orchestrator initialized
+              </div>
+              <div className="text-emerald-400 font-bold pt-1">
+                ➔ System compiled successfully: 12 Production Blueprints Ready.
+              </div>
+            </div>
           </div>
-          <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/60">
-            <div className="text-xs font-mono text-zinc-400">CURRICULUM</div>
-            <div className="text-xl font-bold text-white font-mono mt-0.5">100%</div>
-            <div className="text-[11px] text-zinc-500">Hands-on source code repos</div>
+        </div>
+
+        {/* Telemetry Strip */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 text-left">
+          <div className="cyber-card p-4 space-y-1">
+            <div className="text-[10px] font-mono text-cyan-400">// ACTIVE NODES</div>
+            <div className="text-xl font-bold text-white font-mono">50,420+</div>
+            <div className="text-[10px] text-zinc-500 font-mono">Global developers</div>
           </div>
-          <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/60">
-            <div className="text-xs font-mono text-zinc-400">CERTIFICATION</div>
-            <div className="text-xl font-bold text-white font-mono mt-0.5">Verifiable</div>
-            <div className="text-[11px] text-zinc-500">Digital completion credentials</div>
+          <div className="cyber-card p-4 space-y-1">
+            <div className="text-[10px] font-mono text-emerald-400">// REPO ACCESS</div>
+            <div className="text-xl font-bold text-white font-mono">100%</div>
+            <div className="text-[10px] text-zinc-500 font-mono">Unrestricted monorepos</div>
           </div>
-          <div className="p-4 rounded-xl bg-zinc-900/40 border border-zinc-800/60">
-            <div className="text-xs font-mono text-zinc-400">SUPPORT</div>
-            <div className="text-xl font-bold text-white font-mono mt-0.5">24/7</div>
-            <div className="text-[11px] text-zinc-500">Developer mentor network</div>
+          <div className="cyber-card p-4 space-y-1">
+            <div className="text-[10px] font-mono text-purple-400">// UPTIME PROTOCOL</div>
+            <div className="text-xl font-bold text-white font-mono">99.98%</div>
+            <div className="text-[10px] text-zinc-500 font-mono">Zero downtime SLA</div>
+          </div>
+          <div className="cyber-card p-4 space-y-1">
+            <div className="text-[10px] font-mono text-amber-400">// CRYPTO LEDGER</div>
+            <div className="text-xl font-bold text-white font-mono">SHA-256</div>
+            <div className="text-[10px] text-zinc-500 font-mono">Verifiable certificates</div>
           </div>
         </div>
       </section>
 
-      {/* ── FEATURED COURSES SECTION ── */}
-      <section id="curriculum" className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* ── CURRICULUM SECTION ── */}
+      <section id="curriculum" className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#162034]">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
-              Curated Curriculum
+            <div className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest font-semibold">
+              // PRODUCTION TRACKS
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
-              Production-Grade Courses
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase mt-1">
+              ENGINEERING MASTERCLASSES
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-              Each course includes source code, interactive walkthroughs, and deployment blueprints.
+            <p className="text-xs text-zinc-400 font-mono mt-1">
+              Select an advanced engineering pathway to mount repo starter kits & video blueprints.
             </p>
           </div>
           <Link
             to="/courses"
-            className="text-xs font-medium text-zinc-300 hover:text-white flex items-center gap-1.5 self-start sm:self-auto px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900/60 transition"
+            className="btn-cyber-outline text-xs py-2 px-3.5 self-start sm:self-auto flex items-center gap-1.5"
           >
-            <span>View all courses</span>
+            <span>VIEW ALL TRACKS</span>
             <FiArrowUpRight size={13} />
           </Link>
         </div>
@@ -307,69 +344,65 @@ function Home() {
         {loading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="card-surface h-80 animate-pulse p-4 space-y-4">
-                <div className="h-44 bg-zinc-800/60 rounded-xl" />
-                <div className="h-4 bg-zinc-800 rounded w-3/4" />
-                <div className="h-3 bg-zinc-800 rounded w-1/2" />
-              </div>
+              <div key={n} className="cyber-card h-80 animate-pulse p-4 space-y-3" />
             ))}
           </div>
         ) : courses.length === 0 ? (
-          <div className="card-surface p-12 text-center max-w-md mx-auto space-y-3">
+          <div className="cyber-card p-12 text-center max-w-md mx-auto space-y-3">
             <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-            <div className="text-sm font-semibold text-zinc-300">No courses available</div>
-            <p className="text-xs text-zinc-500">Check back shortly or run database seeding.</p>
+            <div className="text-sm font-mono text-zinc-300">No tracks mounted</div>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.slice(0, 6).map((course) => (
+            {courses.slice(0, 6).map((course, idx) => (
               <div
                 key={course._id}
-                className="card-surface-interactive overflow-hidden flex flex-col group justify-between"
+                className="cyber-card-interactive flex flex-col justify-between group"
               >
                 {/* Image Container */}
-                <div className="relative h-48 overflow-hidden bg-zinc-950 border-b border-zinc-800">
+                <div className="relative h-48 overflow-hidden bg-[#04060a] border-b border-[#162034]">
                   <img
                     src={
                       course.image?.url ||
                       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
                     }
                     alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                     onError={(e) => {
                       e.target.src =
                         "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600";
                     }}
                   />
-                  <span className="absolute bottom-3 left-3 text-xs font-bold text-white font-mono bg-zinc-950/90 border border-zinc-800 px-2.5 py-1 rounded-md">
+                  <div className="absolute top-3 left-3 badge-cyber text-[10px]">
+                    TRACK 0{idx + 1}
+                  </div>
+                  <div className="absolute bottom-3 left-3 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded text-xs font-mono font-bold text-cyan-300">
                     ₹{course.price}
-                  </span>
-                  <span className="absolute top-3 right-3 text-[11px] font-mono font-medium text-emerald-400 bg-zinc-950/90 border border-emerald-500/20 px-2 py-0.5 rounded">
-                    Instant Access
-                  </span>
+                  </div>
                 </div>
 
                 {/* Card Content */}
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   <div className="space-y-1.5">
-                    <h3 className="text-sm sm:text-base font-bold text-zinc-100 group-hover:text-white line-clamp-2 leading-snug">
+                    <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug">
                       {course.title}
                     </h3>
-                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-zinc-400 line-clamp-2 font-mono leading-relaxed">
                       {course.description}
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between gap-3">
-                    <div className="text-[11px] font-mono text-zinc-400 flex items-center gap-1">
-                      <FiClock size={12} className="text-zinc-500" />
-                      <span>Self-paced</span>
+                  <div className="pt-3 border-t border-[#162034] flex items-center justify-between gap-3">
+                    <div className="text-[11px] font-mono text-zinc-500 flex items-center gap-1">
+                      <FiClock size={11} className="text-zinc-400" />
+                      <span>SELF-PACED</span>
                     </div>
                     <Link
                       to={`/buy/${course._id}`}
-                      className="btn-accent text-xs font-semibold py-2 px-3.5 rounded-lg"
+                      className="btn-cyber-primary text-xs py-2 px-3.5 flex items-center gap-1"
                     >
-                      Enroll Now
+                      <span>INITIALIZE</span>
+                      <FiArrowRight size={12} />
                     </Link>
                   </div>
                 </div>
@@ -379,109 +412,68 @@ function Home() {
         )}
       </section>
 
-      {/* ── WHY COURSESHIP / PILLARS ── */}
-      <section id="features" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-zinc-800">
+      {/* ── MATRIX / ARCHITECTURE BLUEPRINTS ── */}
+      <section id="matrix" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#162034]">
         <div className="max-w-2xl mb-10">
-          <div className="text-xs font-mono text-indigo-400 uppercase tracking-wider font-semibold">
-            Engineering Standard
+          <div className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest font-semibold">
+            // ARCHITECTURE STANDARD
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">
-            Built for developers who value real code
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight mt-1">
+            BUILT FOR ENTERPRISE READINESS
           </h2>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          <div className="card-surface p-6 space-y-3">
-            <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 text-base">
+          <div className="cyber-card p-6 space-y-3">
+            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg">
               <FiCode />
             </div>
-            <h3 className="text-base font-bold text-white">Full-Stack Repositories</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Every course is paired with complete, clean monorepos, Prisma migrations, Dockerfiles, and CI/CD actions.
+            <h3 className="text-base font-bold text-white font-display uppercase">Monorepo Toolchain</h3>
+            <p className="text-xs text-zinc-400 font-mono leading-relaxed">
+              Every course includes audited production repository setups with TurboRepo, ESLint, TypeScript 5, and Docker configs.
             </p>
           </div>
 
-          <div className="card-surface p-6 space-y-3">
-            <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 text-base">
+          <div className="cyber-card p-6 space-y-3">
+            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-purple-500/30 flex items-center justify-center text-purple-400 text-lg">
+              <FiCpu />
+            </div>
+            <h3 className="text-base font-bold text-white font-display uppercase">Autonomous AI & RAG</h3>
+            <p className="text-xs text-zinc-400 font-mono leading-relaxed">
+              Integrate vector databases, fine-tuned LLM agents, LangGraph workflows, and real-time streaming architectures.
+            </p>
+          </div>
+
+          <div className="cyber-card p-6 space-y-3">
+            <div className="w-10 h-10 rounded-lg bg-[#0c121e] border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-lg">
               <FiAward />
             </div>
-            <h3 className="text-base font-bold text-white">Verifiable Credentials</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              Upon completing capstone requirements, receive a unique cryptographic credential URL for your resume.
-            </p>
-          </div>
-
-          <div className="card-surface p-6 space-y-3">
-            <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-200 text-base">
-              <FiTerminal />
-            </div>
-            <h3 className="text-base font-bold text-white">Continuous Updates</h3>
-            <p className="text-xs text-zinc-400 leading-relaxed">
-              When major framework versions release (React 19, Next 15, Node 22), courses receive full delta updates.
+            <h3 className="text-base font-bold text-white font-display uppercase">Verifiable Credentials</h3>
+            <p className="text-xs text-zinc-400 font-mono leading-relaxed">
+              Cryptographically verified completion certificates shareable on LinkedIn and verifiable through public URL hashes.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── MINIMAL MEMBERSHIP CALLOUT ── */}
-      <section id="pricing" className="py-14 px-4 sm:px-6 max-w-4xl mx-auto">
-        <div className="card-surface p-8 sm:p-10 border border-zinc-700 text-center space-y-5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-mono">
-            <FiShield size={12} />
-            <span>Lifetime Access Guarantee</span>
-          </div>
-
-          <div className="space-y-2">
-            <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-              Ready to level up your engineering skills?
-            </h3>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-md mx-auto leading-relaxed">
-              Explore individual masterclasses or enroll in the complete developer bundle today.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap justify-center gap-4 text-xs text-zinc-300 font-medium">
-            <span className="flex items-center gap-1.5">
-              <FiCheck className="text-emerald-400" /> Full GitHub Repos
-            </span>
-            <span className="flex items-center gap-1.5">
-              <FiCheck className="text-emerald-400" /> Discord Mastermind
-            </span>
-            <span className="flex items-center gap-1.5">
-              <FiCheck className="text-emerald-400" /> Verifiable Certs
-            </span>
-          </div>
-
-          <div className="pt-2">
-            <Link
-              to="/courses"
-              className="btn-primary px-6 py-3 text-xs font-bold inline-flex items-center gap-2"
-            >
-              <span>Explore Course Catalog</span>
-              <FiArrowRight size={13} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ── CLEAN FOOTER ── */}
-      <footer className="py-8 px-4 sm:px-6 lg:px-8 border-t border-zinc-800 text-xs text-zinc-500 max-w-7xl mx-auto">
+      {/* ── FOOTER ── */}
+      <footer className="py-8 px-4 sm:px-6 lg:px-8 border-t border-[#162034] text-xs font-mono text-zinc-500 max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
-            <span className="font-semibold text-zinc-300">CourseShip</span>
+            <span className="font-bold text-zinc-300 font-display">COURSESHIP OS</span>
             <span>&copy; {new Date().getFullYear()}</span>
           </div>
 
           <div className="flex items-center gap-6">
-            <Link to="/courses" className="hover:text-zinc-300 transition-colors">
-              Courses
+            <Link to="/courses" className="hover:text-cyan-400 transition-colors">
+              // TRACKS
             </Link>
-            <Link to="/login" className="hover:text-zinc-300 transition-colors">
-              Sign In
+            <Link to="/login" className="hover:text-cyan-400 transition-colors">
+              // SIGN IN
             </Link>
-            <Link to="/admin/login" className="hover:text-zinc-300 transition-colors font-mono">
-              Admin Portal
+            <Link to="/admin/login" className="hover:text-cyan-400 transition-colors">
+              // ADMIN STUDIO
             </Link>
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiShield, FiArrowRight } from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiShield, FiArrowRight, FiTerminal } from "react-icons/fi";
 import { BACKEND_URL } from "../utils/utils";
 import logo from "../../public/logo.webp";
 
@@ -31,13 +31,13 @@ function AdminSignup() {
           },
         }
       );
-      toast.success(response.data.message || "Admin account registered! Please sign in.");
+      toast.success(response.data.message || "Root Profile Registered // Please Authenticate");
       navigate("/admin/login");
     } catch (error) {
       if (error.response) {
-        setErrorMessage(error.response.data.errors || "Admin signup failed.");
+        setErrorMessage(error.response.data.errors || "Root registration rejected. Check parameters.");
       } else {
-        setErrorMessage("Network error. Please try again.");
+        setErrorMessage("Network connection timed out.");
       }
     } finally {
       setLoading(false);
@@ -45,43 +45,44 @@ function AdminSignup() {
   };
 
   return (
-    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen flex flex-col justify-between font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex flex-col justify-between font-mono selection:bg-cyan-400 selection:text-black">
       {/* ── TOP HEADER ── */}
       <header className="w-full max-w-6xl mx-auto p-5 flex justify-between items-center">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+          <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 flex items-center justify-center">
             <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
           </div>
-          <span className="font-bold text-white tracking-tight text-sm flex items-center gap-1.5">
-            CourseShip <span className="tag-badge-indigo text-[10px]">Admin</span>
+          <span className="font-display font-bold text-white tracking-wider text-xs uppercase flex items-center gap-1.5">
+            COURSESHIP <span className="badge-cyber text-[9px]">ROOT</span>
           </span>
         </Link>
         <div className="flex items-center gap-3 text-xs">
-          <Link to="/admin/login" className="text-zinc-400 hover:text-white transition">
-            Admin Login
+          <Link to="/admin/login" className="text-zinc-400 hover:text-cyan-400 transition">
+            // ROOT LOGIN
           </Link>
           <Link
             to="/login"
-            className="px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-200 hover:text-white transition"
+            className="btn-cyber-outline py-1.5 px-3 text-[11px]"
           >
-            Student Portal
+            STUDENT PORTAL
           </Link>
         </div>
       </header>
 
       {/* ── ADMIN SIGNUP CARD ── */}
       <div className="max-w-md w-full mx-auto px-4 py-8">
-        <div className="card-surface p-7 sm:p-8 space-y-5 shadow-xl">
+        <div className="cyber-card p-7 sm:p-8 space-y-5">
           {/* Header */}
           <div className="space-y-1">
-            <div className="w-9 h-9 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-300 text-base mb-3">
-              <FiShield />
+            <div className="badge-cyber mb-2">
+              <FiShield size={11} />
+              <span>ROOT REGISTRATION PROTOCOL</span>
             </div>
-            <h2 className="text-xl font-bold text-white tracking-tight">
-              Admin Registration
+            <h2 className="text-xl font-extrabold text-white uppercase font-display">
+              REGISTER ROOT NODE
             </h2>
-            <p className="text-xs text-zinc-400">
-              Create an administrative account to manage the course catalog
+            <p className="text-[11px] text-zinc-400">
+              Create an administrative profile to mount & manage tracks
             </p>
           </div>
 
@@ -90,107 +91,107 @@ function AdminSignup() {
             {/* Names */}
             <div className="grid grid-cols-2 gap-2.5">
               <div className="space-y-1">
-                <label className="text-xs font-medium text-zinc-300">First Name</label>
+                <label className="text-[11px] uppercase text-zinc-300">// FIRST NAME</label>
                 <input
                   type="text"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="Admin"
+                  placeholder="Root"
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-medium text-zinc-300">Last Name</label>
+                <label className="text-[11px] uppercase text-zinc-300">// LAST NAME</label>
                 <input
                   type="text"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
-                  placeholder="User"
+                  placeholder="Admin"
                   required
-                  className="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
                 />
               </div>
             </div>
 
-            {/* Email Field */}
+            {/* Email */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-300">Admin Email</label>
+              <label className="text-[11px] uppercase text-zinc-300">// ROOT EMAIL</label>
               <div className="relative">
-                <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
+                <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={13} />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@courseship.com"
+                  placeholder="root@courseship.dev"
                   required
-                  className="w-full pl-9 pr-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
+                  className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
                 />
               </div>
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div className="space-y-1">
-              <label className="text-xs font-medium text-zinc-300">Password</label>
+              <label className="text-[11px] uppercase text-zinc-300">// ROOT KEY (MIN 6 CHARS)</label>
               <div className="relative">
-                <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={14} />
+                <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={13} />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="•••••••• (min 6 characters)"
+                  placeholder="••••••••"
                   required
                   minLength={6}
-                  className="w-full pl-9 pr-9 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
+                  className="w-full pl-9 pr-9 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-cyan-400"
                 >
-                  {showPassword ? <FiEyeOff size={14} /> : <FiEye size={14} />}
+                  {showPassword ? <FiEyeOff size={13} /> : <FiEye size={13} />}
                 </button>
               </div>
             </div>
 
-            {/* Error Message */}
+            {/* Error */}
             {errorMessage && (
-              <div className="p-2.5 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
+              <div className="p-2.5 rounded bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs">
                 {errorMessage}
               </div>
             )}
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 mt-2"
+              className="btn-cyber-primary w-full py-2.5 text-xs flex items-center justify-center gap-1.5 mt-2"
             >
               {loading ? (
-                <span>Registering Admin...</span>
+                <span>INITIALIZING ROOT...</span>
               ) : (
                 <>
-                  <span>Create Admin Account</span>
+                  <span>CREATE ROOT PROFILE</span>
                   <FiArrowRight size={13} />
                 </>
               )}
             </button>
           </form>
 
-          {/* Footer Link */}
-          <div className="pt-3 border-t border-zinc-800 text-center text-xs text-zinc-500">
-            Already registered?{" "}
-            <Link to="/admin/login" className="text-zinc-300 hover:text-white font-medium underline underline-offset-2">
-              Sign in
+          {/* Footer */}
+          <div className="pt-3 border-t border-[#162034] text-center text-xs text-zinc-500">
+            Root account exists?{" "}
+            <Link to="/admin/login" className="text-cyan-400 hover:underline">
+              Authenticate here
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Bottom info */}
-      <footer className="p-4 text-center text-[11px] text-zinc-600 font-mono">
-        CourseShip Admin Security &copy; {new Date().getFullYear()}
+      {/* Footer */}
+      <footer className="p-4 text-center text-[10px] text-zinc-600 font-mono">
+        COURSESHIP // RESTRICTED ACCESS AREA &copy; {new Date().getFullYear()}
       </footer>
     </div>
   );

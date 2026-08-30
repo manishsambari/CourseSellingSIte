@@ -15,7 +15,7 @@ import OurCourses from "./admin/OurCourses";
 
 function App() {
   return (
-    <div className="bg-[#09090b] min-h-screen text-[#f4f4f5] font-sans antialiased">
+    <div className="bg-[#05070e] min-h-screen text-[#f1f5f9] font-sans antialiased bg-grid-pattern">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -34,7 +34,7 @@ function App() {
         <Route path="/admin/update-course/:id" element={<UpdateCourse />} />
         <Route path="/admin/our-courses" element={<OurCourses />} />
 
-        {/* Catch-all fallback */}
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
@@ -42,25 +42,25 @@ function App() {
         position="top-right"
         toastOptions={{
           style: {
-            background: "#18181b",
-            color: "#f4f4f5",
-            border: "1px solid #27272a",
-            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.8)",
-            fontSize: "13px",
-            fontWeight: "500",
-            borderRadius: "12px",
+            background: "#090d18",
+            color: "#f1f5f9",
+            border: "1px solid #1c2a45",
+            boxShadow: "0 10px 30px -5px rgba(0,0,0,0.9)",
+            fontSize: "12px",
+            fontFamily: "Space Mono, monospace",
+            borderRadius: "8px",
             padding: "10px 16px",
           },
           success: {
             iconTheme: {
-              primary: "#10b981",
-              secondary: "#18181b",
+              primary: "#00f0ff",
+              secondary: "#090d18",
             },
           },
           error: {
             iconTheme: {
-              primary: "#f43f5e",
-              secondary: "#18181b",
+              primary: "#ff0055",
+              secondary: "#090d18",
             },
           },
         }}

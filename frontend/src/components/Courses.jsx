@@ -13,6 +13,7 @@ import {
   FiClock,
   FiAward,
   FiChevronDown,
+  FiTerminal,
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import toast from "react-hot-toast";
@@ -54,7 +55,7 @@ function Courses() {
         setCourses(response.data?.courses || []);
       } catch (error) {
         console.error("Error fetching courses", error);
-        toast.error("Failed to load course catalog");
+        toast.error("Failed to mount catalog tracks");
       } finally {
         setLoading(false);
       }
@@ -67,7 +68,7 @@ function Courses() {
       const response = await axios.get(`${BACKEND_URL}/user/logout`, {
         withCredentials: true,
       });
-      toast.success(response.data?.message || "Logged out successfully");
+      toast.success(response.data?.message || "Session Disconnected");
       localStorage.removeItem("user");
       setIsLoggedIn(false);
       setUserProfile(null);
@@ -77,12 +78,12 @@ function Courses() {
   };
 
   const categories = [
-    { id: "all", label: "All Tracks" },
-    { id: "fullstack", label: "Full-Stack" },
-    { id: "ai", label: "AI & ML" },
-    { id: "backend", label: "Backend Systems" },
-    { id: "cloud", label: "Cloud & DevOps" },
-    { id: "web3", label: "Web3" },
+    { id: "all", label: "// ALL TRACKS" },
+    { id: "fullstack", label: "// 01 FULLSTACK" },
+    { id: "ai", label: "// 02 AI & AGENTS" },
+    { id: "backend", label: "// 03 DISTRIBUTED BACKEND" },
+    { id: "cloud", label: "// 04 DEVOPS & CLOUD" },
+    { id: "web3", label: "// 05 WEB3 & SMART CONTRACTS" },
   ];
 
   // Filtering & Sorting
@@ -111,18 +112,18 @@ function Courses() {
     });
 
   return (
-    <div className="bg-[#09090b] text-[#f4f4f5] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-cyan-400 selection:text-black">
       {/* ── MOBILE HEADER ── */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#0e0e11] border-b border-zinc-800 sticky top-0 z-40">
+      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#060912] border-b border-[#162034] sticky top-0 z-40">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+          <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 flex items-center justify-center">
             <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
           </div>
-          <span className="font-bold text-white tracking-tight text-sm">CourseShip</span>
+          <span className="font-display font-bold text-white tracking-wider text-xs uppercase">CourseShip OS</span>
         </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white"
+          className="p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400"
         >
           {isSidebarOpen ? <HiX size={18} /> : <HiMenu size={18} />}
         </button>
@@ -138,83 +139,82 @@ function Courses() {
 
       {/* ── SIDEBAR NAVIGATION ── */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#0e0e11] border-r border-zinc-800 flex flex-col p-5 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#080c14] border-r border-[#162034] flex flex-col p-5 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center overflow-hidden">
+          <div className="w-8 h-8 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-neon-cyan">
             <img src={logo} alt="CourseShip" className="w-6 h-6 object-cover rounded" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-tight text-white">CourseShip</span>
-            <span className="text-[10px] font-mono text-zinc-500 uppercase">Catalog</span>
+            <span className="font-display text-sm font-bold tracking-wider text-white uppercase">CourseShip</span>
+            <span className="text-[10px] font-mono text-cyan-400">// TRACK EXPLORER</span>
           </div>
         </Link>
 
         {/* Links */}
-        <nav className="space-y-1 flex-1 text-xs font-medium">
+        <nav className="space-y-1.5 flex-1 text-xs font-mono">
           <Link
             to="/"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
-            <FiHome size={15} />
-            <span>Home</span>
+            <FiHome size={14} />
+            <span>// 00 HOME</span>
           </Link>
           <Link
             to="/courses"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-zinc-800 text-white font-semibold border border-zinc-700"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#0c121e] text-cyan-300 font-bold border border-cyan-500/30"
           >
-            <FiBookOpen size={15} className="text-indigo-400" />
-            <span>Courses</span>
+            <FiBookOpen size={14} className="text-cyan-400" />
+            <span>// 01 TRACKS</span>
           </Link>
           <Link
             to="/purchases"
-            className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-850 transition"
+            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
-            <FiShoppingBag size={15} />
-            <span>My Learning</span>
+            <FiShoppingBag size={14} />
+            <span>// 02 MY LEARNING</span>
           </Link>
         </nav>
 
         {/* User Card / Auth */}
-        <div className="pt-4 border-t border-zinc-800 space-y-3">
+        <div className="pt-4 border-t border-[#162034] space-y-3 font-mono">
           {isLoggedIn ? (
             <div className="space-y-2.5">
-              <div className="p-2.5 rounded-xl bg-zinc-900/80 border border-zinc-800 flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-indigo-600/20 border border-indigo-500/30 text-indigo-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
+              <div className="p-2.5 rounded-lg bg-[#0c121e] border border-[#162034] flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
                   {userProfile?.firstName ? userProfile.firstName[0].toUpperCase() : <FiUser />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-medium text-white truncate">
+                  <div className="text-xs font-semibold text-white truncate">
                     {userProfile?.firstName} {userProfile?.lastName}
                   </div>
-                  <div className="text-[10px] text-zinc-500 truncate">{userProfile?.email}</div>
+                  <div className="text-[10px] text-cyan-400 truncate">NODE // VERIFIED</div>
                 </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-rose-500/20 text-rose-400 hover:bg-rose-500/10 text-xs font-medium transition"
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-[11px] transition"
               >
-                <FiLogOut size={13} />
-                <span>Log Out</span>
+                <FiLogOut size={12} />
+                <span>DISCONNECT</span>
               </button>
             </div>
           ) : (
             <div className="space-y-2">
               <Link
                 to="/login"
-                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-zinc-800 text-zinc-300 hover:text-white hover:bg-zinc-800 text-xs font-medium transition"
+                className="btn-cyber-outline w-full py-2 text-center text-xs"
               >
-                <FiLogIn size={13} />
-                <span>Sign In</span>
+                SIGN IN
               </Link>
               <Link
                 to="/signup"
-                className="btn-primary w-full py-2 text-xs font-semibold"
+                className="btn-cyber-primary w-full py-2 text-center text-xs"
               >
-                Sign Up
+                JOIN OS
               </Link>
             </div>
           )}
@@ -227,46 +227,50 @@ function Courses() {
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
-                Engineering Courses
+              <div className="badge-cyber mb-1.5">
+                <FiTerminal size={11} />
+                <span>CATALOG MATRIX // ACTIVE</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight">
+                ENGINEERING TRACKS
               </h1>
-              <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-                Learn modern stacks through hands-on, production-grade applications.
+              <p className="text-xs text-zinc-400 font-mono mt-0.5">
+                Full-stack architectures, autonomous agents, and system design masterclasses.
               </p>
             </div>
 
-            <div className="text-xs font-mono text-zinc-400 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-lg self-start sm:self-auto">
-              <span className="text-white font-semibold">{filteredCourses.length}</span> Courses
+            <div className="badge-cyber text-xs self-start sm:self-auto font-mono">
+              MOUNTED: <span className="text-cyan-400 font-bold ml-1">{filteredCourses.length}</span> TRACKS
             </div>
           </div>
 
-          {/* Search & Sort Controls */}
-          <div className="card-surface p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+          {/* Search & Filter Controls */}
+          <div className="cyber-card p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
             {/* Search Input */}
             <div className="relative w-full sm:w-80">
-              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" size={15} />
+              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={14} />
               <input
                 type="text"
-                placeholder="Search courses or stacks..."
+                placeholder="$ grep --track keyword..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white placeholder:text-zinc-500 focus:border-indigo-500 focus:outline-none"
+                className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:outline-none"
               />
             </div>
 
             {/* Sort Dropdown */}
             <div className="relative w-full sm:w-auto flex items-center justify-end gap-2">
-              <span className="text-xs text-zinc-400 hidden sm:inline font-mono">Sort:</span>
+              <span className="text-xs text-zinc-400 hidden sm:inline font-mono">// SORT:</span>
               <div className="relative w-full sm:w-auto">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full sm:w-auto appearance-none pl-3 pr-8 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-xs text-white outline-none cursor-pointer"
+                  className="w-full sm:w-auto appearance-none pl-3 pr-8 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white outline-none cursor-pointer"
                 >
-                  <option value="default" className="bg-[#121215] text-white">Recommended</option>
-                  <option value="price-low" className="bg-[#121215] text-white">Price: Low to High</option>
-                  <option value="price-high" className="bg-[#121215] text-white">Price: High to Low</option>
-                  <option value="alpha" className="bg-[#121215] text-white">Alphabetical (A-Z)</option>
+                  <option value="default" className="bg-[#090d18] text-white">RECOMMENDED</option>
+                  <option value="price-low" className="bg-[#090d18] text-white">PRICE: LOW TO HIGH</option>
+                  <option value="price-high" className="bg-[#090d18] text-white">PRICE: HIGH TO LOW</option>
+                  <option value="alpha" className="bg-[#090d18] text-white">ALPHABETICAL</option>
                 </select>
                 <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" size={13} />
               </div>
@@ -279,10 +283,10 @@ function Courses() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono uppercase whitespace-nowrap transition-colors ${
                   selectedCategory === cat.id
-                    ? "bg-white text-zinc-950 font-semibold"
-                    : "bg-zinc-900 text-zinc-400 hover:text-white border border-zinc-800"
+                    ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
+                    : "bg-[#080c14] text-zinc-400 hover:text-white border border-[#162034]"
                 }`}
               >
                 {cat.label}
@@ -294,81 +298,80 @@ function Courses() {
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((n) => (
-                <div key={n} className="card-surface h-80 animate-pulse p-4 space-y-4">
-                  <div className="h-44 bg-zinc-800/60 rounded-xl" />
-                  <div className="h-4 bg-zinc-800 rounded w-3/4" />
-                  <div className="h-3 bg-zinc-800 rounded w-full" />
-                </div>
+                <div key={n} className="cyber-card h-80 animate-pulse p-4 space-y-3" />
               ))}
             </div>
           ) : filteredCourses.length === 0 ? (
-            <div className="card-surface p-14 text-center max-w-md mx-auto space-y-3">
+            <div className="cyber-card p-14 text-center max-w-md mx-auto space-y-3 font-mono">
               <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-              <h3 className="text-sm font-bold text-white">No courses match your search</h3>
+              <h3 className="text-sm font-bold text-white uppercase">// NO MATCHING TRACKS</h3>
               <p className="text-xs text-zinc-400">
-                Try searching for a different keyword or reset active filters.
+                Grep returned 0 records. Modify search criteria.
               </p>
               <button
                 onClick={() => {
                   setSearchQuery("");
                   setSelectedCategory("all");
                 }}
-                className="btn-secondary text-xs px-4 py-2"
+                className="btn-cyber-outline text-xs px-4 py-2"
               >
-                Reset Filters
+                RESET QUERY
               </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {filteredCourses.map((course) => (
+              {filteredCourses.map((course, idx) => (
                 <div
                   key={course._id}
-                  className="card-surface-interactive overflow-hidden flex flex-col group justify-between"
+                  className="cyber-card-interactive flex flex-col justify-between group"
                 >
                   {/* Image */}
-                  <div className="relative h-48 overflow-hidden bg-zinc-950 border-b border-zinc-800">
+                  <div className="relative h-48 overflow-hidden bg-[#04060a] border-b border-[#162034]">
                     <img
                       src={
                         course.image?.url ||
                         "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
                       }
                       alt={course.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
                       onError={(e) => {
                         e.target.src =
                           "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600";
                       }}
                     />
-                    <span className="absolute bottom-3 left-3 text-xs font-bold text-white font-mono bg-zinc-950/90 border border-zinc-800 px-2.5 py-1 rounded-md">
+                    <div className="absolute top-3 left-3 badge-cyber text-[10px]">
+                      NODE // 0{idx + 1}
+                    </div>
+                    <div className="absolute bottom-3 left-3 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded text-xs font-mono font-bold text-cyan-300">
                       ₹{course.price}
-                    </span>
+                    </div>
                   </div>
 
                   {/* Body */}
                   <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                     <div className="space-y-1.5">
-                      <h3 className="text-sm sm:text-base font-bold text-zinc-100 group-hover:text-white line-clamp-2 leading-snug">
+                      <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug">
                         {course.title}
                       </h3>
-                      <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                      <p className="text-xs text-zinc-400 line-clamp-2 font-mono leading-relaxed">
                         {course.description}
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-[11px] text-zinc-400 font-mono">
+                    <div className="pt-3 border-t border-[#162034] flex items-center justify-between">
+                      <div className="flex items-center gap-3 text-[11px] font-mono text-zinc-400">
                         <span className="flex items-center gap-1">
-                          <FiClock size={11} className="text-zinc-500" /> Lifetime
+                          <FiClock size={11} className="text-cyan-400" /> LIFETIME
                         </span>
                         <span className="flex items-center gap-1">
-                          <FiAward size={11} className="text-emerald-400" /> Cert
+                          <FiAward size={11} className="text-emerald-400" /> SHA-256
                         </span>
                       </div>
                       <Link
                         to={`/buy/${course._id}`}
-                        className="btn-accent text-xs font-semibold py-2 px-3.5 rounded-lg flex items-center gap-1"
+                        className="btn-cyber-primary text-xs py-2 px-3.5 flex items-center gap-1"
                       >
-                        <span>Enroll</span>
+                        <span>INITIALIZE</span>
                         <FiArrowRight size={12} />
                       </Link>
                     </div>
