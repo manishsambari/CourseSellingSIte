@@ -11,13 +11,11 @@ function adminMiddleware(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.JWT_ADMIN_PASSWORD);
-    console.log(decoded);
     req.adminId = decoded.id;
-
     next();
   } catch (error) {
+    console.error("Error in admin middleware:", error);
     return res.status(401).json({ errors: "Invalid token or expired" });
-    console.log("error in user middleware", error);
   }
 }
 

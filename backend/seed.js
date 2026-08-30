@@ -4,9 +4,16 @@ import bcrypt from "bcryptjs";
 import { Course } from "./models/course.model.js";
 import { Admin } from "./models/admin.model.js";
 
-dotenv.config();
+import path from "path";
+import { fileURLToPath } from "url";
 
-const MONGO_URI = process.env.MONGO_URI || process.argv[2];
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, ".env") });
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
+
+const MONGO_URI = process.env.MONGO_URI || process.env.DB_URI || process.argv[2];
 
 const sampleCourses = [
   {
