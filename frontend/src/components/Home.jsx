@@ -18,7 +18,7 @@ import { RiShoppingBag3Line } from "react-icons/ri";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { BACKEND_URL } from "../utils/utils";
-import logo from "../../public/logo.webp";
+import Logo from "./Logo";
 
 function Home() {
   const [courses, setCourses] = useState([]);
@@ -63,7 +63,7 @@ function Home() {
       const response = await axios.get(`${BACKEND_URL}/user/logout`, {
         withCredentials: true,
       });
-      toast.success(response.data?.message || "Session Terminated");
+      toast.success(response.data?.message || "Session Disconnected");
       localStorage.removeItem("user");
       setIsLoggedIn(false);
       setUserProfile(null);
@@ -77,15 +77,8 @@ function Home() {
       {/* ── TOP NAV BAR ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#060912]/90 backdrop-blur-md border-b border-[#162034]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-8 h-8 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-neon-cyan">
-              <img src={logo} alt="CourseShip Logo" className="w-6 h-6 object-cover rounded" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-display text-sm font-bold tracking-wider text-white flex items-center gap-1.5 uppercase">
-                COURSESHIP <span className="text-[10px] font-mono text-cyan-400 font-normal">[OS.v2]</span>
-              </span>
-            </div>
+          <Link to="/">
+            <Logo size="md" subtitle="OS.v2" />
           </Link>
 
           {/* Desktop Nav */}
@@ -100,7 +93,7 @@ function Home() {
               // CURRICULUM
             </a>
             <a href="#matrix" className="hover:text-cyan-400 transition-colors">
-              // BLUEPRINT
+              // BLUEPRINTS
             </a>
           </nav>
 
@@ -110,7 +103,7 @@ function Home() {
               <div className="flex items-center gap-3">
                 <Link
                   to="/purchases"
-                  className="btn-cyber-outline py-2 px-3 flex items-center gap-1.5"
+                  className="btn-cyber-outline py-2 px-3 flex items-center gap-1.5 font-mono"
                 >
                   <RiShoppingBag3Line size={13} className="text-cyan-400" />
                   <span>[ LEARNING HUB ]</span>
@@ -223,7 +216,7 @@ function Home() {
         <div className="flex justify-center">
           <div className="badge-cyber">
             <FiZap className="text-cyan-400" />
-            <span>CORE RELEASE // 2026 DISTRIBUTED & AI ENGINEERING</span>
+            <span>CORE PROTOCOL // 2026 DISTRIBUTED & AI SYSTEMS</span>
           </div>
         </div>
 
@@ -237,7 +230,7 @@ function Home() {
           </h1>
 
           <p className="text-xs sm:text-sm text-zinc-400 max-w-2xl mx-auto font-mono leading-relaxed">
-            High-throughput distributed systems, autonomous multi-agent AI frameworks, cloud native Kubernetes architectures, and verified monorepo codebases.
+            High-throughput distributed backends, autonomous multi-agent AI frameworks, cloud native Kubernetes architectures, and production-tested monorepo codebases.
           </p>
         </div>
 
@@ -273,7 +266,7 @@ function Home() {
             </div>
 
             {/* Terminal Code Body */}
-            <div className="space-y-1 text-[11px] sm:text-xs leading-relaxed">
+            <div className="space-y-1 text-[11px] sm:text-xs leading-relaxed font-mono">
               <div className="text-zinc-400">
                 <span className="text-emerald-400">$</span> npx courseship init --track=fullstack-ai-next15
               </div>
@@ -334,7 +327,7 @@ function Home() {
           </div>
           <Link
             to="/courses"
-            className="btn-cyber-outline text-xs py-2 px-3.5 self-start sm:self-auto flex items-center gap-1.5"
+            className="btn-cyber-outline text-xs py-2 px-3.5 self-start sm:self-auto flex items-center gap-1.5 font-mono"
           >
             <span>VIEW ALL TRACKS</span>
             <FiArrowUpRight size={13} />
@@ -348,9 +341,9 @@ function Home() {
             ))}
           </div>
         ) : courses.length === 0 ? (
-          <div className="cyber-card p-12 text-center max-w-md mx-auto space-y-3">
+          <div className="cyber-card p-12 text-center max-w-md mx-auto space-y-3 font-mono">
             <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-            <div className="text-sm font-mono text-zinc-300">No tracks mounted</div>
+            <div className="text-sm text-zinc-300">// NO TRACKS MOUNTED</div>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -412,7 +405,7 @@ function Home() {
         )}
       </section>
 
-      {/* ── MATRIX / ARCHITECTURE BLUEPRINTS ── */}
+      {/* ── ARCHITECTURE BLUEPRINTS SECTION ── */}
       <section id="matrix" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#162034]">
         <div className="max-w-2xl mb-10">
           <div className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest font-semibold">
@@ -459,11 +452,7 @@ function Home() {
       {/* ── FOOTER ── */}
       <footer className="py-8 px-4 sm:px-6 lg:px-8 border-t border-[#162034] text-xs font-mono text-zinc-500 max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
-            <span className="font-bold text-zinc-300 font-display">COURSESHIP OS</span>
-            <span>&copy; {new Date().getFullYear()}</span>
-          </div>
+          <Logo size="sm" subtitle="OS.v2" />
 
           <div className="flex items-center gap-6">
             <Link to="/courses" className="hover:text-cyan-400 transition-colors">

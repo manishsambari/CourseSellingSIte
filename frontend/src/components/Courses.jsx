@@ -18,7 +18,7 @@ import {
 import { HiMenu, HiX } from "react-icons/hi";
 import toast from "react-hot-toast";
 import { BACKEND_URL } from "../utils/utils";
-import logo from "../../public/logo.webp";
+import Logo from "./Logo";
 
 function Courses() {
   const [courses, setCourses] = useState([]);
@@ -115,11 +115,8 @@ function Courses() {
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-cyan-400 selection:text-black">
       {/* ── MOBILE HEADER ── */}
       <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#060912] border-b border-[#162034] sticky top-0 z-40">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 flex items-center justify-center">
-            <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
-          </div>
-          <span className="font-display font-bold text-white tracking-wider text-xs uppercase">CourseShip OS</span>
+        <Link to="/">
+          <Logo size="sm" subtitle="OS" />
         </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -144,14 +141,8 @@ function Courses() {
         }`}
       >
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-neon-cyan">
-            <img src={logo} alt="CourseShip" className="w-6 h-6 object-cover rounded" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-display text-sm font-bold tracking-wider text-white uppercase">CourseShip</span>
-            <span className="text-[10px] font-mono text-cyan-400">// TRACK EXPLORER</span>
-          </div>
+        <Link to="/" className="mb-8 block">
+          <Logo size="md" subtitle="TRACKS" />
         </Link>
 
         {/* Links */}
@@ -231,7 +222,7 @@ function Courses() {
                 <FiTerminal size={11} />
                 <span>CATALOG MATRIX // ACTIVE</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display">
                 ENGINEERING TRACKS
               </h1>
               <p className="text-xs text-zinc-400 font-mono mt-0.5">
@@ -304,7 +295,7 @@ function Courses() {
           ) : filteredCourses.length === 0 ? (
             <div className="cyber-card p-14 text-center max-w-md mx-auto space-y-3 font-mono">
               <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-              <h3 className="text-sm font-bold text-white uppercase">// NO MATCHING TRACKS</h3>
+              <h3 className="text-sm font-bold text-white uppercase font-display">// NO MATCHING TRACKS</h3>
               <p className="text-xs text-zinc-400">
                 Grep returned 0 records. Modify search criteria.
               </p>

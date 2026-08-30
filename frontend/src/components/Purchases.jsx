@@ -22,7 +22,7 @@ import {
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import { BACKEND_URL } from "../utils/utils";
-import logo from "../../public/logo.webp";
+import Logo from "./Logo";
 
 function Purchases() {
   const [purchases, setPurchases] = useState([]);
@@ -105,11 +105,8 @@ function Purchases() {
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-cyan-400 selection:text-black">
       {/* ── MOBILE TOPBAR ── */}
       <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#060912] border-b border-[#162034] sticky top-0 z-40">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 flex items-center justify-center">
-            <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
-          </div>
-          <span className="font-display font-bold text-white tracking-wider text-xs uppercase">CourseShip OS</span>
+        <Link to="/">
+          <Logo size="sm" subtitle="HUB" />
         </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -134,14 +131,8 @@ function Purchases() {
         }`}
       >
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-neon-cyan">
-            <img src={logo} alt="CourseShip" className="w-6 h-6 object-cover rounded" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-display text-sm font-bold tracking-wider text-white uppercase">CourseShip</span>
-            <span className="text-[10px] font-mono text-cyan-400">// COMMAND CENTER</span>
-          </div>
+        <Link to="/" className="mb-8 block">
+          <Logo size="md" subtitle="COMMAND" />
         </Link>
 
         {/* Links */}
@@ -202,7 +193,7 @@ function Purchases() {
                 <FiCpu size={11} />
                 <span>ACTIVE NODES // MOUNTED</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display">
                 DEVELOPER COMMAND CENTER
               </h1>
               <p className="text-xs text-zinc-400 font-mono mt-0.5">
@@ -283,7 +274,7 @@ function Purchases() {
               <div className="w-12 h-12 rounded bg-[#0c121e] border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto text-xl">
                 <FiBookOpen />
               </div>
-              <h3 className="text-sm font-bold text-white uppercase">// NO MOUNTED TRACKS</h3>
+              <h3 className="text-sm font-bold text-white uppercase font-display">// NO MOUNTED TRACKS</h3>
               <p className="text-xs text-zinc-400">
                 You have not mounted any curriculum nodes yet. Explore the tracks catalog.
               </p>

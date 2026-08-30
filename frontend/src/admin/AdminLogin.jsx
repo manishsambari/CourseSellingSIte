@@ -4,7 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiShield, FiArrowRight, FiTerminal } from "react-icons/fi";
 import { BACKEND_URL } from "../utils/utils";
-import logo from "../../public/logo.webp";
+import Logo from "../components/Logo";
 
 function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -47,13 +47,8 @@ function AdminLogin() {
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex flex-col justify-between font-mono selection:bg-cyan-400 selection:text-black">
       {/* ── TOP HEADER ── */}
       <header className="w-full max-w-6xl mx-auto p-5 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 flex items-center justify-center">
-            <img src={logo} alt="Logo" className="w-5 h-5 rounded object-cover" />
-          </div>
-          <span className="font-display font-bold text-white tracking-wider text-xs uppercase flex items-center gap-1.5">
-            COURSESHIP <span className="badge-cyber text-[9px]">ROOT</span>
-          </span>
+        <Link to="/">
+          <Logo size="sm" subtitle="ROOT" />
         </Link>
         <div className="flex items-center gap-3 text-xs">
           <Link to="/login" className="text-zinc-400 hover:text-cyan-400 transition">

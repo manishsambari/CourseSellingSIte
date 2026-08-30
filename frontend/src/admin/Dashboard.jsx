@@ -16,7 +16,7 @@ import {
 } from "react-icons/fi";
 import { RiDashboardLine, RiShieldUserLine } from "react-icons/ri";
 import { BACKEND_URL } from "../utils/utils";
-import logo from "../../public/logo.webp";
+import Logo from "../components/Logo";
 
 function Dashboard() {
   const [courses, setCourses] = useState([]);
@@ -88,15 +88,8 @@ function Dashboard() {
         }`}
       >
         {/* Brand */}
-        <Link to="/" className="flex items-center gap-2.5 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-[#0c121e] border border-cyan-500/30 flex items-center justify-center overflow-hidden shadow-neon-cyan">
-            <img src={logo} alt="CourseShip" className="w-6 h-6 object-cover rounded" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-display text-sm font-bold tracking-wider text-white uppercase flex items-center gap-1.5">
-              CourseShip <span className="badge-cyber text-[9px]">ROOT</span>
-            </span>
-          </div>
+        <Link to="/" className="mb-8 block">
+          <Logo size="md" subtitle="ROOT" />
         </Link>
 
         {/* Navigation */}
@@ -164,7 +157,7 @@ function Dashboard() {
                 <FiTerminal size={11} />
                 <span>ROOT TELEMETRY // ACTIVE</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display">
                 SYSTEM ANALYTICS MATRIX
               </h1>
               <p className="text-xs text-zinc-400 font-mono mt-0.5">

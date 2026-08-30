@@ -12,7 +12,7 @@ import {
   FaQrcode,
 } from "react-icons/fa";
 import { FiCheckCircle, FiCopy, FiHelpCircle, FiTerminal, FiCpu } from "react-icons/fi";
-import logo from "../../public/logo.webp";
+import Logo from "./Logo";
 
 function Buy() {
   const { courseId } = useParams();
@@ -149,7 +149,7 @@ function Buy() {
           <div className="w-12 h-12 bg-[#0c121e] border border-cyan-500/30 text-cyan-400 rounded-xl flex items-center justify-center mx-auto text-xl">
             <FaShieldAlt />
           </div>
-          <h2 className="text-base font-bold text-white uppercase">// ENROLLMENT NOTICE</h2>
+          <h2 className="text-base font-bold text-white uppercase font-display">// ENROLLMENT NOTICE</h2>
           <p className="text-zinc-400 text-xs leading-relaxed">{error}</p>
           <div className="pt-2">
             <Link
@@ -170,13 +170,8 @@ function Buy() {
       {/* ── HEADER ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#060912]/90 backdrop-blur-md border-b border-[#162034]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between font-mono">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded bg-[#0c121e] border border-cyan-500/40 flex items-center justify-center">
-              <img src={logo} alt="CourseShip" className="w-5 h-5 rounded object-cover" />
-            </div>
-            <span className="text-xs font-bold text-white tracking-wider uppercase font-display">
-              COURSESHIP // SECURE GATEWAY
-            </span>
+          <Link to="/">
+            <Logo size="sm" subtitle="GATEWAY" />
           </Link>
           <Link
             to="/courses"
