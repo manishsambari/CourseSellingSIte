@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FiArrowRight,
@@ -12,7 +12,6 @@ import {
   FiShield,
   FiCpu,
   FiZap,
-  FiSearch,
   FiCopy,
   FiCheck,
   FiChevronDown,
@@ -35,8 +34,6 @@ function Home() {
   const [userProfile, setUserProfile] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("cli");
   const [copied, setCopied] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
@@ -86,40 +83,6 @@ function Home() {
     }
   };
 
-  const categories = [
-    { id: "all", label: "ALL TRACKS" },
-    { id: "fullstack", label: "FULLSTACK" },
-    { id: "ai", label: "AI & AGENTS" },
-    { id: "backend", label: "BACKEND & SYSTEMS" },
-    { id: "cloud", label: "DEVOPS & CLOUD" },
-    { id: "web3", label: "WEB3 & CRYPTO" },
-  ];
-
-  const filteredCourses = useMemo(() => {
-    return courses.filter((c) => {
-      const matchesSearch =
-        !searchQuery.trim() ||
-        (c.title || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (c.description || "").toLowerCase().includes(searchQuery.toLowerCase());
-
-      if (!matchesSearch) return false;
-      if (activeCategory === "all") return true;
-
-      const text = `${c.title} ${c.description}`.toLowerCase();
-      if (activeCategory === "fullstack")
-        return text.includes("react") || text.includes("next") || text.includes("fullstack") || text.includes("mobile") || text.includes("frontend") || text.includes("typescript") || text.includes("mern");
-      if (activeCategory === "ai")
-        return text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("llm") || text.includes("generative") || text.includes("langgraph");
-      if (activeCategory === "backend")
-        return text.includes("backend") || text.includes("rust") || text.includes("golang") || text.includes("grpc") || text.includes("system design") || text.includes("websocket") || text.includes("data structure") || text.includes("node") || text.includes("java") || text.includes("linux");
-      if (activeCategory === "cloud")
-        return text.includes("cloud") || text.includes("kubernetes") || text.includes("docker") || text.includes("devops") || text.includes("aws");
-      if (activeCategory === "web3")
-        return text.includes("web3") || text.includes("solidity") || text.includes("smart contract") || text.includes("cryptography") || text.includes("security") || text.includes("pentesting");
-      return true;
-    });
-  }, [courses, activeCategory, searchQuery]);
-
   const handleCopyCommand = (text) => {
     navigator.clipboard?.writeText(text);
     setCopied(true);
@@ -161,6 +124,9 @@ function Home() {
     },
   ];
 
+  // Curate 6 top featured tracks for landing page
+  const featuredCourses = courses.slice(0, 6);
+
   return (
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-sans selection:bg-cyan-400 selection:text-black">
       {/* ── TOP NAV BAR ── */}
@@ -179,7 +145,7 @@ function Home() {
               // TELEMETRY
             </a>
             <a href="#curriculum" className="hover:text-cyan-400 transition-colors">
-              // CURRICULUM
+              // FEATURED
             </a>
             <a href="#matrix" className="hover:text-cyan-400 transition-colors">
               // BLUEPRINTS
@@ -245,7 +211,7 @@ function Home() {
               onClick={() => setMobileMenuOpen(false)}
               className="block text-zinc-300 hover:text-cyan-400"
             >
-              // BROWSE TRACKS ({courses.length})
+              // BROWSE ALL TRACKS ({courses.length})
             </Link>
             <a
               href="#terminal"
@@ -259,7 +225,7 @@ function Home() {
               onClick={() => setMobileMenuOpen(false)}
               className="block text-zinc-300 hover:text-cyan-400"
             >
-              // CURRICULUM OVERVIEW
+              // FEATURED TRACKS
             </a>
             <a
               href="#faqs"
@@ -498,90 +464,49 @@ function Home() {
         </div>
       </section>
 
-      {/* ── PRODUCTION TRACKS SECTION ── */}
+      {/* ── FEATURED MASTERCLASSES SECTION (CURATED 6 ITEMS ONLY) ── */}
       <section id="curriculum" className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#162034]">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
             <div className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest font-semibold">
-              // PRODUCTION TRACKS ({filteredCourses.length})
+              // FEATURED TRACKS ({featuredCourses.length})
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase font-display mt-1">
-              ENGINEERING MASTERCLASSES
+              FEATURED MASTERCLASSES
             </h2>
             <p className="text-xs text-zinc-400 font-mono mt-1">
-              Select an advanced engineering pathway to mount repo starter kits & video blueprints.
+              Top curated engineering pathways. Browse the complete catalog for all 16 tracks.
             </p>
           </div>
           <Link
             to="/courses"
             className="btn-cyber-outline text-xs py-2 px-3.5 self-start md:self-auto flex items-center gap-1.5 font-mono"
           >
-            <span>EXPLORE ALL ({courses.length})</span>
+            <span>VIEW ALL ({courses.length}) TRACKS</span>
             <FiArrowUpRight size={13} />
           </Link>
         </div>
 
-        {/* Search & Category Filter Controls */}
-        <div className="cyber-card p-3 mb-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          {/* Quick Search */}
-          <div className="relative w-full md:w-80">
-            <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={13} />
-            <input
-              type="text"
-              placeholder="$ filter --keyword..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3.5 py-1.5 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
-            />
-          </div>
-
-          {/* Category Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto scrollbar-none">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-md text-xs font-mono uppercase whitespace-nowrap transition-colors ${
-                  activeCategory === cat.id
-                    ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
-                    : "bg-[#080c14] text-zinc-400 hover:text-white border border-[#162034]"
-                }`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
         {loading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
               <div key={n} className="cyber-card h-80 animate-pulse p-4 space-y-3" />
             ))}
           </div>
-        ) : filteredCourses.length === 0 ? (
+        ) : featuredCourses.length === 0 ? (
           <div className="cyber-card p-12 text-center max-w-md mx-auto space-y-3 font-mono">
             <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-            <div className="text-sm text-zinc-300">// NO TRACKS FOUND FOR THIS QUERY</div>
-            <button
-              onClick={() => {
-                setActiveCategory("all");
-                setSearchQuery("");
-              }}
-              className="btn-cyber-outline text-xs px-3.5 py-1.5"
-            >
-              RESET FILTERS
-            </button>
+            <div className="text-sm text-zinc-300">// NO TRACKS MOUNTED</div>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredCourses.map((course, idx) => (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {featuredCourses.map((course, idx) => (
               <div
                 key={course._id}
                 className="cyber-card-interactive flex flex-col justify-between group"
               >
                 {/* Image Container with HD Cover */}
-                <div className="relative h-44 overflow-hidden bg-[#04060a] border-b border-[#162034]">
+                <div className="relative h-48 overflow-hidden bg-[#04060a] border-b border-[#162034]">
                   <img
                     src={
                       course.image?.url ||
@@ -594,18 +519,18 @@ function Home() {
                         "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&auto=format&fit=crop&q=80";
                     }}
                   />
-                  <div className="absolute top-2.5 left-2.5 badge-cyber text-[9px]">
-                    NODE // 0{idx + 1}
+                  <div className="absolute top-3 left-3 badge-cyber text-[10px]">
+                    TRACK 0{idx + 1}
                   </div>
-                  <div className="absolute bottom-2.5 left-2.5 bg-[#060912]/95 border border-[#162034] px-2 py-0.5 rounded text-xs font-mono font-bold text-cyan-300 shadow-md">
+                  <div className="absolute bottom-3 left-3 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded text-xs font-mono font-bold text-cyan-300 shadow-md">
                     ₹{course.price}
                   </div>
                 </div>
 
                 {/* Card Content */}
-                <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                  <div className="space-y-1">
-                    <h3 className="font-display text-sm font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug">
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-1.5">
+                    <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug">
                       {course.title}
                     </h3>
                     <p className="text-xs text-zinc-400 line-clamp-2 font-mono leading-relaxed">
@@ -613,17 +538,17 @@ function Home() {
                     </p>
                   </div>
 
-                  <div className="pt-2.5 border-t border-[#162034] flex items-center justify-between gap-2">
-                    <div className="text-[10px] font-mono text-zinc-500 flex items-center gap-1">
-                      <FiClock size={10} className="text-zinc-400" />
+                  <div className="pt-3 border-t border-[#162034] flex items-center justify-between gap-2">
+                    <div className="text-[11px] font-mono text-zinc-500 flex items-center gap-1">
+                      <FiClock size={11} className="text-zinc-400" />
                       <span>LIFETIME</span>
                     </div>
                     <Link
                       to={`/buy/${course._id}`}
-                      className="btn-cyber-primary text-xs py-1.5 px-3 flex items-center gap-1"
+                      className="btn-cyber-primary text-xs py-2 px-3.5 flex items-center gap-1 font-display"
                     >
                       <span>INITIALIZE</span>
-                      <FiArrowRight size={11} />
+                      <FiArrowRight size={12} />
                     </Link>
                   </div>
                 </div>
@@ -631,6 +556,25 @@ function Home() {
             ))}
           </div>
         )}
+
+        {/* Explore All Tracks Banner CTA */}
+        <div className="mt-10 p-6 rounded-xl cyber-card border border-cyan-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+          <div className="space-y-1">
+            <h3 className="text-base font-bold text-white font-display uppercase">
+              LOOKING FOR MORE PATHWAYS?
+            </h3>
+            <p className="text-xs text-zinc-400 font-mono">
+              Explore the complete catalog with all 16 engineering tracks across Fullstack, AI Agents, DevOps, and Web3.
+            </p>
+          </div>
+          <Link
+            to="/courses"
+            className="btn-cyber-primary text-xs py-2.5 px-5 flex items-center gap-2 whitespace-nowrap font-display"
+          >
+            <span>VIEW ALL 16 TRACKS</span>
+            <FiArrowRight size={13} />
+          </Link>
+        </div>
       </section>
 
       {/* ── ARCHITECTURE BLUEPRINTS SECTION ── */}
