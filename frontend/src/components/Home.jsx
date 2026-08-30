@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
   FiArrowRight,
@@ -20,6 +20,8 @@ import {
   FiGitBranch,
   FiActivity,
   FiHelpCircle,
+  FiCheckCircle,
+  FiStar,
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import { RiShoppingBag3Line } from "react-icons/ri";
@@ -35,6 +37,7 @@ function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("cli");
+  const [featuredFilter, setFeaturedFilter] = useState("all");
   const [copied, setCopied] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
 
@@ -124,8 +127,18 @@ function Home() {
     },
   ];
 
-  // Curate 6 top featured tracks for landing page
-  const featuredCourses = courses.slice(0, 6);
+  // Curate top featured tracks with optional quick filter
+  const featuredCourses = useMemo(() => {
+    const topPicks = courses.slice(0, 6);
+    if (featuredFilter === "all") return topPicks;
+    return courses.filter((c) => {
+      const text = `${c.title} ${c.description}`.toLowerCase();
+      if (featuredFilter === "fullstack") return text.includes("next") || text.includes("react") || text.includes("fullstack") || text.includes("typescript");
+      if (featuredFilter === "ai") return text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("langgraph");
+      if (featuredFilter === "systems") return text.includes("rust") || text.includes("golang") || text.includes("kubernetes") || text.includes("grpc") || text.includes("system design");
+      return true;
+    }).slice(0, 6);
+  }, [courses, featuredFilter]);
 
   return (
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-sans selection:bg-cyan-400 selection:text-black">
@@ -186,7 +199,7 @@ function Home() {
                 </Link>
                 <Link
                   to="/signup"
-                  className="btn-cyber-primary text-xs py-2 px-3.5"
+                  className="btn-cyber-primary text-xs py-2 px-3.5 font-display"
                 >
                   JOIN PROTOCOL
                 </Link>
@@ -225,7 +238,7 @@ function Home() {
               onClick={() => setMobileMenuOpen(false)}
               className="block text-zinc-300 hover:text-cyan-400"
             >
-              // FEATURED TRACKS
+              // FEATURED MASTERCLASSES
             </a>
             <a
               href="#faqs"
@@ -464,73 +477,133 @@ function Home() {
         </div>
       </section>
 
-      {/* ── FEATURED MASTERCLASSES SECTION (CURATED 6 ITEMS ONLY) ── */}
-      <section id="curriculum" className="py-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#162034]">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <div className="text-[11px] font-mono text-cyan-400 uppercase tracking-widest font-semibold">
-              // FEATURED TRACKS ({featuredCourses.length})
+      {/* ── UPGRADED FEATURED MASTERCLASSES SECTION ── */}
+      <section id="curriculum" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[#162034]">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+          <div className="space-y-2">
+            <div className="badge-cyber text-[10px]">
+              <FiStar className="text-amber-400" />
+              <span>CURATED ARCHITECTURES // TOP TIER</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight uppercase font-display mt-1">
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight uppercase font-display">
               FEATURED MASTERCLASSES
             </h2>
-            <p className="text-xs text-zinc-400 font-mono mt-1">
-              Top curated engineering pathways. Browse the complete catalog for all 16 tracks.
+            <p className="text-xs sm:text-sm text-zinc-400 font-mono max-w-xl">
+              Production-grade engineering curricula with full monorepos, video walkthroughs, and verifiable credentials.
             </p>
           </div>
-          <Link
-            to="/courses"
-            className="btn-cyber-outline text-xs py-2 px-3.5 self-start md:self-auto flex items-center gap-1.5 font-mono"
-          >
-            <span>VIEW ALL ({courses.length}) TRACKS</span>
-            <FiArrowUpRight size={13} />
-          </Link>
+
+          {/* Quick Category Filter Pills on Featured Section */}
+          <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs">
+            <button
+              onClick={() => setFeaturedFilter("all")}
+              className={`px-3 py-1.5 rounded-md transition ${
+                featuredFilter === "all"
+                  ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
+                  : "bg-[#080c14] border border-[#162034] text-zinc-400 hover:text-white"
+              }`}
+            >
+              // ALL
+            </button>
+            <button
+              onClick={() => setFeaturedFilter("fullstack")}
+              className={`px-3 py-1.5 rounded-md transition ${
+                featuredFilter === "fullstack"
+                  ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
+                  : "bg-[#080c14] border border-[#162034] text-zinc-400 hover:text-white"
+              }`}
+            >
+              // FULLSTACK
+            </button>
+            <button
+              onClick={() => setFeaturedFilter("ai")}
+              className={`px-3 py-1.5 rounded-md transition ${
+                featuredFilter === "ai"
+                  ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
+                  : "bg-[#080c14] border border-[#162034] text-zinc-400 hover:text-white"
+              }`}
+            >
+              // AI AGENTS
+            </button>
+            <button
+              onClick={() => setFeaturedFilter("systems")}
+              className={`px-3 py-1.5 rounded-md transition ${
+                featuredFilter === "systems"
+                  ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
+                  : "bg-[#080c14] border border-[#162034] text-zinc-400 hover:text-white"
+              }`}
+            >
+              // SYSTEMS
+            </button>
+          </div>
         </div>
 
+        {/* Courses Grid */}
         {loading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((n) => (
-              <div key={n} className="cyber-card h-80 animate-pulse p-4 space-y-3" />
+              <div key={n} className="cyber-card h-96 animate-pulse p-4 space-y-3" />
             ))}
           </div>
         ) : featuredCourses.length === 0 ? (
           <div className="cyber-card p-12 text-center max-w-md mx-auto space-y-3 font-mono">
             <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-            <div className="text-sm text-zinc-300">// NO TRACKS MOUNTED</div>
+            <div className="text-sm text-zinc-300">// NO TRACKS FOUND</div>
+            <button
+              onClick={() => setFeaturedFilter("all")}
+              className="btn-cyber-outline text-xs px-3.5 py-1.5"
+            >
+              SHOW ALL FEATURED
+            </button>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredCourses.map((course, idx) => (
               <div
                 key={course._id}
-                className="cyber-card-interactive flex flex-col justify-between group"
+                className="cyber-card-interactive flex flex-col justify-between group border border-[#162034] hover:border-cyan-500/60 rounded-xl overflow-hidden bg-[#080c14]"
               >
-                {/* Image Container with HD Cover */}
-                <div className="relative h-48 overflow-hidden bg-[#04060a] border-b border-[#162034]">
+                {/* Image Container with HD Cover & Badges */}
+                <div className="relative h-52 overflow-hidden bg-[#04060a] border-b border-[#162034]">
                   <img
                     src={
                       course.image?.url ||
                       "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&auto=format&fit=crop&q=80"
                     }
                     alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
                     onError={(e) => {
                       e.target.src =
                         "https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=800&auto=format&fit=crop&q=80";
                     }}
                   />
-                  <div className="absolute top-3 left-3 badge-cyber text-[10px]">
+                  {/* Top Badges */}
+                  <div className="absolute top-3 left-3 badge-cyber text-[10px] bg-[#060912]/90 backdrop-blur-md">
                     TRACK 0{idx + 1}
                   </div>
-                  <div className="absolute bottom-3 left-3 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded text-xs font-mono font-bold text-cyan-300 shadow-md">
-                    ₹{course.price}
+                  <div className="absolute top-3 right-3 badge-cyber-green text-[10px] bg-[#060912]/90 backdrop-blur-md">
+                    PRODUCTION
+                  </div>
+
+                  {/* Bottom Price Pill with Discount */}
+                  <div className="absolute bottom-3 left-3 flex items-center gap-1.5 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded-md backdrop-blur-md shadow-lg">
+                    <span className="text-xs font-mono font-bold text-cyan-300">
+                      ₹{course.price}
+                    </span>
+                    <span className="text-[10px] font-mono line-through text-zinc-500">
+                      ₹{Number(course.price) * 4 || 5999}
+                    </span>
+                    <span className="text-[9px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-1 rounded">
+                      75% OFF
+                    </span>
                   </div>
                 </div>
 
                 {/* Card Content */}
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-1.5">
-                    <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug">
+                  <div className="space-y-2">
+                    <h3 className="font-display text-base font-bold text-white group-hover:text-cyan-300 line-clamp-2 leading-snug transition-colors">
                       {course.title}
                     </h3>
                     <p className="text-xs text-zinc-400 line-clamp-2 font-mono leading-relaxed">
@@ -538,17 +611,34 @@ function Home() {
                     </p>
                   </div>
 
-                  <div className="pt-3 border-t border-[#162034] flex items-center justify-between gap-2">
-                    <div className="text-[11px] font-mono text-zinc-500 flex items-center gap-1">
+                  {/* Micro Curriculum Inclusions List */}
+                  <div className="space-y-1.5 pt-2 border-t border-[#162034] text-[11px] font-mono text-zinc-400">
+                    <div className="flex items-center gap-1.5">
+                      <FiCheckCircle size={12} className="text-cyan-400 flex-shrink-0" />
+                      <span className="truncate">Production GitHub Starter Monorepo</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <FiCheckCircle size={12} className="text-emerald-400 flex-shrink-0" />
+                      <span className="truncate">Docker Topology & Schema Blueprints</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <FiCheckCircle size={12} className="text-purple-400 flex-shrink-0" />
+                      <span className="truncate">SHA-256 Ledger Verified Certificate</span>
+                    </div>
+                  </div>
+
+                  {/* Card Action Row */}
+                  <div className="pt-3 border-t border-[#162034] flex items-center justify-between gap-2 font-mono">
+                    <div className="text-[11px] text-zinc-500 flex items-center gap-1">
                       <FiClock size={11} className="text-zinc-400" />
                       <span>LIFETIME</span>
                     </div>
                     <Link
                       to={`/buy/${course._id}`}
-                      className="btn-cyber-primary text-xs py-2 px-3.5 flex items-center gap-1 font-display"
+                      className="btn-cyber-primary text-xs py-2 px-4 flex items-center gap-1.5 font-display group-hover:shadow-neon-cyan transition-all"
                     >
                       <span>INITIALIZE</span>
-                      <FiArrowRight size={12} />
+                      <FiArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </div>
                 </div>
@@ -557,23 +647,30 @@ function Home() {
           </div>
         )}
 
-        {/* Explore All Tracks Banner CTA */}
-        <div className="mt-10 p-6 rounded-xl cyber-card border border-cyan-500/30 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <div className="space-y-1">
-            <h3 className="text-base font-bold text-white font-display uppercase">
-              LOOKING FOR MORE PATHWAYS?
+        {/* ── HIGH-TECH CATALOG GATEWAY BANNER ── */}
+        <div className="mt-12 p-6 sm:p-8 rounded-xl cyber-card border border-cyan-500/40 bg-gradient-to-r from-[#090d18] via-[#0c1222] to-[#090d18] flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+          <div className="space-y-1.5 text-center md:text-left">
+            <div className="badge-cyber text-[10px]">
+              <FiLayers className="text-cyan-400" />
+              <span>EXPANDED CATALOG // 16 PRODUCTION BLUEPRINTS</span>
+            </div>
+            <h3 className="text-lg sm:text-xl font-bold text-white font-display uppercase tracking-wide">
+              READY TO EXPLORE THE ENTIRE CATALOG?
             </h3>
-            <p className="text-xs text-zinc-400 font-mono">
-              Explore the complete catalog with all 16 engineering tracks across Fullstack, AI Agents, DevOps, and Web3.
+            <p className="text-xs text-zinc-400 font-mono max-w-xl">
+              Browse all 16 engineering masterclasses across Full-Stack, AI Agents, Low-Latency Systems, Cloud DevOps, and Web3 Security.
             </p>
           </div>
-          <Link
-            to="/courses"
-            className="btn-cyber-primary text-xs py-2.5 px-5 flex items-center gap-2 whitespace-nowrap font-display"
-          >
-            <span>VIEW ALL 16 TRACKS</span>
-            <FiArrowRight size={13} />
-          </Link>
+
+          <div className="flex flex-wrap items-center justify-center gap-3 font-mono">
+            <Link
+              to="/courses"
+              className="btn-cyber-primary text-xs py-3 px-5 flex items-center gap-2 font-display shadow-neon-cyan"
+            >
+              <span>BROWSE ALL 16 TRACKS</span>
+              <FiArrowRight size={13} />
+            </Link>
+          </div>
         </div>
       </section>
 
