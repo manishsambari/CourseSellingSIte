@@ -3,18 +3,21 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import {
   FiSearch,
-  FiHome,
   FiBookOpen,
   FiShoppingBag,
   FiUser,
   FiLogOut,
-  FiLogIn,
   FiArrowRight,
   FiClock,
   FiAward,
   FiChevronDown,
   FiTerminal,
   FiX,
+  FiFilter,
+  FiShield,
+  FiLayers,
+  FiDollarSign,
+  FiRotateCcw,
 } from "react-icons/fi";
 import { HiMenu, HiX } from "react-icons/hi";
 import toast from "react-hot-toast";
@@ -26,6 +29,7 @@ function Courses() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [priceFilter, setPriceFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -84,8 +88,22 @@ function Courses() {
     { id: "ai", label: "02 AI & AGENTS" },
     { id: "backend", label: "03 DISTRIBUTED BACKEND" },
     { id: "cloud", label: "04 DEVOPS & CLOUD" },
-    { id: "web3", label: "05 WEB3 & SMART CONTRACTS" },
+    { id: "web3", label: "05 WEB3 & SECURITY" },
   ];
+
+  // Helper to count tracks per category
+  const categoryCounts = useMemo(() => {
+    const counts = { all: courses.length, fullstack: 0, ai: 0, backend: 0, cloud: 0, web3: 0 };
+    courses.forEach((c) => {
+      const text = `${c.title} ${c.description}`.toLowerCase();
+      if (text.includes("react") || text.includes("next") || text.includes("web") || text.includes("frontend") || text.includes("typescript") || text.includes("mern") || text.includes("mobile")) counts.fullstack++;
+      if (text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("llm") || text.includes("generative")) counts.ai++;
+      if (text.includes("node") || text.includes("backend") || text.includes("microservice") || text.includes("grpc") || text.includes("rust") || text.includes("golang") || text.includes("system design") || text.includes("java")) counts.backend++;
+      if (text.includes("aws") || text.includes("devops") || text.includes("docker") || text.includes("cloud") || text.includes("kubernetes")) counts.cloud++;
+      if (text.includes("solidity") || text.includes("web3") || text.includes("smart contract") || text.includes("crypto") || text.includes("security") || text.includes("pentesting")) counts.web3++;
+    });
+    return counts;
+  }, [courses]);
 
   // Filtering & Sorting
   const filteredCourses = useMemo(() => {
@@ -96,8 +114,13 @@ function Courses() {
           (course.description || "").toLowerCase().includes(searchQuery.toLowerCase());
 
         if (!matchesSearch) return false;
-        if (selectedCategory === "all") return true;
 
+        // Price Filter
+        if (priceFilter === "under-1500" && Number(course.price) >= 1500) return false;
+        if (priceFilter === "1500-plus" && Number(course.price) < 1500) return false;
+
+        // Category Filter
+        if (selectedCategory === "all") return true;
         const text = `${course.title} ${course.description}`.toLowerCase();
         if (selectedCategory === "fullstack") return text.includes("react") || text.includes("next") || text.includes("web") || text.includes("frontend") || text.includes("typescript") || text.includes("mern") || text.includes("mobile");
         if (selectedCategory === "ai") return text.includes("ai") || text.includes("agent") || text.includes("python") || text.includes("llm") || text.includes("generative");
@@ -112,20 +135,26 @@ function Courses() {
         if (sortBy === "alpha") return (a.title || "").localeCompare(b.title || "");
         return 0;
       });
-  }, [courses, searchQuery, selectedCategory, sortBy]);
+  }, [courses, searchQuery, selectedCategory, priceFilter, sortBy]);
+
+  const activeCategoryTitle = useMemo(() => {
+    const cat = categories.find((c) => c.id === selectedCategory);
+    return cat ? cat.label : "ALL TRACKS";
+  }, [selectedCategory, categories]);
 
   return (
     <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex flex-col lg:flex-row font-sans selection:bg-cyan-400 selection:text-black">
-      {/* ── MOBILE HEADER ── */}
+      {/* ── MOBILE TOPBAR ── */}
       <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#060912] border-b border-[#162034] sticky top-0 z-40">
         <Link to="/">
-          <Logo size="sm" subtitle="OS" />
+          <Logo size="sm" subtitle="CATALOG" />
         </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400"
+          className="p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400 flex items-center gap-1.5 text-xs font-mono"
         >
-          {isSidebarOpen ? <HiX size={18} /> : <HiMenu size={18} />}
+          <FiFilter size={14} className="text-cyan-400" />
+          <span>FILTERS</span>
         </button>
       </div>
 
@@ -137,43 +166,135 @@ function Courses() {
         />
       )}
 
-      {/* ── SIDEBAR NAVIGATION ── */}
+      {/* ── DEDICATED CATALOG FILTER & NAVIGATION SIDEBAR ── */}
       <aside
-        className={`fixed top-0 bottom-0 left-0 z-50 w-64 bg-[#080c14] border-r border-[#162034] flex flex-col p-5 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 bottom-0 left-0 z-50 w-72 bg-[#080c14] border-r border-[#162034] flex flex-col p-5 transition-transform duration-200 ease-in-out lg:translate-x-0 ${
           isSidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
         }`}
       >
-        {/* Logo */}
-        <Link to="/" className="mb-8 block">
-          <Logo size="md" subtitle="TRACKS" />
-        </Link>
+        {/* Brand / Logo */}
+        <div className="mb-6 flex items-center justify-between">
+          <Link to="/" title="Return to Homepage">
+            <Logo size="md" subtitle="CATALOG" />
+          </Link>
+          {isSidebarOpen && (
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="lg:hidden p-1.5 rounded bg-[#0c121e] text-zinc-400 hover:text-white"
+            >
+              <FiX size={16} />
+            </button>
+          )}
+        </div>
 
-        {/* Links */}
-        <nav className="space-y-1.5 flex-1 text-xs font-mono">
-          <Link
-            to="/"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
-          >
-            <FiHome size={14} />
-            <span>// 00 HOME</span>
-          </Link>
-          <Link
-            to="/courses"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#0c121e] text-cyan-300 font-bold border border-cyan-500/30"
-          >
-            <FiBookOpen size={14} className="text-cyan-400" />
-            <span>// 01 TRACKS ({courses.length})</span>
-          </Link>
-          <Link
-            to="/purchases"
-            className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
-          >
-            <FiShoppingBag size={14} />
-            <span>// 02 MY LEARNING</span>
-          </Link>
-        </nav>
+        {/* Sidebar Filter Navigation */}
+        <div className="flex-1 overflow-y-auto space-y-6 pr-1 font-mono">
+          {/* Section: Categories */}
+          <div className="space-y-2">
+            <div className="text-[10px] uppercase text-zinc-500 font-bold tracking-widest flex items-center gap-1.5">
+              <FiLayers className="text-cyan-400" />
+              <span>// TRACK CATEGORIES</span>
+            </div>
 
-        {/* User Card / Auth */}
+            <div className="space-y-1">
+              {categories.map((cat) => {
+                const count = categoryCounts[cat.id] || 0;
+                const isActive = selectedCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => {
+                      setSelectedCategory(cat.id);
+                      if (isSidebarOpen) setIsSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-mono transition-all text-left ${
+                      isActive
+                        ? "bg-cyan-500/15 border border-cyan-500/50 text-cyan-300 font-bold shadow-neon-cyan"
+                        : "text-zinc-400 hover:text-white hover:bg-[#0c121e]"
+                    }`}
+                  >
+                    <span className="truncate">{cat.label}</span>
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded border ${
+                        isActive
+                          ? "bg-cyan-400 text-black border-cyan-400 font-bold"
+                          : "bg-[#060910] border-[#162034] text-zinc-500"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Section: Price Filter */}
+          <div className="space-y-2 pt-2 border-t border-[#162034]">
+            <div className="text-[10px] uppercase text-zinc-500 font-bold tracking-widest flex items-center gap-1.5">
+              <FiDollarSign className="text-emerald-400" />
+              <span>// PRICE TIER</span>
+            </div>
+
+            <div className="grid grid-cols-1 gap-1 text-xs">
+              <button
+                onClick={() => setPriceFilter("all")}
+                className={`px-3 py-1.5 rounded-lg text-left transition ${
+                  priceFilter === "all"
+                    ? "bg-[#0c121e] text-emerald-300 font-bold border border-emerald-500/30"
+                    : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                // ALL PRICES
+              </button>
+              <button
+                onClick={() => setPriceFilter("under-1500")}
+                className={`px-3 py-1.5 rounded-lg text-left transition ${
+                  priceFilter === "under-1500"
+                    ? "bg-[#0c121e] text-emerald-300 font-bold border border-emerald-500/30"
+                    : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                // UNDER ₹1,500
+              </button>
+              <button
+                onClick={() => setPriceFilter("1500-plus")}
+                className={`px-3 py-1.5 rounded-lg text-left transition ${
+                  priceFilter === "1500-plus"
+                    ? "bg-[#0c121e] text-emerald-300 font-bold border border-emerald-500/30"
+                    : "text-zinc-400 hover:text-white"
+                }`}
+              >
+                // ₹1,500 & ABOVE
+              </button>
+            </div>
+          </div>
+
+          {/* Section: Shortcuts */}
+          <div className="space-y-2 pt-2 border-t border-[#162034]">
+            <div className="text-[10px] uppercase text-zinc-500 font-bold tracking-widest">
+              // USER ACCESS
+            </div>
+            <div className="space-y-1 text-xs">
+              <Link
+                to="/purchases"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-cyan-300 hover:bg-[#0c121e] transition"
+              >
+                <FiShoppingBag size={13} className="text-cyan-400" />
+                <span>MY ENROLLED HUB</span>
+              </Link>
+              <Link
+                to="/admin/dashboard"
+                className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-purple-300 hover:bg-[#0c121e] transition"
+              >
+                <FiShield size={13} className="text-purple-400" />
+                <span>ADMIN STUDIO</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* User Card & Disconnect Footer */}
         <div className="pt-4 border-t border-[#162034] space-y-3 font-mono">
           {isLoggedIn ? (
             <div className="space-y-2.5">
@@ -215,18 +336,18 @@ function Courses() {
         </div>
       </aside>
 
-      {/* ── MAIN CONTENT AREA ── */}
-      <main className="flex-1 lg:ml-64 min-h-screen p-4 sm:p-8 lg:p-10 overflow-y-auto">
+      {/* ── MAIN CATALOG VIEW ── */}
+      <main className="flex-1 lg:ml-72 min-h-screen p-4 sm:p-8 lg:p-10 overflow-y-auto">
         <div className="max-w-6xl mx-auto space-y-7">
           {/* Header Bar */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="badge-cyber mb-1.5 font-mono text-[10px]">
                 <FiTerminal size={11} />
-                <span>CATALOG MATRIX // ACTIVE</span>
+                <span>CATALOG REGISTRY // {activeCategoryTitle}</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display">
-                ENGINEERING TRACKS
+                ENGINEERING MASTERCLASSES
               </h1>
               <p className="text-xs text-zinc-400 font-mono mt-0.5">
                 Full-stack architectures, autonomous agents, and system design masterclasses.
@@ -234,14 +355,14 @@ function Courses() {
             </div>
 
             <div className="badge-cyber text-xs self-start sm:self-auto font-mono">
-              MOUNTED: <span className="text-cyan-400 font-bold ml-1">{filteredCourses.length}</span> / {courses.length} TRACKS
+              SHOWING: <span className="text-cyan-400 font-bold ml-1">{filteredCourses.length}</span> / {courses.length} TRACKS
             </div>
           </div>
 
-          {/* Search & Filter Controls */}
-          <div className="cyber-card p-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+          {/* Search & Sort Controls */}
+          <div className="cyber-card p-3 flex flex-col sm:flex-row items-center justify-between gap-3 font-mono">
             {/* Search Input */}
-            <div className="relative w-full sm:w-80 font-mono">
+            <div className="relative w-full sm:w-80">
               <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={13} />
               <input
                 type="text"
@@ -260,14 +381,28 @@ function Courses() {
               )}
             </div>
 
-            {/* Sort Dropdown */}
-            <div className="relative w-full sm:w-auto flex items-center justify-end gap-2 font-mono">
-              <span className="text-xs text-zinc-400 hidden sm:inline">// SORT:</span>
+            {/* Sort & Reset Actions */}
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              {(selectedCategory !== "all" || priceFilter !== "all" || searchQuery) && (
+                <button
+                  onClick={() => {
+                    setSelectedCategory("all");
+                    setPriceFilter("all");
+                    setSearchQuery("");
+                  }}
+                  className="btn-cyber-outline text-xs px-2.5 py-2 flex items-center gap-1 text-zinc-400 hover:text-rose-400"
+                  title="Reset all filters"
+                >
+                  <FiRotateCcw size={11} />
+                  <span>RESET</span>
+                </button>
+              )}
+
               <div className="relative w-full sm:w-auto">
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full sm:w-auto appearance-none pl-3 pr-8 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white outline-none cursor-pointer"
+                  className="w-full sm:w-auto appearance-none pl-3 pr-8 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white outline-none cursor-pointer"
                 >
                   <option value="default" className="bg-[#090d18] text-white">RECOMMENDED</option>
                   <option value="price-low" className="bg-[#090d18] text-white">PRICE: LOW TO HIGH</option>
@@ -277,23 +412,6 @@ function Courses() {
                 <FiChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" size={13} />
               </div>
             </div>
-          </div>
-
-          {/* Category Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono uppercase whitespace-nowrap transition-colors ${
-                  selectedCategory === cat.id
-                    ? "bg-cyan-400 text-black font-bold shadow-neon-cyan"
-                    : "bg-[#080c14] text-zinc-400 hover:text-white border border-[#162034]"
-                }`}
-              >
-                // {cat.label}
-              </button>
-            ))}
           </div>
 
           {/* Courses Grid */}
@@ -308,16 +426,17 @@ function Courses() {
               <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
               <h3 className="text-sm font-bold text-white uppercase font-display">// NO MATCHING TRACKS</h3>
               <p className="text-xs text-zinc-400">
-                Grep returned 0 records. Modify search criteria.
+                Grep returned 0 records. Modify search criteria or active filters.
               </p>
               <button
                 onClick={() => {
                   setSearchQuery("");
                   setSelectedCategory("all");
+                  setPriceFilter("all");
                 }}
                 className="btn-cyber-outline text-xs px-4 py-2"
               >
-                RESET QUERY
+                RESET ALL FILTERS
               </button>
             </div>
           ) : (
@@ -360,8 +479,8 @@ function Courses() {
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-[#162034] flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-[11px] font-mono text-zinc-400">
+                    <div className="pt-3 border-t border-[#162034] flex items-center justify-between font-mono">
+                      <div className="flex items-center gap-3 text-[11px] text-zinc-400">
                         <span className="flex items-center gap-1">
                           <FiClock size={11} className="text-cyan-400" /> LIFETIME
                         </span>
@@ -371,7 +490,7 @@ function Courses() {
                       </div>
                       <Link
                         to={`/buy/${course._id}`}
-                        className="btn-cyber-primary text-xs py-2 px-3.5 flex items-center gap-1"
+                        className="btn-cyber-primary text-xs py-2 px-3.5 flex items-center gap-1 font-display"
                       >
                         <span>INITIALIZE</span>
                         <FiArrowRight size={12} />
