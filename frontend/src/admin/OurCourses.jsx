@@ -84,13 +84,13 @@ function OurCourses() {
           <div>
             <div className="badge-cyber mb-1.5 font-mono text-[10px]">
               <FiTerminal size={11} />
-              <span>REGISTRY // CATALOG MANAGEMENT</span>
+              <span>ADMIN // CATALOG MANAGEMENT</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight uppercase font-display">
-              MANAGE TRACK CATALOG
+              MANAGE COURSE CATALOG
             </h1>
             <p className="text-xs text-zinc-400 font-mono mt-0.5">
-              Edit pricing metadata, update syllabus, and purge courses from registry.
+              Edit pricing, update course details, and manage courses in your store.
             </p>
           </div>
 
@@ -100,7 +100,7 @@ function OurCourses() {
               className="btn-cyber-primary text-xs px-3.5 py-2 flex items-center gap-1.5"
             >
               <FiPlusCircle size={13} />
-              <span>MOUNT NEW TRACK</span>
+              <span>CREATE NEW COURSE</span>
             </Link>
             <Link
               to="/admin/dashboard"
@@ -118,7 +118,7 @@ function OurCourses() {
             <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={13} />
             <input
               type="text"
-              placeholder="$ grep --catalog keyword..."
+              placeholder="Search courses by keyword..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-8 py-2 rounded-lg bg-[#080c14] border border-[#162034] text-xs text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:outline-none"
@@ -132,8 +132,8 @@ function OurCourses() {
               </button>
             )}
           </div>
-          <div className="text-xs font-mono text-zinc-500">
-            // MOUNTED: {filteredCourses.length} OF {courses.length}
+          <div className="text-xs font-mono text-zinc-400">
+            SHOWING: {filteredCourses.length} OF {courses.length} COURSES
           </div>
         </div>
 
@@ -147,16 +147,16 @@ function OurCourses() {
         ) : filteredCourses.length === 0 ? (
           <div className="cyber-card p-14 text-center max-w-md mx-auto space-y-3 font-mono">
             <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-            <h3 className="text-base font-bold text-white uppercase">// NO TRACKS FOUND</h3>
+            <h3 className="text-base font-bold text-white uppercase font-display">NO COURSES FOUND</h3>
             <p className="text-xs text-zinc-400">
-              {search ? "Grep returned 0 records." : "Catalog is empty. Mount your first track."}
+              {search ? "No courses matched your search query." : "Your catalog is empty. Create your first course."}
             </p>
             <Link
               to="/admin/create-course"
-              className="btn-cyber-primary text-xs px-4 py-2 inline-flex items-center gap-1.5"
+              className="btn-cyber-primary text-xs px-4 py-2 inline-flex items-center gap-1.5 cursor-pointer"
             >
               <FiPlusCircle size={12} />
-              <span>MOUNT TRACK</span>
+              <span>CREATE COURSE</span>
             </Link>
           </div>
         ) : (
@@ -181,10 +181,10 @@ function OurCourses() {
                     }}
                   />
                   <span className="absolute top-2.5 left-2.5 badge-cyber text-[10px]">
-                    NODE 0{idx + 1}
+                    COURSE 0{idx + 1}
                   </span>
                   <span className="absolute top-2.5 right-2.5 badge-cyber-green text-[10px]">
-                    LIVE
+                    ACTIVE
                   </span>
                 </div>
 
@@ -207,7 +207,7 @@ function OurCourses() {
                     <div className="flex items-center gap-1.5">
                       <Link
                         to={`/admin/update-course/${course._id}`}
-                        className="btn-cyber-outline text-xs py-1.5 px-2.5 flex items-center gap-1"
+                        className="btn-cyber-outline text-xs py-1.5 px-2.5 flex items-center gap-1 cursor-pointer"
                       >
                         <FiEdit size={11} />
                         <span>EDIT</span>
@@ -215,8 +215,8 @@ function OurCourses() {
                       <button
                         onClick={() => handleDelete(course._id)}
                         disabled={deletingId === course._id}
-                        className="p-1.5 rounded border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-xs transition"
-                        title="Purge Track"
+                        className="p-1.5 rounded border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-xs transition cursor-pointer"
+                        title="Delete Course"
                       >
                         <FiTrash2 size={13} />
                       </button>

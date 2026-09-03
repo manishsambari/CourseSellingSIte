@@ -15,7 +15,7 @@ import cookieParser from "cookie-parser"
 
 dotenv.config()
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3333
 const app = express()
 
 const DB_URI = process.env.MONGO_URI 
@@ -46,7 +46,7 @@ app.use(
 app.use(
   cors({
     origin: process.env.FRONTEND_URL, // here is the port
-    credentials: true,
+    credentials: true, 
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })

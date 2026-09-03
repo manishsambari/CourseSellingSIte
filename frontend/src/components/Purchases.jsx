@@ -73,7 +73,7 @@ function Purchases() {
       const response = await axios.get(`${BACKEND_URL}/user/logout`, {
         withCredentials: true,
       });
-      toast.success(response.data?.message || "Session Disconnected");
+      toast.success(response.data?.message || "Logged out successfully");
       localStorage.removeItem("user");
       navigate("/login");
       setIsLoggedIn(false);
@@ -110,7 +110,7 @@ function Purchases() {
         </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400"
+          className="p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400 cursor-pointer"
         >
           {isSidebarOpen ? <HiX size={18} /> : <HiMenu size={18} />}
         </button>
@@ -131,8 +131,8 @@ function Purchases() {
         }`}
       >
         {/* Logo */}
-        <Link to="/" className="mb-8 block">
-          <Logo size="md" subtitle="COMMAND" />
+        <Link to="/" className="mb-8 block" title="Go to Home">
+          <Logo size="md" subtitle="LEARNING" />
         </Link>
 
         {/* Links */}
@@ -142,43 +142,44 @@ function Purchases() {
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
             <FiHome size={14} />
-            <span>// 00 HOME</span>
+            <span>Home</span>
           </Link>
           <Link
             to="/courses"
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
             <FiBookOpen size={14} />
-            <span>// 01 TRACKS</span>
+            <span>Explore Courses</span>
           </Link>
           <Link
             to="/purchases"
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#0c121e] text-cyan-300 font-bold border border-cyan-500/30"
           >
             <FiShoppingBag size={14} className="text-cyan-400" />
-            <span>// 02 MY LEARNING</span>
+            <span>My Enrolled Courses</span>
           </Link>
         </nav>
 
         {/* User Card & Logout */}
         <div className="pt-4 border-t border-[#162034] space-y-3 font-mono">
           <div className="p-2.5 rounded-lg bg-[#0c121e] border border-[#162034] flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold flex items-center justify-center text-xs flex-shrink-0">
+            <div className="w-7 h-7 rounded bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold flex items-center justify-center text-xs flex-shrink-0 shadow-neon-cyan">
               {userProfile?.firstName ? userProfile.firstName[0].toUpperCase() : <FiUser />}
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-xs font-semibold text-white truncate">
                 {userProfile?.firstName} {userProfile?.lastName}
               </div>
-              <div className="text-[10px] text-cyan-400 truncate">NODE // ACTIVE</div>
+              <div className="text-[10px] text-cyan-400 truncate">Learner Account</div>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-[11px] transition"
+            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-xs transition font-semibold cursor-pointer"
+            title="Log out of your account"
           >
-            <FiLogOut size={12} />
-            <span>DISCONNECT</span>
+            <FiLogOut size={13} />
+            <span>Log Out</span>
           </button>
         </div>
       </aside>
@@ -191,13 +192,13 @@ function Purchases() {
             <div>
               <div className="badge-cyber mb-1.5">
                 <FiCpu size={11} />
-                <span>ACTIVE NODES // MOUNTED</span>
+                <span>LEARNER DASHBOARD</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display">
-                DEVELOPER COMMAND CENTER
+                My Learning Dashboard
               </h1>
               <p className="text-xs text-zinc-400 font-mono mt-0.5">
-                Access video streams, clone repositories, and claim verified ledger certificates.
+                Access video walkthroughs, repository starters, and verified certificates.
               </p>
             </div>
 
@@ -206,7 +207,7 @@ function Purchases() {
               className="btn-cyber-outline text-xs px-3.5 py-2 flex items-center gap-1.5 self-start sm:self-auto font-mono"
             >
               <FiBookOpen size={12} />
-              <span>MOUNT MORE TRACKS</span>
+              <span>Browse More Courses</span>
             </Link>
           </div>
 
@@ -214,10 +215,10 @@ function Purchases() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 font-mono">
             <div className="cyber-card p-4 space-y-1">
               <div className="text-xs text-cyan-400 flex items-center gap-1.5 font-bold">
-                <FiBookOpen /> // MOUNTED
+                <FiBookOpen /> // ENROLLED
               </div>
               <div className="text-2xl font-bold text-white">{purchases.length}</div>
-              <div className="text-[10px] text-zinc-500">Active Repos</div>
+              <div className="text-[10px] text-zinc-500">Active Courses</div>
             </div>
 
             <div className="cyber-card p-4 space-y-1">
@@ -230,18 +231,18 @@ function Purchases() {
 
             <div className="cyber-card p-4 space-y-1">
               <div className="text-xs text-purple-400 flex items-center gap-1.5 font-bold">
-                <FiAward /> // CERTS
+                <FiAward /> // CERTIFICATES
               </div>
               <div className="text-2xl font-bold text-white">{purchases.length}</div>
-              <div className="text-[10px] text-zinc-500">SHA-256 Verified</div>
+              <div className="text-[10px] text-zinc-500">Verified Credentials</div>
             </div>
 
             <div className="cyber-card p-4 space-y-1">
               <div className="text-xs text-amber-400 flex items-center gap-1.5 font-bold">
-                <FiCode /> // BLUEPRINTS
+                <FiCode /> // REPOSITORIES
               </div>
               <div className="text-2xl font-bold text-white">{purchases.length * 3}</div>
-              <div className="text-[10px] text-zinc-500">Monorepo Starters</div>
+              <div className="text-[10px] text-zinc-500">Code Starters</div>
             </div>
           </div>
 
@@ -251,14 +252,14 @@ function Purchases() {
               <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={14} />
               <input
                 type="text"
-                placeholder="$ grep --enrolled tracks..."
+                placeholder="Search your enrolled courses..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs font-mono text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:outline-none"
               />
             </div>
-            <div className="text-xs font-mono text-zinc-500 hidden sm:block">
-              // MOUNTED: {filteredPurchases.length} OF {purchases.length}
+            <div className="text-xs font-mono text-zinc-400 hidden sm:block">
+              ENROLLED: {filteredPurchases.length} OF {purchases.length} COURSES
             </div>
           </div>
 
@@ -274,16 +275,16 @@ function Purchases() {
               <div className="w-12 h-12 rounded bg-[#0c121e] border border-cyan-500/30 text-cyan-400 flex items-center justify-center mx-auto text-xl">
                 <FiBookOpen />
               </div>
-              <h3 className="text-sm font-bold text-white uppercase font-display">// NO MOUNTED TRACKS</h3>
+              <h3 className="text-sm font-bold text-white uppercase font-display">// NO ENROLLED COURSES YET</h3>
               <p className="text-xs text-zinc-400">
-                You have not mounted any curriculum nodes yet. Explore the tracks catalog.
+                You have not enrolled in any courses yet. Explore our curriculum to get started!
               </p>
               <div className="pt-2">
                 <Link
                   to="/courses"
                   className="btn-cyber-primary text-xs px-5 py-2.5 inline-flex items-center gap-1.5"
                 >
-                  <span>BROWSE TRACKS</span>
+                  <span>EXPLORE COURSES</span>
                   <FiArrowRight size={12} />
                 </Link>
               </div>
@@ -310,7 +311,7 @@ function Purchases() {
                       }}
                     />
                     <span className="absolute top-2.5 right-2.5 badge-cyber-green text-[10px]">
-                      MOUNTED
+                      ENROLLED
                     </span>
                   </div>
 
@@ -332,15 +333,15 @@ function Purchases() {
                           setSelectedCourseForPlayer(course);
                           setActiveLesson(1);
                         }}
-                        className="btn-cyber-primary flex-1 py-2 text-xs flex items-center justify-center gap-1.5"
+                        className="btn-cyber-primary flex-1 py-2 text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                       >
                         <FiPlayCircle size={13} />
-                        <span>INITIALIZE STREAM</span>
+                        <span>START LEARNING</span>
                       </button>
 
                       <button
                         onClick={() => setSelectedCourseForCert(course)}
-                        className="btn-cyber-outline px-3 py-2 text-xs text-zinc-300 hover:text-amber-400"
+                        className="btn-cyber-outline px-3 py-2 text-xs text-zinc-300 hover:text-amber-400 cursor-pointer"
                         title="View Certificate"
                       >
                         <FiAward size={13} />
@@ -368,12 +369,12 @@ function Purchases() {
                   <h3 className="text-xs sm:text-sm font-bold text-white font-display line-clamp-1">
                     {selectedCourseForPlayer.title}
                   </h3>
-                  <p className="text-[10px] text-cyan-400">// ACTIVE PLAYBACK STREAM</p>
+                  <p className="text-[10px] text-cyan-400">Course Playback · HD Stream</p>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedCourseForPlayer(null)}
-                className="p-1.5 rounded bg-[#0c121e] hover:bg-[#162034] text-zinc-400 hover:text-white transition"
+                className="p-1.5 rounded bg-[#0c121e] hover:bg-[#162034] text-zinc-400 hover:text-white transition cursor-pointer"
               >
                 <FiX size={15} />
               </button>
@@ -394,28 +395,28 @@ function Purchases() {
                       <FiPlayCircle />
                     </div>
                     <span className="text-xs text-cyan-300 font-mono">
-                      STREAM 0{activeLesson}: {mockLessons.find((l) => l.id === activeLesson)?.title}
+                      Lesson 0{activeLesson}: {mockLessons.find((l) => l.id === activeLesson)?.title}
                     </span>
                   </div>
                 </div>
 
                 <div className="terminal-box space-y-2">
                   <div className="flex items-center justify-between text-zinc-400 text-[11px]">
-                    <span className="text-cyan-400 uppercase font-bold">// MOUNTED CODE BLUEPRINT</span>
-                    <span>v2.6 PRODUCTION</span>
+                    <span className="text-cyan-400 uppercase font-bold">COURSE RESOURCES & CODE</span>
+                    <span>Production Setup</span>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-1">
                     <button
-                      onClick={() => toast.success("Pulling starter zip archive...")}
-                      className="btn-cyber-outline text-xs py-1.5 px-3 flex items-center gap-1.5"
+                      onClick={() => toast.success("Downloading starter code archive...")}
+                      className="btn-cyber-outline text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
                     >
-                      <FiDownload size={11} /> CLONE REPO (.ZIP)
+                      <FiDownload size={11} /> Download Zip (.ZIP)
                     </button>
                     <button
                       onClick={() => toast.success("Opening repository in new tab...")}
-                      className="btn-cyber-outline text-xs py-1.5 px-3 flex items-center gap-1.5"
+                      className="btn-cyber-outline text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer"
                     >
-                      <FiCode size={11} /> GITHUB MASTER
+                      <FiCode size={11} /> View on GitHub
                     </button>
                   </div>
                 </div>
@@ -424,14 +425,14 @@ function Purchases() {
               {/* Right: Modules List */}
               <div className="lg:col-span-4 space-y-2.5 flex flex-col font-mono">
                 <div className="text-xs font-bold text-cyan-400 uppercase">
-                  // MODULE STREAMS ({mockLessons.length})
+                  Course Lessons ({mockLessons.length})
                 </div>
                 <div className="space-y-1.5 flex-1 overflow-y-auto max-h-72 lg:max-h-none">
                   {mockLessons.map((lesson) => (
                     <button
                       key={lesson.id}
                       onClick={() => setActiveLesson(lesson.id)}
-                      className={`w-full text-left p-2.5 rounded-lg border text-xs transition flex items-center justify-between ${
+                      className={`w-full text-left p-2.5 rounded-lg border text-xs transition flex items-center justify-between cursor-pointer ${
                         activeLesson === lesson.id
                           ? "bg-cyan-500/10 border-cyan-500 text-cyan-300 font-bold"
                           : "bg-[#060910] border-[#162034] text-zinc-400 hover:text-white"
@@ -454,11 +455,11 @@ function Purchases() {
           <div className="cyber-card w-full max-w-xl overflow-hidden flex flex-col border border-cyan-500/40 shadow-2xl p-6 space-y-5">
             <div className="flex items-center justify-between border-b border-[#162034] pb-3">
               <div className="flex items-center gap-2 text-cyan-400 font-bold text-xs uppercase">
-                <FiAward size={15} /> VERIFIED CRYPTOGRAPHIC CERTIFICATE
+                <FiAward size={15} /> Verified Certificate of Completion
               </div>
               <button
                 onClick={() => setSelectedCourseForCert(null)}
-                className="p-1 rounded bg-[#0c121e] text-zinc-400 hover:text-white"
+                className="p-1 rounded bg-[#0c121e] text-zinc-400 hover:text-white cursor-pointer"
               >
                 <FiX size={14} />
               </button>
@@ -467,19 +468,19 @@ function Purchases() {
             {/* Certificate Canvas */}
             <div className="p-6 rounded-lg bg-[#060910] border-2 border-cyan-500/30 text-center space-y-3 shadow-neon-cyan">
               <div className="text-[11px] uppercase tracking-widest text-cyan-400 font-bold">
-                [ CERTIFICATE OF ENGINEERING MASTERY ]
+                CERTIFICATE OF COMPLETION
               </div>
-              <div className="text-[11px] text-zinc-400">Awarded to Developer Node</div>
+              <div className="text-[11px] text-zinc-400">This certifies that</div>
               <div className="text-xl font-bold text-white tracking-wide font-display uppercase">
                 {userProfile?.firstName} {userProfile?.lastName}
               </div>
-              <div className="text-[11px] text-zinc-400">for verified completion of track</div>
+              <div className="text-[11px] text-zinc-400">has successfully completed all project requirements for</div>
               <div className="text-sm font-bold text-cyan-300 font-display">
                 {selectedCourseForCert.title}
               </div>
               <div className="pt-3 border-t border-[#162034] flex items-center justify-between text-[10px] text-zinc-500">
-                <span>HASH: SHA256-{selectedCourseForCert._id?.slice(-8).toUpperCase()}</span>
-                <span>TIMESTAMP: {new Date().toLocaleDateString()}</span>
+                <span>CERT ID: CS-{selectedCourseForCert._id?.slice(-8).toUpperCase()}</span>
+                <span>DATE: {new Date().toLocaleDateString()}</span>
               </div>
             </div>
 
@@ -488,19 +489,19 @@ function Purchases() {
               <button
                 onClick={() => {
                   navigator.clipboard?.writeText(window.location.href);
-                  toast.success("Credential hash copied!");
+                  toast.success("Certificate link copied to clipboard!");
                 }}
-                className="btn-cyber-outline text-xs py-2 px-3.5 flex items-center gap-1.5"
+                className="btn-cyber-outline text-xs py-2 px-3.5 flex items-center gap-1.5 cursor-pointer"
               >
                 <FiShare2 size={11} />
-                <span>SHARE HASH</span>
+                <span>Share Link</span>
               </button>
               <button
-                onClick={() => toast.success("Generating cryptographic PDF...")}
-                className="btn-cyber-primary text-xs py-2 px-4 flex items-center gap-1.5"
+                onClick={() => toast.success("Preparing certificate PDF...")}
+                className="btn-cyber-primary text-xs py-2 px-4 flex items-center gap-1.5 cursor-pointer"
               >
                 <FiDownload size={11} />
-                <span>DOWNLOAD PDF</span>
+                <span>Download PDF</span>
               </button>
             </div>
           </div>

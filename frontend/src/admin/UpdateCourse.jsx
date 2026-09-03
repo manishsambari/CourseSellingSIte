@@ -88,11 +88,11 @@ function UpdateCourse() {
           withCredentials: true,
         }
       );
-      toast.success(response.data?.message || "Track updated in registry successfully!");
+      toast.success(response.data?.message || "Course updated successfully!");
       navigate("/admin/our-courses");
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.errors || "Error updating track");
+      toast.error(error.response?.data?.errors || "Error updating course");
     } finally {
       setUpdating(false);
     }
@@ -100,36 +100,36 @@ function UpdateCourse() {
 
   if (initialLoading) {
     return (
-      <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex items-center justify-center font-mono">
-        <div className="text-center space-y-3">
+      <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex items-center justify-center font-sans">
+        <div className="text-center space-y-3 font-mono">
           <div className="w-8 h-8 border-2 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin mx-auto" />
-          <p className="text-cyan-400 text-xs">// PULLING TRACK BUFFER...</p>
+          <p className="text-cyan-400 text-xs">Loading course details...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-mono selection:bg-cyan-400 selection:text-black p-4 sm:p-8">
+    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-sans selection:bg-cyan-400 selection:text-black p-4 sm:p-8">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <div className="cyber-card p-5 sm:p-6 flex items-center justify-between gap-4">
           <div>
-            <div className="badge-cyber mb-1 text-[10px]">
+            <div className="badge-cyber mb-1 text-[10px] font-mono">
               <FiTerminal size={11} />
-              <span>REGISTRY BUFFER // PATCH</span>
+              <span>ADMIN // COURSE EDIT</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight uppercase font-display">
-              UPDATE TRACK MATRIX
+              UPDATE COURSE DETAILS
             </h1>
             <p className="text-xs text-zinc-400 font-mono mt-0.5">
-              Modify curriculum parameters, pricing, or artwork buffer.
+              Modify course title, syllabus, pricing, and cover image.
             </p>
           </div>
 
           <Link
             to="/admin/our-courses"
-            className="btn-cyber-outline text-xs px-3.5 py-2 flex items-center gap-1.5"
+            className="btn-cyber-outline text-xs px-3.5 py-2 flex items-center gap-1.5 font-mono cursor-pointer"
           >
             <FiArrowLeft size={12} />
             <span>CATALOG</span>
@@ -140,8 +140,8 @@ function UpdateCourse() {
         <div className="cyber-card p-6 sm:p-8">
           <form onSubmit={handleUpdateCourse} className="space-y-4">
             {/* Title */}
-            <div className="space-y-1">
-              <label className="text-[11px] uppercase text-zinc-300">// TRACK TITLE</label>
+            <div className="space-y-1 font-mono">
+              <label className="text-xs uppercase text-zinc-300 font-medium">COURSE TITLE</label>
               <input
                 type="text"
                 value={title}
@@ -152,8 +152,8 @@ function UpdateCourse() {
             </div>
 
             {/* Description */}
-            <div className="space-y-1">
-              <label className="text-[11px] uppercase text-zinc-300">// DESCRIPTION & SYLLABUS</label>
+            <div className="space-y-1 font-mono">
+              <label className="text-xs uppercase text-zinc-300 font-medium">COURSE DESCRIPTION & SYLLABUS</label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -164,8 +164,8 @@ function UpdateCourse() {
             </div>
 
             {/* Price */}
-            <div className="space-y-1">
-              <label className="text-[11px] uppercase text-zinc-300">// PRICE (INR ₹)</label>
+            <div className="space-y-1 font-mono">
+              <label className="text-xs uppercase text-zinc-300 font-medium">PRICE (INR ₹)</label>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 font-mono text-xs">₹</span>
                 <input
@@ -180,8 +180,8 @@ function UpdateCourse() {
             </div>
 
             {/* Thumbnail Preview and Upload */}
-            <div className="space-y-1 pt-1">
-              <label className="text-[11px] uppercase text-zinc-300">// COVER ARTWORK BUFFER</label>
+            <div className="space-y-1 pt-1 font-mono">
+              <label className="text-xs uppercase text-zinc-300 font-medium">COURSE COVER IMAGE</label>
 
               <div className="border border-dashed border-[#1c2a45] rounded-xl p-5 text-center hover:border-cyan-500/50 transition-colors bg-[#080c14]">
                 <input
@@ -200,7 +200,7 @@ function UpdateCourse() {
                         className="mx-auto max-h-48 rounded object-contain border border-[#162034]"
                       />
                       <div className="text-xs font-mono text-cyan-400 flex items-center justify-center gap-1">
-                        <FiCheckCircle size={12} /> CLICK TO REPLACE IMAGE BUFFER
+                        <FiCheckCircle size={12} /> Click to replace image
                       </div>
                     </div>
                   ) : (
@@ -209,7 +209,7 @@ function UpdateCourse() {
                         <FiUploadCloud />
                       </div>
                       <div className="text-xs font-semibold text-white uppercase font-display">
-                        Click to select new image
+                        Click to select new cover image
                       </div>
                     </div>
                   )}
@@ -222,21 +222,21 @@ function UpdateCourse() {
               <button
                 type="button"
                 onClick={() => navigate("/admin/our-courses")}
-                className="btn-cyber-outline text-xs px-4 py-2"
+                className="btn-cyber-outline text-xs px-4 py-2 cursor-pointer"
               >
                 CANCEL
               </button>
               <button
                 type="submit"
                 disabled={updating}
-                className="btn-cyber-primary text-xs px-5 py-2 flex items-center gap-1.5"
+                className="btn-cyber-primary text-xs px-5 py-2 flex items-center gap-1.5 cursor-pointer"
               >
                 {updating ? (
-                  <span>PATCHING BUFFER...</span>
+                  <span>Saving Changes...</span>
                 ) : (
                   <>
                     <FiEdit size={13} />
-                    <span>SAVE PATCH</span>
+                    <span>SAVE CHANGES</span>
                   </>
                 )}
               </button>

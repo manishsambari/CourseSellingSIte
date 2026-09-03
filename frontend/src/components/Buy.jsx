@@ -53,10 +53,10 @@ function Buy() {
         setClientSecret(response.data?.clientSecret || "");
       } catch (error) {
         if (error?.response?.status === 400) {
-          setError("You have already mounted this curriculum node!");
+          setError("You are already enrolled in this course!");
           setTimeout(() => navigate("/purchases"), 2500);
         } else {
-          setError(error?.response?.data?.errors || "Checkout session failed to mount");
+          setError(error?.response?.data?.errors || "Failed to load checkout details");
         }
       } finally {
         setInitialLoading(false);
@@ -68,7 +68,7 @@ function Buy() {
   const handlePurchase = async (event) => {
     event.preventDefault();
     if (!stripe || !elements || !clientSecret) {
-      toast.error("Payment matrix not initialized. Please refresh.");
+      toast.error("Payment system not ready. Please refresh the page.");
       return;
     }
 
@@ -86,7 +86,7 @@ function Buy() {
     });
 
     if (pmError) {
-      setCardError(pmError.message || "Invalid card credentials");
+      setCardError(pmError.message || "Invalid card details. Please check and try again.");
       setLoading(false);
       return;
     }
@@ -97,7 +97,7 @@ function Buy() {
         payment_method: {
           card: cardElement,
           billing_details: {
-            name: `${user?.user?.firstName || ""} ${user?.user?.lastName || ""}`.trim() || "Developer Node",
+            name: `${user?.user?.firstName || ""} ${user?.user?.lastName || ""}`.trim() || "Learner",
             email: user?.user?.email,
           },
         },
@@ -105,7 +105,7 @@ function Buy() {
     );
 
     if (confirmError) {
-      setCardError(confirmError.message || "Payment confirmation failed");
+      setCardError(confirmError.message || "Payment confirmation failed. Please try again.");
       setLoading(false);
     } else if (paymentIntent?.status === "succeeded") {
       const paymentInfo = {
@@ -122,7 +122,7 @@ function Buy() {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         });
-        toast.success("Transaction Confirmed // Track Mounted 🎉");
+        toast.success("Enrollment Successful! Welcome aboard 🎉");
         navigate("/purchases");
       } catch (err) {
         toast.error("Payment confirmed, but order record failed. Please contact support.");
@@ -136,7 +136,7 @@ function Buy() {
       <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen flex items-center justify-center font-sans">
         <div className="text-center space-y-3 font-mono">
           <div className="w-8 h-8 border-2 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin mx-auto" />
-          <p className="text-cyan-400 text-xs">// INITIALIZING SECURE ESCROW MATRIX...</p>
+          <p className="text-cyan-400 text-xs">Setting up secure checkout...</p>
         </div>
       </div>
     );
@@ -149,7 +149,7 @@ function Buy() {
           <div className="w-12 h-12 bg-[#0c121e] border border-cyan-500/30 text-cyan-400 rounded-xl flex items-center justify-center mx-auto text-xl">
             <FaShieldAlt />
           </div>
-          <h2 className="text-base font-bold text-white uppercase font-display">// ENROLLMENT NOTICE</h2>
+          <h2 className="text-base font-bold text-white uppercase font-display">Enrollment Notice</h2>
           <p className="text-zinc-400 text-xs leading-relaxed">{error}</p>
           <div className="pt-2">
             <Link
@@ -157,7 +157,7 @@ function Buy() {
               className="btn-cyber-primary w-full py-2.5 text-xs font-semibold flex items-center justify-center gap-2"
             >
               <FaArrowLeft size={11} />
-              <span>RETURN TO COMMAND CENTER</span>
+              <span>Back to My Courses</span>
             </Link>
           </div>
         </div>
@@ -170,15 +170,15 @@ function Buy() {
       {/* ── HEADER ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#060912]/90 backdrop-blur-md border-b border-[#162034]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between font-mono">
-          <Link to="/">
-            <Logo size="sm" subtitle="GATEWAY" />
+          <Link to="/" title="CourseShip">
+            <Logo size="sm" subtitle="CHECKOUT" />
           </Link>
           <Link
             to="/courses"
             className="text-xs text-zinc-400 hover:text-cyan-400 transition flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#0c121e] border border-[#162034]"
           >
             <FaArrowLeft size={10} />
-            <span>// CATALOG</span>
+            <span>Back to Courses</span>
           </Link>
         </div>
       </header>
@@ -186,15 +186,15 @@ function Buy() {
       {/* ── MAIN CHECKOUT LAYOUT ── */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-24 pb-16">
         <div className="grid lg:grid-cols-12 gap-8 items-start">
-          {/* LEFT: Order Telemetry */}
+          {/* LEFT: Order Summary */}
           <div className="lg:col-span-5 space-y-5">
             <div className="cyber-card p-6 space-y-5">
               <div className="flex items-center justify-between border-b border-[#162034] pb-3">
                 <span className="text-xs font-mono uppercase tracking-wider text-cyan-400 font-bold">
-                  // ORDER SUMMARY
+                  ORDER SUMMARY
                 </span>
                 <span className="badge-cyber-green text-[10px]">
-                  NODE READY
+                  VERIFIED COURSE
                 </span>
               </div>
 
@@ -210,7 +210,7 @@ function Buy() {
                 />
                 <div className="min-w-0 flex-1">
                   <h3 className="text-sm font-bold text-white font-display line-clamp-2 leading-snug">
-                    {course.title || "Engineering Track"}
+                    {course.title || "Course Masterclass"}
                   </h3>
                   <div className="text-xs text-cyan-300 font-mono font-bold mt-1">
                     ₹{course.price || 0}
@@ -221,23 +221,23 @@ function Buy() {
               {/* Price Calculation */}
               <div className="space-y-2 pt-3 border-t border-[#162034] text-xs font-mono">
                 <div className="flex justify-between text-zinc-400">
-                  <span>STANDARD TUITION</span>
+                  <span>Standard Tuition</span>
                   <span className="line-through">₹{Number(course.price || 0) * 4 || 4999}</span>
                 </div>
                 <div className="flex justify-between text-emerald-400">
-                  <span>LAUNCH PRIVILEGE (75% OFF)</span>
+                  <span>Special Discount (75% OFF)</span>
                   <span>-₹{Number(course.price || 0) * 3 || 3750}</span>
                 </div>
                 <div className="flex justify-between text-white font-bold text-sm pt-2.5 border-t border-[#162034]">
-                  <span>TOTAL ESCROW</span>
+                  <span>Total Amount</span>
                   <span className="font-mono text-base text-cyan-300">₹{course.price || 0}</span>
                 </div>
               </div>
 
               {/* Inclusions */}
               <div className="pt-3 border-t border-[#162034] space-y-2 font-mono">
-                <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-semibold">
-                  MOUNTED ARTIFACTS:
+                <div className="text-[10px] uppercase tracking-wider text-zinc-400 font-semibold">
+                  WHAT'S INCLUDED:
                 </div>
                 <ul className="space-y-1.5 text-xs text-zinc-300">
                   <li className="flex items-center gap-2">
@@ -246,32 +246,32 @@ function Buy() {
                   </li>
                   <li className="flex items-center gap-2">
                     <FiCheckCircle className="text-cyan-400 flex-shrink-0" size={13} />
-                    <span>Video blueprints & architecture diagrams</span>
+                    <span>HD video walkthroughs & architecture diagrams</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <FiCheckCircle className="text-cyan-400 flex-shrink-0" size={13} />
-                    <span>Cryptographic SHA-256 completion certificate</span>
+                    <span>Verified completion certificate</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <FiCheckCircle className="text-cyan-400 flex-shrink-0" size={13} />
-                    <span>Discord engineer channel access</span>
+                    <span>Developer Discord community access</span>
                   </li>
                 </ul>
               </div>
             </div>
           </div>
 
-          {/* RIGHT: Payment Matrix */}
+          {/* RIGHT: Payment Box */}
           <div className="lg:col-span-7 space-y-5">
             <div className="cyber-card p-6 sm:p-7 space-y-5">
               {/* Header */}
               <div className="flex items-center justify-between border-b border-[#162034] pb-4 font-mono">
                 <div>
-                  <h2 className="text-sm font-bold text-white uppercase font-display">// PAYMENT GATEWAY</h2>
-                  <p className="text-[11px] text-zinc-400">Select protocol endpoint</p>
+                  <h2 className="text-sm font-bold text-white uppercase font-display">PAYMENT METHOD</h2>
+                  <p className="text-[11px] text-zinc-400">Choose your preferred payment option</p>
                 </div>
                 <div className="flex items-center gap-1.5 text-[10px] text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/30">
-                  <FaLock size={9} /> 256-BIT ENCRYPTED
+                  <FaLock size={9} /> 256-BIT SECURE
                 </div>
               </div>
 
@@ -280,27 +280,27 @@ function Buy() {
                 <button
                   type="button"
                   onClick={() => setActiveMethod("card")}
-                  className={`p-3 rounded-lg border text-xs font-semibold flex items-center justify-center gap-2 transition ${
+                  className={`p-3 rounded-lg border text-xs font-semibold flex items-center justify-center gap-2 transition cursor-pointer ${
                     activeMethod === "card"
                       ? "bg-cyan-500/10 border-cyan-500 text-cyan-300 shadow-neon-cyan"
                       : "bg-[#080c14] border-[#162034] text-zinc-400 hover:text-white"
                   }`}
                 >
                   <FaCreditCard className="text-cyan-400" />
-                  <span>CREDIT / DEBIT</span>
+                  <span>CREDIT / DEBIT CARD</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setActiveMethod("upi")}
-                  className={`p-3 rounded-lg border text-xs font-semibold flex items-center justify-center gap-2 transition ${
+                  className={`p-3 rounded-lg border text-xs font-semibold flex items-center justify-center gap-2 transition cursor-pointer ${
                     activeMethod === "upi"
                       ? "bg-cyan-500/10 border-cyan-500 text-cyan-300 shadow-neon-cyan"
                       : "bg-[#080c14] border-[#162034] text-zinc-400 hover:text-white"
                   }`}
                 >
                   <FaQrcode className="text-emerald-400" />
-                  <span>UPI / QR MATRIX</span>
+                  <span>UPI / QR CODE</span>
                 </button>
               </div>
 
@@ -310,12 +310,12 @@ function Buy() {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <label className="text-xs text-zinc-300 uppercase">
-                        // CARD CREDENTIALS
+                        CARD DETAILS
                       </label>
                       <button
                         type="button"
                         onClick={() => setShowTestCardInfo(!showTestCardInfo)}
-                        className="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1"
+                        className="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
                       >
                         <FiHelpCircle size={11} />
                         <span>TEST CARD INFO</span>
@@ -331,9 +331,9 @@ function Buy() {
                             type="button"
                             onClick={() => {
                               navigator.clipboard?.writeText("4242424242424242");
-                              toast.success("Copied to buffer!");
+                              toast.success("Card copied to clipboard!");
                             }}
-                            className="p-1 text-zinc-400 hover:text-white"
+                            className="p-1 text-zinc-400 hover:text-white cursor-pointer"
                           >
                             <FiCopy size={12} />
                           </button>
@@ -375,24 +375,24 @@ function Buy() {
                   <button
                     type="submit"
                     disabled={loading || !stripe}
-                    className="btn-cyber-primary w-full py-3 text-xs flex items-center justify-center gap-2 disabled:opacity-50"
+                    className="btn-cyber-primary w-full py-3 text-xs flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
                   >
                     {loading ? (
                       <>
                         <div className="w-3.5 h-3.5 border-2 border-black/40 border-t-black rounded-full animate-spin" />
-                        <span>PROCESSING PROTOCOL...</span>
+                        <span>Processing Payment...</span>
                       </>
                     ) : (
                       <>
                         <FaLock size={11} />
-                        <span>AUTHORIZE ₹{course.price || 0}</span>
+                        <span>PAY ₹{course.price || 0}</span>
                       </>
                     )}
                   </button>
                 </form>
               )}
 
-              {/* Method 2: UPI / QR Matrix */}
+              {/* Method 2: UPI / QR Code */}
               {activeMethod === "upi" && (
                 <div className="p-6 rounded-lg bg-[#060910] border border-[#162034] text-center space-y-4 font-mono">
                   <div className="w-36 h-36 bg-white p-2 rounded-lg mx-auto flex items-center justify-center border-2 border-cyan-400 shadow-neon-cyan">
@@ -404,14 +404,14 @@ function Buy() {
                   </div>
                   <div className="space-y-0.5">
                     <p className="text-xs text-zinc-300 font-semibold">
-                      SCAN VIA BHIM, GPAY, OR PHONEPE
+                      Scan with Google Pay, PhonePe, or Paytm
                     </p>
-                    <p className="text-[11px] text-cyan-400">VPA: courseship@upi</p>
+                    <p className="text-[11px] text-cyan-400">UPI ID: courseship@upi</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => setActiveMethod("card")}
-                    className="btn-cyber-outline text-xs px-4 py-2"
+                    className="btn-cyber-outline text-xs px-4 py-2 cursor-pointer"
                   >
                     SWITCH TO CARD
                   </button>

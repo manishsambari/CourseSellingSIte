@@ -63,19 +63,24 @@ export const login = async (req, res) => {
       return res.status(403).json({ errors: "Invalid credentials" });
     }
 
+    // Create a JWT token and set it in a cookie
     const token = jwt.sign(
-      {
-        id: user._id,
-      },
+      {id: user._id },
       config.JWT_USER_PASSWORD,
       { expiresIn: "30d" }
     );
+
+    console.log("JWT SECRET:", config.JWT_USER_PASSWORD);
+    console.log("JWT TOKEN:", token);
+
+    // Set cookie options
     const cookieOptions = {
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     };
+
     res.cookie("jwt", token, cookieOptions);
     res.status(200).json({ message: "Login successful", user, token });
   } catch (error) {
