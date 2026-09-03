@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken"
 import config from "../config.js"
 
 function userMiddleware(req, res, next) {
+
+  
   const authHeader = req.headers.authorization
 
   // 1. check if token is present
@@ -9,6 +11,8 @@ function userMiddleware(req, res, next) {
     return res.status(401).json({ errors: "No token provided" })
   }
   const token = authHeader.split(" ")[1]
+
+  
 
   // 2. verify token
   try {

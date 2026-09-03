@@ -53,7 +53,7 @@ function Dashboard() {
       const response = await axios.get(`${BACKEND_URL}/admin/logout`, {
         withCredentials: true,
       });
-      toast.success(response.data?.message || "Admin Session Terminated");
+      toast.success(response.data?.message || "Admin logged out successfully");
       localStorage.removeItem("admin");
       navigate("/admin/login");
     } catch (error) {
@@ -68,7 +68,7 @@ function Dashboard() {
       {/* Mobile Hamburger */}
       <button
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="lg:hidden fixed top-3.5 left-3.5 z-50 p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400"
+        className="lg:hidden fixed top-3.5 left-3.5 z-50 p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400 cursor-pointer"
       >
         {isSidebarOpen ? "✕" : "☰"}
       </button>
@@ -88,8 +88,8 @@ function Dashboard() {
         }`}
       >
         {/* Brand */}
-        <Link to="/" className="mb-8 block">
-          <Logo size="md" subtitle="ROOT" />
+        <Link to="/" className="mb-8 block" title="Go to Home">
+          <Logo size="md" subtitle="ADMIN" />
         </Link>
 
         {/* Navigation */}
@@ -99,28 +99,28 @@ function Dashboard() {
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[#0c121e] text-cyan-300 font-bold border border-cyan-500/30"
           >
             <RiDashboardLine size={14} className="text-cyan-400" />
-            <span>// 00 DASHBOARD</span>
+            <span>Dashboard</span>
           </Link>
           <Link
             to="/admin/our-courses"
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
             <FiBookOpen size={14} />
-            <span>// 01 CATALOG</span>
+            <span>Course Catalog</span>
           </Link>
           <Link
             to="/admin/create-course"
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-white hover:bg-[#0c121e] transition"
           >
             <FiPlusCircle size={14} />
-            <span>// 02 MOUNT TRACK</span>
+            <span>Create New Course</span>
           </Link>
           <Link
             to="/courses"
             className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-cyan-400 hover:bg-[#0c121e] transition"
           >
             <FiHome size={14} />
-            <span>// 03 CLIENT VIEW</span>
+            <span>View Public Store</span>
           </Link>
         </nav>
 
@@ -134,15 +134,16 @@ function Dashboard() {
               <div className="text-xs font-semibold text-white truncate">
                 {admin?.admin?.firstName || "Root"} {admin?.admin?.lastName || "Admin"}
               </div>
-              <div className="text-[10px] text-cyan-400 font-mono">ROOT // PRIVILEGE</div>
+              <div className="text-[10px] text-cyan-400 font-mono">Administrator</div>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-[11px] transition"
+            className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-xs transition font-semibold cursor-pointer"
+            title="Log out of admin session"
           >
-            <FiLogOut size={12} />
-            <span>DISCONNECT ROOT</span>
+            <FiLogOut size={13} />
+            <span>Log Out</span>
           </button>
         </div>
       </aside>
@@ -155,22 +156,22 @@ function Dashboard() {
             <div>
               <div className="badge-cyber mb-1.5">
                 <FiTerminal size={11} />
-                <span>ROOT TELEMETRY // ACTIVE</span>
+                <span>ADMIN PLATFORM OVERVIEW</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display">
-                SYSTEM ANALYTICS MATRIX
+                ADMIN DASHBOARD
               </h1>
               <p className="text-xs text-zinc-400 font-mono mt-0.5">
-                Live monitoring, course management & platform node telemetry.
+                Monitor course performance, estimated revenue, and student enrollments.
               </p>
             </div>
 
             <Link
               to="/admin/create-course"
-              className="btn-cyber-primary text-xs px-4 py-2 flex items-center gap-1.5 self-start sm:self-auto"
+              className="btn-cyber-primary text-xs px-4 py-2 flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
             >
               <FiPlusCircle size={13} />
-              <span>MOUNT NEW TRACK</span>
+              <span>CREATE NEW COURSE</span>
             </Link>
           </div>
 
@@ -178,38 +179,38 @@ function Dashboard() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 font-mono">
             <div className="cyber-card p-5 space-y-2">
               <div className="flex justify-between items-center text-zinc-400">
-                <span className="text-xs uppercase font-bold">// ACTIVE TRACKS</span>
+                <span className="text-xs uppercase font-bold">ACTIVE COURSES</span>
                 <FiBookOpen className="text-cyan-400" />
               </div>
               <div className="text-2xl font-bold text-white">{courses.length}</div>
-              <div className="text-[10px] text-emerald-400">Mounted on registry</div>
+              <div className="text-[10px] text-emerald-400">Published on store</div>
             </div>
 
             <div className="cyber-card p-5 space-y-2">
               <div className="flex justify-between items-center text-zinc-400">
-                <span className="text-xs uppercase font-bold">// GROSS VOLUME</span>
+                <span className="text-xs uppercase font-bold">ESTIMATED REVENUE</span>
                 <FiDollarSign className="text-emerald-400" />
               </div>
               <div className="text-2xl font-bold text-white">₹{totalRevenue.toLocaleString()}</div>
-              <div className="text-[10px] text-zinc-500">Telemetry estimation</div>
+              <div className="text-[10px] text-zinc-400">Projected volume</div>
             </div>
 
             <div className="cyber-card p-5 space-y-2">
               <div className="flex justify-between items-center text-zinc-400">
-                <span className="text-xs uppercase font-bold">// SUBSCRIBERS</span>
+                <span className="text-xs uppercase font-bold">TOTAL LEARNERS</span>
                 <FiUsers className="text-purple-400" />
               </div>
               <div className="text-2xl font-bold text-white">{courses.length * 128 || 250}</div>
-              <div className="text-[10px] text-zinc-500">Active developer nodes</div>
+              <div className="text-[10px] text-zinc-400">Enrolled students</div>
             </div>
 
             <div className="cyber-card p-5 space-y-2">
               <div className="flex justify-between items-center text-zinc-400">
-                <span className="text-xs uppercase font-bold">// PROTOCOL SLA</span>
+                <span className="text-xs uppercase font-bold">SYSTEM STATUS</span>
                 <FiActivity className="text-cyan-400" />
               </div>
               <div className="text-2xl font-bold text-white">99.98%</div>
-              <div className="text-[10px] text-emerald-400">All Clusters Normal</div>
+              <div className="text-[10px] text-emerald-400">All Systems Operational</div>
             </div>
           </div>
 
@@ -217,32 +218,32 @@ function Dashboard() {
           <div className="cyber-card p-5 sm:p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-white uppercase font-display">// MOUNTED MASTERCLASSES</h3>
-                <p className="text-xs text-zinc-400 font-mono">Real-time database track records</p>
+                <h3 className="text-sm font-bold text-white uppercase font-display">PUBLISHED COURSES</h3>
+                <p className="text-xs text-zinc-400 font-mono">Overview of your active course catalog</p>
               </div>
               <Link
                 to="/admin/our-courses"
                 className="text-xs font-mono text-cyan-400 hover:underline flex items-center gap-1"
               >
-                <span>CATALOG</span>
+                <span>VIEW ALL</span>
                 <FiArrowRight size={11} />
               </Link>
             </div>
 
             {loading ? (
               <div className="py-8 text-center text-xs text-zinc-500 font-mono">
-                Fetching catalog nodes...
+                Loading courses...
               </div>
             ) : courses.length === 0 ? (
               <div className="py-8 text-center text-xs text-zinc-500 font-mono">
-                No tracks mounted. Click "MOUNT NEW TRACK" to publish.
+                No courses published yet. Click "CREATE NEW COURSE" to publish.
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
                   <thead>
                     <tr className="border-b border-[#162034] text-zinc-400">
-                      <th className="pb-3 font-semibold uppercase">TRACK TITLE</th>
+                      <th className="pb-3 font-semibold uppercase">COURSE TITLE</th>
                       <th className="pb-3 font-semibold uppercase">PRICE</th>
                       <th className="pb-3 font-semibold uppercase">STATUS</th>
                       <th className="pb-3 font-semibold uppercase text-right">ACTION</th>

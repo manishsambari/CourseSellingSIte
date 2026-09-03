@@ -65,37 +65,37 @@ function CourseCreate() {
           withCredentials: true,
         }
       );
-      toast.success(response.data?.message || "Track Mounted to Registry Successfully!");
+      toast.success(response.data?.message || "Course published successfully!");
       navigate("/admin/our-courses");
     } catch (error) {
       console.error(error);
-      toast.error(error.response?.data?.errors || "Error creating track");
+      toast.error(error.response?.data?.errors || "Error publishing course");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-mono selection:bg-cyan-400 selection:text-black p-4 sm:p-8">
+    <div className="bg-[#05070e] text-[#f1f5f9] min-h-screen font-sans selection:bg-cyan-400 selection:text-black p-4 sm:p-8">
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <div className="cyber-card p-5 sm:p-6 flex items-center justify-between gap-4">
           <div>
-            <div className="badge-cyber mb-1 text-[10px]">
+            <div className="badge-cyber mb-1 text-[10px] font-mono">
               <FiTerminal size={11} />
-              <span>REGISTRY PROTOCOL // MOUNT</span>
+              <span>ADMIN // COURSE CREATION</span>
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight uppercase font-display">
-              MOUNT NEW TRACK
+              CREATE NEW COURSE
             </h1>
             <p className="text-xs text-zinc-400 font-mono mt-0.5">
-              Publish a new technical course track with curriculum details.
+              Publish a new engineering course with curriculum details and pricing.
             </p>
           </div>
 
           <Link
             to="/admin/our-courses"
-            className="btn-cyber-outline text-xs px-3.5 py-2 flex items-center gap-1.5"
+            className="btn-cyber-outline text-xs px-3.5 py-2 flex items-center gap-1.5 font-mono cursor-pointer"
           >
             <FiArrowLeft size={12} />
             <span>CATALOG</span>
@@ -106,8 +106,8 @@ function CourseCreate() {
         <div className="cyber-card p-6 sm:p-8">
           <form onSubmit={handleCreateCourse} className="space-y-4">
             {/* Title */}
-            <div className="space-y-1">
-              <label className="text-[11px] uppercase text-zinc-300">// TRACK TITLE</label>
+            <div className="space-y-1 font-mono">
+              <label className="text-xs uppercase text-zinc-300 font-medium">COURSE TITLE</label>
               <input
                 type="text"
                 placeholder="e.g. Next.js 15, Rust & Distributed AI Agents"
@@ -119,10 +119,10 @@ function CourseCreate() {
             </div>
 
             {/* Description */}
-            <div className="space-y-1">
-              <label className="text-[11px] uppercase text-zinc-300">// SYLLABUS & BLUEPRINT DETAILS</label>
+            <div className="space-y-1 font-mono">
+              <label className="text-xs uppercase text-zinc-300 font-medium">COURSE DESCRIPTION & SYLLABUS</label>
               <textarea
-                placeholder="Describe curriculum, architectural patterns, stack components, and capstone requirements..."
+                placeholder="Describe curriculum, architectural patterns, stack components, and project details..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
@@ -132,8 +132,8 @@ function CourseCreate() {
             </div>
 
             {/* Price */}
-            <div className="space-y-1">
-              <label className="text-[11px] uppercase text-zinc-300">// PRICE (INR ₹)</label>
+            <div className="space-y-1 font-mono">
+              <label className="text-xs uppercase text-zinc-300 font-medium">PRICE (INR ₹)</label>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 font-mono text-xs">₹</span>
                 <input
@@ -149,8 +149,8 @@ function CourseCreate() {
             </div>
 
             {/* Image Upload Dropzone */}
-            <div className="space-y-1 pt-1">
-              <label className="text-[11px] uppercase text-zinc-300">// TRACK ARTWORK BUFFER</label>
+            <div className="space-y-1 pt-1 font-mono">
+              <label className="text-xs uppercase text-zinc-300 font-medium">COURSE THUMBNAIL IMAGE</label>
 
               <div className="border border-dashed border-[#1c2a45] rounded-xl p-5 text-center hover:border-cyan-500/50 transition-colors bg-[#080c14]">
                 <input
@@ -169,7 +169,7 @@ function CourseCreate() {
                         className="mx-auto max-h-48 rounded object-contain border border-[#162034]"
                       />
                       <div className="text-xs font-mono text-cyan-400 flex items-center justify-center gap-1">
-                        <FiCheckCircle size={12} /> CLICK TO REPLACE IMAGE BUFFER
+                        <FiCheckCircle size={12} /> Click to change image
                       </div>
                     </div>
                   ) : (
@@ -178,7 +178,7 @@ function CourseCreate() {
                         <FiUploadCloud />
                       </div>
                       <div className="text-xs font-semibold text-white uppercase font-display">
-                        Click to select artwork file
+                        Click to upload course image
                       </div>
                       <p className="text-[10px] text-zinc-500 font-mono">
                         16:9 ratio recommended (PNG, JPG, WebP)
@@ -194,21 +194,21 @@ function CourseCreate() {
               <button
                 type="button"
                 onClick={() => navigate("/admin/our-courses")}
-                className="btn-cyber-outline text-xs px-4 py-2"
+                className="btn-cyber-outline text-xs px-4 py-2 cursor-pointer"
               >
                 CANCEL
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="btn-cyber-primary text-xs px-5 py-2 flex items-center gap-1.5"
+                className="btn-cyber-primary text-xs px-5 py-2 flex items-center gap-1.5 cursor-pointer"
               >
                 {loading ? (
-                  <span>MOUNTING TRACK...</span>
+                  <span>Publishing Course...</span>
                 ) : (
                   <>
                     <FiPlusCircle size={13} />
-                    <span>PUBLISH TRACK</span>
+                    <span>PUBLISH COURSE</span>
                   </>
                 )}
               </button>

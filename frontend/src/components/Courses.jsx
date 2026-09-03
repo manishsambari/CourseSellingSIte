@@ -73,7 +73,7 @@ function Courses() {
       const response = await axios.get(`${BACKEND_URL}/user/logout`, {
         withCredentials: true,
       });
-      toast.success(response.data?.message || "Session Disconnected");
+      toast.success(response.data?.message || "Logged out successfully");
       localStorage.removeItem("user");
       setIsLoggedIn(false);
       setUserProfile(null);
@@ -83,12 +83,12 @@ function Courses() {
   };
 
   const categories = [
-    { id: "all", label: "ALL TRACKS" },
-    { id: "fullstack", label: "01 FULLSTACK" },
-    { id: "ai", label: "02 AI & AGENTS" },
-    { id: "backend", label: "03 DISTRIBUTED BACKEND" },
-    { id: "cloud", label: "04 DEVOPS & CLOUD" },
-    { id: "web3", label: "05 WEB3 & SECURITY" },
+    { id: "all", label: "ALL COURSES" },
+    { id: "fullstack", label: "FULLSTACK" },
+    { id: "ai", label: "AI & AGENTS" },
+    { id: "backend", label: "DISTRIBUTED BACKEND" },
+    { id: "cloud", label: "DEVOPS & CLOUD" },
+    { id: "web3", label: "WEB3 & SECURITY" },
   ];
 
   // Helper to count tracks per category
@@ -139,7 +139,7 @@ function Courses() {
 
   const activeCategoryTitle = useMemo(() => {
     const cat = categories.find((c) => c.id === selectedCategory);
-    return cat ? cat.label : "ALL TRACKS";
+    return cat ? cat.label : "ALL COURSES";
   }, [selectedCategory, categories]);
 
   return (
@@ -151,7 +151,7 @@ function Courses() {
         </Link>
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400 flex items-center gap-1.5 text-xs font-mono"
+          className="p-2 rounded bg-[#0c121e] border border-[#162034] text-zinc-300 hover:text-cyan-400 flex items-center gap-1.5 text-xs font-mono cursor-pointer"
         >
           <FiFilter size={14} className="text-cyan-400" />
           <span>FILTERS</span>
@@ -175,12 +175,12 @@ function Courses() {
         {/* Brand / Logo */}
         <div className="mb-6 flex items-center justify-between">
           <Link to="/" title="Return to Homepage">
-            <Logo size="md" subtitle="CATALOG" />
+            <Logo size="md" subtitle="COURSES" />
           </Link>
           {isSidebarOpen && (
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="lg:hidden p-1.5 rounded bg-[#0c121e] text-zinc-400 hover:text-white"
+              className="lg:hidden p-1.5 rounded bg-[#0c121e] text-zinc-400 hover:text-white cursor-pointer"
             >
               <FiX size={16} />
             </button>
@@ -191,9 +191,9 @@ function Courses() {
         <div className="flex-1 overflow-y-auto space-y-6 pr-1 font-mono">
           {/* Section: Categories */}
           <div className="space-y-2">
-            <div className="text-[10px] uppercase text-zinc-500 font-bold tracking-widest flex items-center gap-1.5">
+            <div className="text-[10px] uppercase text-zinc-400 font-bold tracking-widest flex items-center gap-1.5">
               <FiLayers className="text-cyan-400" />
-              <span>// TRACK CATEGORIES</span>
+              <span>COURSE CATEGORIES</span>
             </div>
 
             <div className="space-y-1">
@@ -207,7 +207,7 @@ function Courses() {
                       setSelectedCategory(cat.id);
                       if (isSidebarOpen) setIsSidebarOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-mono transition-all text-left ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-mono transition-all text-left cursor-pointer ${
                       isActive
                         ? "bg-cyan-500/15 border border-cyan-500/50 text-cyan-300 font-bold shadow-neon-cyan"
                         : "text-zinc-400 hover:text-white hover:bg-[#0c121e]"
@@ -231,49 +231,49 @@ function Courses() {
 
           {/* Section: Price Filter */}
           <div className="space-y-2 pt-2 border-t border-[#162034]">
-            <div className="text-[10px] uppercase text-zinc-500 font-bold tracking-widest flex items-center gap-1.5">
+            <div className="text-[10px] uppercase text-zinc-400 font-bold tracking-widest flex items-center gap-1.5">
               <FiDollarSign className="text-emerald-400" />
-              <span>// PRICE TIER</span>
+              <span>PRICE FILTER</span>
             </div>
 
             <div className="grid grid-cols-1 gap-1 text-xs">
               <button
                 onClick={() => setPriceFilter("all")}
-                className={`px-3 py-1.5 rounded-lg text-left transition ${
+                className={`px-3 py-1.5 rounded-lg text-left transition cursor-pointer ${
                   priceFilter === "all"
                     ? "bg-[#0c121e] text-emerald-300 font-bold border border-emerald-500/30"
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
-                // ALL PRICES
+                All Prices
               </button>
               <button
                 onClick={() => setPriceFilter("under-1500")}
-                className={`px-3 py-1.5 rounded-lg text-left transition ${
+                className={`px-3 py-1.5 rounded-lg text-left transition cursor-pointer ${
                   priceFilter === "under-1500"
                     ? "bg-[#0c121e] text-emerald-300 font-bold border border-emerald-500/30"
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
-                // UNDER ₹1,500
+                Under ₹1,500
               </button>
               <button
                 onClick={() => setPriceFilter("1500-plus")}
-                className={`px-3 py-1.5 rounded-lg text-left transition ${
+                className={`px-3 py-1.5 rounded-lg text-left transition cursor-pointer ${
                   priceFilter === "1500-plus"
                     ? "bg-[#0c121e] text-emerald-300 font-bold border border-emerald-500/30"
                     : "text-zinc-400 hover:text-white"
                 }`}
               >
-                // ₹1,500 & ABOVE
+                ₹1,500 & Above
               </button>
             </div>
           </div>
 
           {/* Section: Shortcuts */}
           <div className="space-y-2 pt-2 border-t border-[#162034]">
-            <div className="text-[10px] uppercase text-zinc-500 font-bold tracking-widest">
-              // USER ACCESS
+            <div className="text-[10px] uppercase text-zinc-400 font-bold tracking-widest">
+              QUICK NAVIGATION
             </div>
             <div className="space-y-1 text-xs">
               <Link
@@ -281,20 +281,20 @@ function Courses() {
                 className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-cyan-300 hover:bg-[#0c121e] transition"
               >
                 <FiShoppingBag size={13} className="text-cyan-400" />
-                <span>MY ENROLLED HUB</span>
+                <span>My Enrolled Courses</span>
               </Link>
               <Link
                 to="/admin/dashboard"
                 className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-zinc-400 hover:text-purple-300 hover:bg-[#0c121e] transition"
               >
                 <FiShield size={13} className="text-purple-400" />
-                <span>ADMIN STUDIO</span>
+                <span>Admin Portal</span>
               </Link>
             </div>
           </div>
         </div>
 
-        {/* User Card & Disconnect Footer */}
+        {/* User Card & Logout Footer */}
         <div className="pt-4 border-t border-[#162034] space-y-3 font-mono">
           {isLoggedIn ? (
             <div className="space-y-2.5">
@@ -306,30 +306,31 @@ function Courses() {
                   <div className="text-xs font-semibold text-white truncate">
                     {userProfile?.firstName} {userProfile?.lastName}
                   </div>
-                  <div className="text-[10px] text-cyan-400 truncate">NODE // VERIFIED</div>
+                  <div className="text-[10px] text-cyan-400 truncate">Learner Account</div>
                 </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-[11px] transition"
+                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg border border-rose-500/30 text-rose-400 hover:bg-rose-500/10 text-xs transition font-semibold cursor-pointer"
+                title="Log out of your account"
               >
-                <FiLogOut size={12} />
-                <span>DISCONNECT</span>
+                <FiLogOut size={13} />
+                <span>Log Out</span>
               </button>
             </div>
           ) : (
             <div className="space-y-2">
               <Link
                 to="/login"
-                className="btn-cyber-outline w-full py-2 text-center text-xs"
+                className="btn-cyber-outline w-full py-2 text-center text-xs block font-medium"
               >
-                SIGN IN
+                Log In
               </Link>
               <Link
                 to="/signup"
-                className="btn-cyber-primary w-full py-2 text-center text-xs"
+                className="btn-cyber-primary w-full py-2 text-center text-xs block font-medium"
               >
-                JOIN OS
+                Sign Up
               </Link>
             </div>
           )}
@@ -344,7 +345,7 @@ function Courses() {
             <div>
               <div className="badge-cyber mb-1.5 font-mono text-[10px]">
                 <FiTerminal size={11} />
-                <span>CATALOG REGISTRY // {activeCategoryTitle}</span>
+                <span>COURSE CATALOG · {activeCategoryTitle}</span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white uppercase tracking-tight font-display">
                 ENGINEERING MASTERCLASSES
@@ -355,7 +356,7 @@ function Courses() {
             </div>
 
             <div className="badge-cyber text-xs self-start sm:self-auto font-mono">
-              SHOWING: <span className="text-cyan-400 font-bold ml-1">{filteredCourses.length}</span> / {courses.length} TRACKS
+              SHOWING: <span className="text-cyan-400 font-bold ml-1">{filteredCourses.length}</span> / {courses.length} COURSES
             </div>
           </div>
 
@@ -366,15 +367,15 @@ function Courses() {
               <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400" size={13} />
               <input
                 type="text"
-                placeholder="$ grep --track keyword..."
+                placeholder="Search courses by keyword or tech..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white placeholder:text-zinc-600 focus:border-cyan-500 focus:outline-none"
+                className="w-full pl-9 pr-8 py-2 rounded-lg bg-[#060910] border border-[#162034] text-xs text-white placeholder:text-zinc-500 focus:border-cyan-500 focus:outline-none"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white cursor-pointer"
                 >
                   <FiX size={13} />
                 </button>
@@ -390,7 +391,7 @@ function Courses() {
                     setPriceFilter("all");
                     setSearchQuery("");
                   }}
-                  className="btn-cyber-outline text-xs px-2.5 py-2 flex items-center gap-1 text-zinc-400 hover:text-rose-400"
+                  className="btn-cyber-outline text-xs px-2.5 py-2 flex items-center gap-1 text-zinc-400 hover:text-rose-400 cursor-pointer"
                   title="Reset all filters"
                 >
                   <FiRotateCcw size={11} />
@@ -424,9 +425,9 @@ function Courses() {
           ) : filteredCourses.length === 0 ? (
             <div className="cyber-card p-14 text-center max-w-md mx-auto space-y-3 font-mono">
               <FiBookOpen size={32} className="text-zinc-500 mx-auto" />
-              <h3 className="text-sm font-bold text-white uppercase font-display">// NO MATCHING TRACKS</h3>
+              <h3 className="text-sm font-bold text-white uppercase font-display">NO MATCHING COURSES</h3>
               <p className="text-xs text-zinc-400">
-                Grep returned 0 records. Modify search criteria or active filters.
+                No courses matched your query. Try clearing search filters.
               </p>
               <button
                 onClick={() => {
@@ -434,7 +435,7 @@ function Courses() {
                   setSelectedCategory("all");
                   setPriceFilter("all");
                 }}
-                className="btn-cyber-outline text-xs px-4 py-2"
+                className="btn-cyber-outline text-xs px-4 py-2 cursor-pointer"
               >
                 RESET ALL FILTERS
               </button>
@@ -461,7 +462,7 @@ function Courses() {
                       }}
                     />
                     <div className="absolute top-3 left-3 badge-cyber text-[10px]">
-                      NODE // 0{idx + 1}
+                      COURSE 0{idx + 1}
                     </div>
                     <div className="absolute bottom-3 left-3 bg-[#060912]/95 border border-[#162034] px-2.5 py-1 rounded text-xs font-mono font-bold text-cyan-300 shadow-md">
                       ₹{course.price}
@@ -492,7 +493,7 @@ function Courses() {
                         to={`/buy/${course._id}`}
                         className="btn-cyber-primary text-xs py-2 px-3.5 flex items-center gap-1 font-display"
                       >
-                        <span>INITIALIZE</span>
+                        <span>ENROLL NOW</span>
                         <FiArrowRight size={12} />
                       </Link>
                     </div>
